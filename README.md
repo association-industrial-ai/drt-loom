@@ -62,9 +62,11 @@ git clone https://github.com/association-industrial-ai/drt-loom.git
 cd drt-loom
 npm install
 npm run gen
+npm test
 ```
 
-Node 20+. No network access, no API keys, no database.
+Node 20+. No network access, no API keys, no database. `npm test` runs type
+checking, gold-answer verification, multi-seed validation and determinism checks.
 
 ```
 Generating Kestrel Drive Systems dataset (seed 20260728, today 2026-07-28)…

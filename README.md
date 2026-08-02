@@ -32,6 +32,8 @@ and the committed reference environment are all derived from it.
 DRT Loom is the reference implementation of the Digital Reasoning Thread concept,
 developed under AI², the Association Industrial AI.
 
+![Top left: copilots confined to ERP, PLM, MES, CAD and document silos. Top right: a Digital Reasoning Thread linking the same five systems, traversed by one agent. Bottom: an integer seed feeding the DRT Loom generator, which derives structured records, a knowledge graph, benchmark questions and evaluation artifacts — reproducible, diverse across seeds, publishable and evaluable against exact ground truth.](docs/assets/overview.png)
+
 ---
 
 ## Quick start

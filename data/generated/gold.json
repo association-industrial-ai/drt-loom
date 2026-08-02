@@ -4,30 +4,34 @@
   "category": "disambiguation",
   "question": "What is the status of order 4711?",
   "expectedIds": [
-   "SO-4711",
+   "ECO-4711",
    "PRO-4711",
    "PUR-4711",
-   "ECO-4711"
+   "SO-4711"
   ],
   "expectedValues": {
    "distinctObjects": 4
   },
-  "reference": "\"4711\" is ambiguous: four different objects share that number. SO-4711 is a sales order from Nordhavn Marine A/S for 12 × KDU-3-B-45-20-F, due 2026-09-12, status \"in production\". PRO-4711 is the production order fulfilling it, released to MONT-2, planned start 2026-08-10. PUR-4711 is a purchase order to Nordwerk Guss GmbH for part 30-1177, promised 2026-08-20. ECO-4711 is an engineering change order on the same part, effective 2026-09-15. They are not unrelated: the sales order is fulfilled by the production order, which consumes the part bought on the purchase order, which is the part the change order modifies. A correct answer must distinguish all four and should surface the chain."
+  "reference": "\"4711\" is ambiguous: 4 different objects share that number. SO-4711 is a sales order from Nordhavn Marine A/S, due 2026-09-12, status \"in production\". PRO-4711 is the production order fulfilling it, planned start 2026-08-10. PUR-4711 is a purchase order to Nordwerk Guss GmbH for part 30-1177. ECO-4711 is an engineering change order on the same part, effective 2026-09-15. They are not unrelated: the sales order is fulfilled by the production order, which consumes the part bought on the purchase order, which is the part the change order modifies."
  },
  {
   "id": "Q-DIS-02",
   "category": "disambiguation",
   "question": "Someone told me 4711 is delayed by three weeks. Which 4711 do they mean, and what does it affect?",
   "expectedIds": [
-   "PUR-4711",
    "PART-30-1177",
+   "PRO-4707",
+   "PRO-4709",
    "PRO-4711",
-   "SO-4711"
+   "PUR-4711",
+   "SO-4711",
+   "SO-4726",
+   "SO-4730"
   ],
   "expectedValues": {
    "intended": "PUR-4711"
   },
-  "reference": "The three-week slip is on PUR-4711, the purchase order to Nordwerk Guss GmbH for bearing housing 30-1177. It was promised 2026-08-20. The slip propagates to PRO-4711 (which consumes that part and starts 2026-08-10) and therefore to SO-4711, due 2026-09-12."
+  "reference": "The slip is on PUR-4711, the purchase order to Nordwerk Guss GmbH for part 30-1177. It propagates through the parts that order supplies to the production orders consuming them, and from there to the sales orders they fulfil."
  },
  {
   "id": "Q-MH-01",
@@ -99,8 +103,10 @@
    "SUP-016",
    "SUP-018"
   ],
-  "expectedValues": {},
-  "reference": "Path: SO-4711 → fulfilled_by → PRO-4711 → consumes → parts → purchased_via / approved_supplier → suppliers."
+  "expectedValues": {
+   "supplierCount": 10
+  },
+  "reference": "Path: SO-4711 → fulfilled_by → PRO-4711 → consumes → parts → purchased_via / approved_supplier → 10 suppliers."
  },
  {
   "id": "Q-AGG-01",
@@ -290,7 +296,10 @@
    "REV-60-1778-B",
    "REV-60-1817-B",
    "REV-60-1826-A",
-   "REV-60-1837-C"
+   "REV-60-1837-C",
+   "REV-60-1871-B",
+   "REV-60-1927-C",
+   "REV-60-1956-C"
   ],
   "expectedValues": {
    "revisionCount": 63
@@ -302,8 +311,8 @@
   "category": "lookup",
   "question": "Who is the customer on SO-4711 and what is the requested delivery date?",
   "expectedIds": [
-   "SO-4711",
-   "CUST-001"
+   "CUST-001",
+   "SO-4711"
   ],
   "expectedValues": {
    "customer": "Nordhavn Marine A/S",
@@ -320,9 +329,11 @@
    "PART-30-1177"
   ],
   "expectedValues": {
-   "effectivity": "2026-09-15"
+   "effectivity": "2026-09-15",
+   "fromRevision": "B",
+   "toRevision": "C"
   },
-  "reference": "ECO-4711 takes bearing housing 30-1177 from revision B to C — tighter bearing seat tolerance and a material change to EN-GJS-500-7 — effective 2026-09-15."
+  "reference": "ECO-4711 takes Bearing housing 30-1177: increase bearing seat tolerance, rev B → C from revision B to C, effective 2026-09-15. Disposition: use-up existing stock, then switch."
  },
  {
   "id": "Q-LK-03",
@@ -330,7 +341,9 @@
   "question": "What is the standard oil fill for a KDU-3 unit, and when should it be changed?",
   "expectedIds": [],
   "expectedValues": {
-   "grade": "ISO VG 220"
+   "grade": "ISO VG 220",
+   "intervalHours": 8000,
+   "intervalMonths": 18
   },
   "reference": "ISO VG 220 mineral oil as standard; ISO VG 320 synthetic below -10 °C or above 80 °C. Change every 8,000 operating hours or 18 months, whichever comes first."
  },
@@ -365,15 +378,18 @@
  {
   "id": "Q-NX-01",
   "category": "multi_hop",
-  "question": "Here is the NX assembly for KDU-3-B-45-20-F. Is it buildable for the September batch, and what is blocking it?",
+  "question": "Here is the NX assembly for KDU-3-B-45-20-F assembly. Is it buildable for the September batch (2026-08-10 to 2026-09-12), and what is blocking it?",
   "expectedIds": [
-   "PART-30-1177",
+   "PART-10-1654",
    "PART-10-1668",
-   "PART-10-1654"
+   "PART-30-1177",
+   "PART-40-1548",
+   "PART-70-1859"
   ],
   "expectedValues": {
-   "blockerCount": 3
+   "blockerCount": 5,
+   "blockerReasons": 3
   },
-  "reference": "Not buildable. 3 components block it, for three different reasons: 30-1177 (eco_effectivity) — Superseded by ECO-4711 with effectivity 2026-09-15, which falls after the September batch. The change notice additionally bars revision B from marine duty from approval onward, and this order is for a marine customer. 10-1668 (unreleased_revision) — Revision B is the current revision but has never been released, and has no released drawing. 10-1654 (no_approved_supplier) — No entry on the approved vendor list. Nothing in the document corpus says so — the fact is the absence of a relationship, which only the graph can see."
+  "reference": "Not buildable. 5 components block the batch running 2026-08-10 to 2026-09-12, for 3 different reasons. 10-1654 (no_approved_supplier) — No entry on the approved vendor list. No document states this; the fact is the absence of a relationship. 10-1668 (unreleased_revision) — Revision B is current but has never been released. 30-1177 (eco_effectivity) — ECO-4711 bars revision B from marine duty from approval onward, and this batch is for a marine customer. Effectivity 2026-09-15 falls after the batch delivery date 2026-09-12, so the use-up-stock disposition does not apply here. 40-1548 (unreleased_revision) — Revision B is current but has never been released. 70-1859 (no_approved_supplier) — No entry on the approved vendor list. No document states this; the fact is the absence of a relationship."
  }
 ]

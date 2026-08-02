@@ -10615,7 +10615,11 @@
     "size": 25,
     "stages": 3,
     "sizeClass": "small",
-    "nominalTorqueNm": 2600
+    "nominalTorqueNm": 2600,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -11094,7 +11098,11 @@
     "size": 35,
     "stages": 3,
     "sizeClass": "small",
-    "nominalTorqueNm": 3885
+    "nominalTorqueNm": 3885,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -11643,7 +11651,11 @@
     "size": 45,
     "stages": 3,
     "sizeClass": "medium",
-    "nominalTorqueNm": 5670
+    "nominalTorqueNm": 5670,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -12108,7 +12120,11 @@
     "size": 63,
     "stages": 3,
     "sizeClass": "medium",
-    "nominalTorqueNm": 7056
+    "nominalTorqueNm": 7056,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -12559,7 +12575,11 @@
     "size": 80,
     "stages": 3,
     "sizeClass": "large",
-    "nominalTorqueNm": 8000
+    "nominalTorqueNm": 8000,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -13038,7 +13058,11 @@
     "size": 100,
     "stages": 3,
     "sizeClass": "large",
-    "nominalTorqueNm": 9300
+    "nominalTorqueNm": 9300,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -13503,7 +13527,11 @@
     "size": 25,
     "stages": 2,
     "sizeClass": "small",
-    "nominalTorqueNm": 2300
+    "nominalTorqueNm": 2300,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -14038,7 +14066,11 @@
     "size": 35,
     "stages": 2,
     "sizeClass": "small",
-    "nominalTorqueNm": 3430
+    "nominalTorqueNm": 3430,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -14531,7 +14563,11 @@
     "size": 45,
     "stages": 2,
     "sizeClass": "medium",
-    "nominalTorqueNm": 4410
+    "nominalTorqueNm": 4410,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -15038,7 +15074,11 @@
     "size": 63,
     "stages": 2,
     "sizeClass": "medium",
-    "nominalTorqueNm": 6237
+    "nominalTorqueNm": 6237,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -15573,7 +15613,11 @@
     "size": 80,
     "stages": 2,
     "sizeClass": "large",
-    "nominalTorqueNm": 10080
+    "nominalTorqueNm": 10080,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -16094,7 +16138,11 @@
     "size": 100,
     "stages": 2,
     "sizeClass": "large",
-    "nominalTorqueNm": 11800
+    "nominalTorqueNm": 11800,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -16545,7 +16593,11 @@
     "size": 25,
     "stages": 3,
     "sizeClass": "small",
-    "nominalTorqueNm": 2650
+    "nominalTorqueNm": 2650,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -17024,7 +17076,11 @@
     "size": 35,
     "stages": 3,
     "sizeClass": "small",
-    "nominalTorqueNm": 3535
+    "nominalTorqueNm": 3535,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -17531,7 +17587,11 @@
     "size": 45,
     "stages": 3,
     "sizeClass": "medium",
-    "nominalTorqueNm": 4500
+    "nominalTorqueNm": 4500,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -18010,7 +18070,11 @@
     "size": 63,
     "stages": 3,
     "sizeClass": "medium",
-    "nominalTorqueNm": 5733
+    "nominalTorqueNm": 5733,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -18531,7 +18595,11 @@
     "size": 80,
     "stages": 3,
     "sizeClass": "large",
-    "nominalTorqueNm": 10000
+    "nominalTorqueNm": 10000,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -18982,7 +19050,11 @@
     "size": 100,
     "stages": 3,
     "sizeClass": "large",
-    "nominalTorqueNm": 10500
+    "nominalTorqueNm": 10500,
+    "standardOilGrade": "ISO VG 220",
+    "alternateOilGrade": "ISO VG 320",
+    "oilChangeIntervalHours": 8000,
+    "oilChangeIntervalMonths": 18
    }
   },
   {
@@ -27153,7 +27225,9 @@
     "effectivityDate": "2026-09-15",
     "fromRevision": "B",
     "toRevision": "C",
-    "disposition": "use-up existing stock, then switch"
+    "disposition": "use-up existing stock, then switch",
+    "marineDutyBarredRevision": "B",
+    "marineDutyBarredFrom": "approval"
    }
   },
   {
@@ -81998,7 +82072,7 @@
    "family": "eco_notice",
    "path": "documents/doc-0004-change-notice-eco-4711.md",
    "date": "2026-06-18",
-   "body": "# Engineering change notice ECO-4711\n\n**Title:** Bearing housing 30-1177: increase bearing seat tolerance, rev B → C\n**Status:** approved\n**Raised by:** R. Delgado on 2026-06-18\n**Approved by:** J. Haverkamp\n**Effective from:** 2026-09-15\n**Disposition:** use-up existing stock, then switch\n\n## Reason\n\nField returns from three marine installations showed fretting corrosion on the bearing seat.\nRoot cause analysis traced this to a tolerance stack-up between the housing bore and the bearing\nouter ring under thermal cycling. The seat tolerance is tightened and the material changes from\nEN-GJL-250 to EN-GJS-500-7 nodular iron.\n\n## Effectivity\n\nChange order 4711 takes effect on 2026-09-15. Units built before that date may\nuse the superseded revision B casting where existing stock allows.\n\n**Marine duty exception:** following the field returns, revision B is no longer acceptable for\nmarine applications regardless of build date. Marine units must be built to revision C. This\napplies from approval, not from the effectivity date.\n\n## Implementation\n\nPurchasing to align open purchase orders with the cut-over. Production planning to check open\nproduction orders against the effectivity date.",
+   "body": "# Engineering change notice ECO-4711\n\n**Title:** Bearing housing 30-1177: increase bearing seat tolerance, rev B → C\n**Status:** approved\n**Raised by:** R. Delgado on 2026-06-18\n**Approved by:** J. Haverkamp\n**Effective from:** 2026-09-15\n**Disposition:** use-up existing stock, then switch\n\n## Reason\n\nField returns from three marine installations showed fretting corrosion on the bearing seat.\nRoot cause analysis traced this to a tolerance stack-up between the housing bore and the bearing\nouter ring under thermal cycling. The seat tolerance is tightened and the material changes from\nEN-GJL-250 to EN-GJS-500-7 nodular iron.\n\n## Effectivity\n\nChange order 4711 takes effect on 2026-09-15. Units built before that date may\nuse the superseded revision B casting where existing stock allows.\n\n**Marine duty exception:** following the field returns, revision B is no longer\nacceptable for marine applications regardless of build date. Marine units must be built to\nrevision C. This applies from approval, not from the effectivity date.\n\n## Implementation\n\nPurchasing to align open purchase orders with the cut-over. Production planning to check open\nproduction orders against the effectivity date.",
    "mentions": [
     "ECO-4711",
     "PART-30-1177"
@@ -82010,7 +82084,7 @@
    "family": "product_spec",
    "path": "documents/doc-0005-kdu-3-b-25-product-specification.md",
    "date": "2025-10-18",
-   "body": "# KDU-3-B-25 — Bevel-helical gear unit\n\nThe KDU-3-B-25 is a bevel-helical unit in the KDU-3 family, size 25, \nwith 3 reduction stages and a nominal output torque of 2600 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-B-25 — Bevel-helical gear unit\n\nThe KDU-3-B-25 is a bevel-helical unit in the KDU-3 family, size 25, \nwith 3 reduction stages and a nominal output torque of 2600 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-B-25"
    ]
@@ -82021,7 +82095,7 @@
    "family": "product_spec",
    "path": "documents/doc-0006-kdu-3-b-35-product-specification.md",
    "date": "2025-04-10",
-   "body": "# KDU-3-B-35 — Bevel-helical gear unit\n\nThe KDU-3-B-35 is a bevel-helical unit in the KDU-3 family, size 35, \nwith 3 reduction stages and a nominal output torque of 3885 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-B-35 — Bevel-helical gear unit\n\nThe KDU-3-B-35 is a bevel-helical unit in the KDU-3 family, size 35, \nwith 3 reduction stages and a nominal output torque of 3885 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-B-35"
    ]
@@ -82032,7 +82106,7 @@
    "family": "product_spec",
    "path": "documents/doc-0007-kdu-3-b-45-product-specification.md",
    "date": "2025-09-18",
-   "body": "# KDU-3-B-45 — Bevel-helical gear unit\n\nThe KDU-3-B-45 is a bevel-helical unit in the KDU-3 family, size 45, \nwith 3 reduction stages and a nominal output torque of 5670 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-B-45 — Bevel-helical gear unit\n\nThe KDU-3-B-45 is a bevel-helical unit in the KDU-3 family, size 45, \nwith 3 reduction stages and a nominal output torque of 5670 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-B-45"
    ]
@@ -82043,7 +82117,7 @@
    "family": "product_spec",
    "path": "documents/doc-0008-kdu-3-b-63-product-specification.md",
    "date": "2025-09-26",
-   "body": "# KDU-3-B-63 — Bevel-helical gear unit\n\nThe KDU-3-B-63 is a bevel-helical unit in the KDU-3 family, size 63, \nwith 3 reduction stages and a nominal output torque of 7056 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-B-63 — Bevel-helical gear unit\n\nThe KDU-3-B-63 is a bevel-helical unit in the KDU-3 family, size 63, \nwith 3 reduction stages and a nominal output torque of 7056 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-B-63"
    ]
@@ -82054,7 +82128,7 @@
    "family": "product_spec",
    "path": "documents/doc-0009-kdu-3-b-80-product-specification.md",
    "date": "2025-08-22",
-   "body": "# KDU-3-B-80 — Bevel-helical gear unit\n\nThe KDU-3-B-80 is a bevel-helical unit in the KDU-3 family, size 80, \nwith 3 reduction stages and a nominal output torque of 8000 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-B-80 — Bevel-helical gear unit\n\nThe KDU-3-B-80 is a bevel-helical unit in the KDU-3 family, size 80, \nwith 3 reduction stages and a nominal output torque of 8000 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-B-80"
    ]
@@ -82065,7 +82139,7 @@
    "family": "product_spec",
    "path": "documents/doc-0010-kdu-3-b-100-product-specification.md",
    "date": "2026-03-02",
-   "body": "# KDU-3-B-100 — Bevel-helical gear unit\n\nThe KDU-3-B-100 is a bevel-helical unit in the KDU-3 family, size 100, \nwith 3 reduction stages and a nominal output torque of 9300 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-B-100 — Bevel-helical gear unit\n\nThe KDU-3-B-100 is a bevel-helical unit in the KDU-3 family, size 100, \nwith 3 reduction stages and a nominal output torque of 9300 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-B-100"
    ]
@@ -82076,7 +82150,7 @@
    "family": "product_spec",
    "path": "documents/doc-0011-kdu-3-h-25-product-specification.md",
    "date": "2024-12-15",
-   "body": "# KDU-3-H-25 — Helical gear unit\n\nThe KDU-3-H-25 is a helical unit in the KDU-3 family, size 25, \nwith 2 reduction stages and a nominal output torque of 2300 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-H-25 — Helical gear unit\n\nThe KDU-3-H-25 is a helical unit in the KDU-3 family, size 25, \nwith 2 reduction stages and a nominal output torque of 2300 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-H-25"
    ]
@@ -82087,7 +82161,7 @@
    "family": "product_spec",
    "path": "documents/doc-0012-kdu-3-h-35-product-specification.md",
    "date": "2025-10-31",
-   "body": "# KDU-3-H-35 — Helical gear unit\n\nThe KDU-3-H-35 is a helical unit in the KDU-3 family, size 35, \nwith 2 reduction stages and a nominal output torque of 3430 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-H-35 — Helical gear unit\n\nThe KDU-3-H-35 is a helical unit in the KDU-3 family, size 35, \nwith 2 reduction stages and a nominal output torque of 3430 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-H-35"
    ]
@@ -82098,7 +82172,7 @@
    "family": "product_spec",
    "path": "documents/doc-0013-kdu-3-h-45-product-specification.md",
    "date": "2025-11-23",
-   "body": "# KDU-3-H-45 — Helical gear unit\n\nThe KDU-3-H-45 is a helical unit in the KDU-3 family, size 45, \nwith 2 reduction stages and a nominal output torque of 4410 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-H-45 — Helical gear unit\n\nThe KDU-3-H-45 is a helical unit in the KDU-3 family, size 45, \nwith 2 reduction stages and a nominal output torque of 4410 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-H-45"
    ]
@@ -82109,7 +82183,7 @@
    "family": "product_spec",
    "path": "documents/doc-0014-kdu-3-h-63-product-specification.md",
    "date": "2025-02-25",
-   "body": "# KDU-3-H-63 — Helical gear unit\n\nThe KDU-3-H-63 is a helical unit in the KDU-3 family, size 63, \nwith 2 reduction stages and a nominal output torque of 6237 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-H-63 — Helical gear unit\n\nThe KDU-3-H-63 is a helical unit in the KDU-3 family, size 63, \nwith 2 reduction stages and a nominal output torque of 6237 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-H-63"
    ]
@@ -82120,7 +82194,7 @@
    "family": "product_spec",
    "path": "documents/doc-0015-kdu-3-h-80-product-specification.md",
    "date": "2025-11-06",
-   "body": "# KDU-3-H-80 — Helical gear unit\n\nThe KDU-3-H-80 is a helical unit in the KDU-3 family, size 80, \nwith 2 reduction stages and a nominal output torque of 10080 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-H-80 — Helical gear unit\n\nThe KDU-3-H-80 is a helical unit in the KDU-3 family, size 80, \nwith 2 reduction stages and a nominal output torque of 10080 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-H-80"
    ]
@@ -82131,7 +82205,7 @@
    "family": "product_spec",
    "path": "documents/doc-0016-kdu-3-h-100-product-specification.md",
    "date": "2025-06-16",
-   "body": "# KDU-3-H-100 — Helical gear unit\n\nThe KDU-3-H-100 is a helical unit in the KDU-3 family, size 100, \nwith 2 reduction stages and a nominal output torque of 11800 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-H-100 — Helical gear unit\n\nThe KDU-3-H-100 is a helical unit in the KDU-3 family, size 100, \nwith 2 reduction stages and a nominal output torque of 11800 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-H-100"
    ]
@@ -82142,7 +82216,7 @@
    "family": "product_spec",
    "path": "documents/doc-0017-kdu-3-p-25-product-specification.md",
    "date": "2025-12-09",
-   "body": "# KDU-3-P-25 — Planetary gear unit\n\nThe KDU-3-P-25 is a planetary unit in the KDU-3 family, size 25, \nwith 3 reduction stages and a nominal output torque of 2650 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-P-25 — Planetary gear unit\n\nThe KDU-3-P-25 is a planetary unit in the KDU-3 family, size 25, \nwith 3 reduction stages and a nominal output torque of 2650 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-P-25"
    ]
@@ -82153,7 +82227,7 @@
    "family": "product_spec",
    "path": "documents/doc-0018-kdu-3-p-35-product-specification.md",
    "date": "2025-03-19",
-   "body": "# KDU-3-P-35 — Planetary gear unit\n\nThe KDU-3-P-35 is a planetary unit in the KDU-3 family, size 35, \nwith 3 reduction stages and a nominal output torque of 3535 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-P-35 — Planetary gear unit\n\nThe KDU-3-P-35 is a planetary unit in the KDU-3 family, size 35, \nwith 3 reduction stages and a nominal output torque of 3535 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-P-35"
    ]
@@ -82164,7 +82238,7 @@
    "family": "product_spec",
    "path": "documents/doc-0019-kdu-3-p-45-product-specification.md",
    "date": "2026-02-20",
-   "body": "# KDU-3-P-45 — Planetary gear unit\n\nThe KDU-3-P-45 is a planetary unit in the KDU-3 family, size 45, \nwith 3 reduction stages and a nominal output torque of 4500 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-P-45 — Planetary gear unit\n\nThe KDU-3-P-45 is a planetary unit in the KDU-3 family, size 45, \nwith 3 reduction stages and a nominal output torque of 4500 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-P-45"
    ]
@@ -82175,7 +82249,7 @@
    "family": "product_spec",
    "path": "documents/doc-0020-kdu-3-p-63-product-specification.md",
    "date": "2025-02-03",
-   "body": "# KDU-3-P-63 — Planetary gear unit\n\nThe KDU-3-P-63 is a planetary unit in the KDU-3 family, size 63, \nwith 3 reduction stages and a nominal output torque of 5733 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-P-63 — Planetary gear unit\n\nThe KDU-3-P-63 is a planetary unit in the KDU-3 family, size 63, \nwith 3 reduction stages and a nominal output torque of 5733 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-P-63"
    ]
@@ -82186,7 +82260,7 @@
    "family": "product_spec",
    "path": "documents/doc-0021-kdu-3-p-80-product-specification.md",
    "date": "2024-06-19",
-   "body": "# KDU-3-P-80 — Planetary gear unit\n\nThe KDU-3-P-80 is a planetary unit in the KDU-3 family, size 80, \nwith 3 reduction stages and a nominal output torque of 10000 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-P-80 — Planetary gear unit\n\nThe KDU-3-P-80 is a planetary unit in the KDU-3 family, size 80, \nwith 3 reduction stages and a nominal output torque of 10000 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-P-80"
    ]
@@ -82197,7 +82271,7 @@
    "family": "product_spec",
    "path": "documents/doc-0022-kdu-3-p-100-product-specification.md",
    "date": "2024-04-24",
-   "body": "# KDU-3-P-100 — Planetary gear unit\n\nThe KDU-3-P-100 is a planetary unit in the KDU-3 family, size 100, \nwith 3 reduction stages and a nominal output torque of 10500 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous\nduty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
+   "body": "# KDU-3-P-100 — Planetary gear unit\n\nThe KDU-3-P-100 is a planetary unit in the KDU-3 family, size 100, \nwith 3 reduction stages and a nominal output torque of 10500 Nm.\n\n## Construction\n\nThe unit is built from four sub-assembly groups: housing group, gear set, bearing group and\ninterface group. Housings are cast iron EN-GJL-250 as standard; EN-GJS-500-7 nodular iron is\navailable for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to DIN quality 6.\n\n## Lubrication\n\nStandard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or\ncontinuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is\n8,000 operating hours or\n18 months, whichever comes first.\n\n## Mounting\n\nFlange, shaft and torque-arm mountings are available. Torque-arm variants require the reaction\nbracket to be aligned within 0.5° of the output axis; misalignment is the most common cause of\npremature bearing wear reported from the field.\n\n## Notes\n\nUnits supplied for marine duty carry an additional C5-M coating and stainless fasteners.",
    "mentions": [
     "PROD-KDU-3-P-100"
    ]

@@ -13,8 +13,9 @@ available for shock-loaded duty. Gearing is case-hardened 18CrNiMo7-6, ground to
 
 ## Lubrication
 
-Standard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous
-duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or
+Standard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or
+continuous duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is
+8,000 operating hours or
 18 months, whichever comes first.
 
 ## Mounting

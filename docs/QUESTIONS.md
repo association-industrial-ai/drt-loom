@@ -3,8 +3,9 @@
 18 questions in `data/generated/gold.json`, regenerated with the corpus. The
 questions are stable across seeds; the answers are not, because the world is not.
 
-Read [KNOWN-ISSUES.md](../KNOWN-ISSUES.md) first. `Q-NX-01` is wrong and
-`Q-ABS-03` has a scoring trap.
+Every `expectedIds` and `expectedValues` field is derived from the finished
+environment by the reference oracle and checked by the invariant gates; see
+[KNOWN-ISSUES.md](../KNOWN-ISSUES.md) for what is verified and what is not.
 
 ## Gold record
 
@@ -83,16 +84,20 @@ Where-used, upward through a multi-level BOM.
 
 The same chain in reverse, from one order down to every supplier that touches it.
 
-### `Q-NX-01` ⚠️
-> Here is the NX assembly for KDU-3-B-45-20-F. Is it buildable for the September
-> batch, and what is blocking it?
+### `Q-NX-01`
+> Here is the NX assembly for KDU-3-B-45-20-F assembly. Is it buildable for the
+> September batch (2026-08-10 to 2026-09-12), and what is blocking it?
 
-`PART-30-1177`, `PART-10-1668`, `PART-10-1654` · `blockerCount: 3`
+`PART-10-1654`, `PART-10-1668`, `PART-30-1177`, `PART-40-1548`, `PART-70-1859`
+· `blockerCount: 5` · `blockerReasons: 3`
 
-**This gold answer is wrong** - the data supports 5 blockers. See
-[KNOWN-ISSUES.md](../KNOWN-ISSUES.md) §1.
+Derived by walking the NX export, resolving every component to a canonical part
+and evaluating the three blocker predicates against the finished environment. The
+batch window is read from the production order's planned start and the sales
+order's requested delivery date. Earlier releases reported 3 here, taken from the
+staging list; that defect is fixed.
 
-The question is the hardest in the set even so. It requires resolving a CAD
+The question is the hardest in the set. It requires resolving a CAD
 assembly tree to ERP part numbers, then evaluating three unrelated predicates
 against each part: ECO effectivity versus the build date, whether the current
 revision was ever released, and whether an approved supplier exists. The three
@@ -153,13 +158,15 @@ set.
 
 The same absence, propagated up through the BOM.
 
-### `Q-ABS-03` ⚠️
+### `Q-ABS-03`
 > Which current part revisions have no released drawing?
 
-60 revision IDs · `revisionCount: 63`
+63 revision IDs · `revisionCount: 63`
 
-**The ID list is truncated to 60 while the count is 63.** See
-[KNOWN-ISSUES.md](../KNOWN-ISSUES.md) §2. Score this one on the scalar.
+The complete canonical set is stored in gold. Earlier releases truncated the ID
+list to 60 while reporting a count of 63, which penalised a correct answer for
+three false positives; that defect is fixed. Apply any prompt-length cap when
+constructing the prompt, not to the ground truth.
 
 ---
 
@@ -208,8 +215,11 @@ The reason lives in meeting minutes and an email thread, not in any field.
 `ECO-4711`
 
 The change notice permits use-up of existing stock, except for marine duty. The
-exception is a sentence in a document, and it is the reason `Q-NX-01`'s first
-blocker is a blocker.
+exception appears as a sentence in the document, and is the reason
+`PART-30-1177` is a blocker in `Q-NX-01`. The notice prose and the oracle both
+render from the same structured fields on `ECO-4711`
+(`marineDutyBarredRevision`, `marineDutyBarredFrom`), so answering from the
+document and answering from the graph agree by construction.
 
 ### `Q-NAR-03`
 > What is the most common cause of premature bearing wear reported from the field?

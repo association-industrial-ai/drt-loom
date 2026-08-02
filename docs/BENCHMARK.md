@@ -48,7 +48,9 @@ alongside correctness, so execution failures are distinguishable from reasoning
 failures.
 
 **Evaluation integrity.** Incorrect ground truth is worse than none, because it is
-confidently wrong. Known defects are documented in
+confidently wrong. Every machine-checkable field is derived from the finished
+environment and re-checked by invariant gates at generation time and across six
+seeds (`npm run verify:seeds`). Remaining limitations are documented in
 [KNOWN-ISSUES.md](../KNOWN-ISSUES.md) rather than corrected silently.
 
 ## One category favours retrieval
@@ -89,6 +91,17 @@ scoreCitations(enrichCitations(citedIds, answer), q.expectedIds);
 scoreValues(answer, q.expectedValues);
 // → { matched: 3, total: 3, missing: [] }
 ```
+
+### How gold is derived
+
+`expectedIds` and `expectedValues` are computed from the finished environment by
+the reference oracle in [`src/generate/oracle.ts`](../src/generate/oracle.ts) —
+never copied from generator constants or from the staging structures used to build
+the environment. The oracle shares no implementation with any system under
+evaluation, so a defect in it cannot cancel out against the same defect in an
+evaluated system.
+
+`reference` is curated prose for a human or an LLM judge. It is not scored.
 
 Two behaviours matter when aggregating.
 

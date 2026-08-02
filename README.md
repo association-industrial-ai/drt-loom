@@ -291,11 +291,17 @@ Design rationale, scoring semantics and the staged reasoning obstacles:
 
 ## Current status
 
-Version 0.1.0.
+Version 0.1.1.
 
 **Implemented**
 
-- Deterministic generation. Verified byte-identical across clean runs.
+- Deterministic generation. Verified byte-identical across clean runs and across
+  six seeds.
+- Environment-derived ground truth. All 18 answers compute `expectedIds` and
+  `expectedValues` from the finished environment through the reference oracle in
+  `src/generate/oracle.ts`. No machine-checkable field is copied from a scripted
+  constant or a staging list.
+- Shape-based invariant gates, run at generation time and across seeds.
 - Knowledge graph generation, with typed, directed, provenance-tagged edges.
 - Evaluation framework: citation F1, scalar matching, execution metrics.
 - Reference environment, committed at seed `20260728`.
@@ -303,15 +309,43 @@ Version 0.1.0.
 
 **In progress**
 
-- Graph-derived gold answers. Ground truth is currently part derived, part specified
-  by hand in `src/generate/gold.ts`. Where the two disagree the hand-written value
-  wins and nothing checks it. One gold answer is confirmed wrong and contradicts
-  another; 4 of 18 have been independently verified.
-- Automated validation across seeds. The existing sanity gates assert on hardcoded
-  counts, which is the direct cause of the known defect.
-- Consolidated reference baselines across multiple seeds.
+- Reference baselines. Two implementations exist but live in a separate
+  repository and predate the ground-truth fixes; they must be re-run before any
+  number is published.
+- Per-seed question wording. The scripted spine uses fixed identifiers, so
+  question text is identical at every seed even though answers differ.
+- Domain modularisation, so a domain can be added without editing the generator.
 
-Read [KNOWN-ISSUES.md](KNOWN-ISSUES.md) before publishing any number measured here.
+Read [KNOWN-ISSUES.md](KNOWN-ISSUES.md) before publishing any number measured
+here. The two defects recorded there previously — `Q-NX-01` undercounting
+blockers and `Q-ABS-03` truncating its citation list — are fixed; the remaining
+limitations are still listed.
+
+### Verification
+
+```bash
+npm run verify         # self-consistency and scorer compatibility, reference seed
+npm run verify:seeds   # invariants + deterministic regeneration across 6 seeds
+npm test               # typecheck + both of the above
+```
+
+`verify` runs the invariant gates, then renders each gold answer into the response
+shape the scorer expects and scores it against itself. It proves that the
+generator, gold format, answer format, citation handling and scorer are
+mechanically compatible. It does not prove the answers are objectively correct —
+a wrong answer scored against itself still returns 1.0.
+
+`verify:seeds` is the evidence that gold matches the environment. For seeds
+`20260728, 1, 2, 3, 4, 5` it rebuilds from scratch, re-derives every answer and
+compares it against gold, checks the cross-question invariants, and rebuilds again
+to confirm byte-identical output. Each seed gets its own oracle and its own alias
+table, so no state carries between them.
+
+Gates include: every expected id exists and is unique; every count equals the size
+of its own id set; absence answers satisfy their anti-join; exposure totals equal
+the summed value of the contributing lines; NX answers reference only parts
+resolved from the assembly; and the `no_approved_supplier` blockers in `Q-NX-01`
+are exactly the intersection of the assembly with the `Q-ABS-01` answer.
 
 ---
 
@@ -332,27 +366,29 @@ An evaluation harness runs every gold question through both and scores citations
 scalar values and a track-blind LLM judge.
 
 These implementations currently live in a separate application repository and are
-not part of this repository. No comparative results are published here.
-Consolidated results across multiple seeds will follow once gold answers are
-graph-derived and the evaluation suite is finalised.
+not part of this repository. No comparative results are published here, for a
+specific reason: they were last exercised against the pre-v0.1.1 gold answers,
+which included the two defects now fixed. Numbers measured against `Q-NX-01` when
+it reported three blockers instead of five are not comparable to numbers measured
+now, so republishing them would be misleading.
+
+Consolidated results across multiple seeds will follow once the baselines have
+been re-run against the corrected ground truth.
 
 ---
 
 ## Roadmap
 
-1. **Graph-derived ground truth.** Derive every gold answer from the built graph,
-   using the same query layer a system under evaluation would use. Keep hand-written
-   text only as human-readable `reference` prose.
-2. **Automated validation across seeds.** Replace hardcoded sanity gates with
-   assertions on the shape of each derived answer, and run the generator across a
-   fixed set of seeds in CI.
-3. **Published baseline results.** Publish the two reference baselines across
-   several seeds, with latency and token cost alongside accuracy.
-4. **Domain modularisation.** Move the closed node and relation unions in
+1. **Published baseline results.** Re-run the hybrid retrieval and graph-augmented
+   reference implementations against the corrected gold answers, across several
+   seeds, reporting latency and token cost alongside accuracy.
+2. **Per-seed question wording.** Parameterise the scripted spine so question text
+   varies with the environment, not only the answers.
+3. **Domain modularisation.** Move the closed node and relation unions in
    `src/types.ts` behind a registered domain module, and remove the hardcoded
-   entity-type filter in `src/score/score.ts`, so a domain can be added without
-   editing the generator.
-5. **Additional industrial domains.** Maintenance, quality and cost within
+   name-bearing type list in `src/score/score.ts`, so a domain can be added
+   without editing the generator.
+4. **Additional industrial domains.** Maintenance, quality and cost within
    manufacturing first; then domains outside it, following
    [docs/EXTENDING.md](docs/EXTENDING.md).
 

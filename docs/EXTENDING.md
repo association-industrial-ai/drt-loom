@@ -226,8 +226,13 @@ g.push({
 ```
 
 Four hops, three systems, and no document states the answer. `expectedIds` and
-`expectedValues` come from the same traversal, so they cannot disagree; the defect
-in [KNOWN-ISSUES.md](../KNOWN-ISSUES.md) #1 comes from deriving them separately.
+`expectedValues` come from the same traversal, so they cannot disagree.
+
+Query through the reference oracle in [`src/generate/oracle.ts`](../src/generate/oracle.ts)
+rather than through the staging structures your generator returned. A staging list
+reports what was staged on purpose and misses whatever the random generation
+produced around it — the defect recorded as [KNOWN-ISSUES.md](../KNOWN-ISSUES.md)
+#1, now fixed.
 
 Add a sanity gate in [`src/generate/index.ts`](../src/generate/index.ts) that asserts
 on the shape of the result rather than on a constant, so a different seed cannot
@@ -299,9 +304,11 @@ if (!NAME_BEARING.includes(e.type)) continue;
 | At least one edge crossing into an existing domain | forms the thread |
 | Uncertain joins tagged `INFERRED` / `AMBIGUOUS` | `b.rel(..., { confidence })` |
 | At least one prose-only fact | so retrieval can win somewhere |
-| Gold derived by traversal, not hardcoded | `src/generate/gold.ts` |
-| Sanity gates assert on shape, not on constants | `src/generate/index.ts` |
+| Gold derived through the oracle, not hardcoded | `src/generate/oracle.ts` |
+| Invariants added for the new answers | `src/generate/invariants.ts` |
 | Name-bearing types registered for scoring | `src/score/score.ts` |
+| `npm run verify` passes | scorer compatibility |
+| `npm run verify:seeds` passes | invariants hold at every seed |
 | Byte-identical output across two clean runs | `npm run gen` twice, `diff -r` |
 
 ## Candidate domains

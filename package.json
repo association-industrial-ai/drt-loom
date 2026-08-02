@@ -1,7 +1,7 @@
 {
   "name": "drt-loom",
   "version": "0.1.0",
-  "description": "A deterministic generator for Synthetic Industrial Reasoning Environments. Models complete industrial enterprises spanning ERP, PLM, MES, CAD and enterprise documents, for evaluating cross-domain reasoning in Industrial Agentic AI.",
+  "description": "A framework for generating Synthetic Industrial Reasoning Environments, with a reference benchmark implementation. Deterministic generation of industrial enterprises spanning ERP, PLM, MES, CAD and enterprise documents, for evaluating cross-domain reasoning in Industrial Agentic AI.",
   "license": "MIT",
   "repository": {
     "type": "git",

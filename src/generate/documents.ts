@@ -72,7 +72,7 @@ export function buildDocuments(
   };
 
   /* ================================================== the four 4711 documents */
-  buildScriptedDocs(add, md);
+  buildScriptedDocs(add, b, md);
 
   /* ------------------------------------------------------- product specs */
   for (const prodId of md.productIds) {
@@ -96,9 +96,10 @@ export function buildDocuments(
         ``,
         `## Lubrication`,
         ``,
-        `Standard fill is ISO VG 220 mineral oil. For ambient temperatures below -10 °C or continuous`,
-        `duty above 80 °C, use ISO VG 320 synthetic. Oil change interval is 8,000 operating hours or`,
-        `18 months, whichever comes first.`,
+        `Standard fill is ${p.standardOilGrade} mineral oil. For ambient temperatures below -10 °C or`,
+        `continuous duty above 80 °C, use ${p.alternateOilGrade} synthetic. Oil change interval is`,
+        `${Number(p.oilChangeIntervalHours).toLocaleString("en-GB")} operating hours or`,
+        `${p.oilChangeIntervalMonths} months, whichever comes first.`,
         ``,
         `## Mounting`,
         ``,
@@ -362,10 +363,14 @@ export function buildDocuments(
 
 function buildScriptedDocs(
   add: (t: string, f: DocFamily, d: string, body: string, m: string[]) => void,
+  b: Builder,
   md: MasterData,
 ): void {
   const partId = `PART-${SCRIPTED.partNumber}`;
   const variantId = `VAR-${SCRIPTED.variant}`;
+  // Rendered from the change order's structured fields, so the notice text and
+  // the gold answer derive from one source rather than from each other.
+  const eco = b.get(SCRIPTED.eco).attrs;
 
   add(
     `RE: order 4711 — Nordhavn Marine`,
@@ -475,9 +480,9 @@ function buildScriptedDocs(
       `Change order 4711 takes effect on ${SCRIPTED.ecoEffectivity}. Units built before that date may`,
       `use the superseded revision B casting where existing stock allows.`,
       ``,
-      `**Marine duty exception:** following the field returns, revision B is no longer acceptable for`,
-      `marine applications regardless of build date. Marine units must be built to revision C. This`,
-      `applies from approval, not from the effectivity date.`,
+      `**Marine duty exception:** following the field returns, revision ${eco.marineDutyBarredRevision} is no longer`,
+      `acceptable for marine applications regardless of build date. Marine units must be built to`,
+      `revision ${eco.toRevision}. This applies from ${eco.marineDutyBarredFrom}, not from the effectivity date.`,
       ``,
       `## Implementation`,
       ``,

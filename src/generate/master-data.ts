@@ -10,6 +10,7 @@ import type { Builder } from "./builder";
 import {
   COMMODITY_GROUPS,
   CUSTOMERS,
+  LUBRICATION,
   MOUNTINGS,
   PART_FAMILIES,
   PRODUCT_SIZES,
@@ -263,6 +264,10 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
         stages: t.stages,
         sizeClass: sizeClassOf(size),
         nominalTorqueNm: size * int(rng, 90, 130),
+        // Structured lubrication spec. The product-specification document renders
+        // its Lubrication section from these fields, and gold reads the same
+        // fields, so neither depends on parsing the other's prose.
+        ...LUBRICATION,
       });
       md.productIds.push(prodId);
 
@@ -576,6 +581,12 @@ function buildEcos(b: Builder, md: MasterData, rng: Rng): void {
     fromRevision: "B",
     toRevision: "C",
     disposition: "use-up existing stock, then switch",
+    // The marine-duty exception, as a structured fact rather than a sentence to
+    // be parsed out of the change notice. The notice renders from these fields
+    // and the reference oracle reads them, so the document text and the gold
+    // answer are produced independently from one source.
+    marineDutyBarredRevision: "B",
+    marineDutyBarredFrom: "approval",
   });
   b.rel(`PART-${SCRIPTED.partNumber}`, "affected_by_eco", scripted, {
     sourceFile: "plm/engineering_changes.json",

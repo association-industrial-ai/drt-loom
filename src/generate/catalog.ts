@@ -9,6 +9,18 @@
 
 export const COMPANY = "Kestrel Drive Systems";
 
+/**
+ * Lubrication spec, attached to every Product entity. Structured so that the
+ * product-specification document and the gold answer for Q-LK-03 are produced
+ * from the same field rather than from each other.
+ */
+export const LUBRICATION = {
+  standardOilGrade: "ISO VG 220",
+  alternateOilGrade: "ISO VG 320",
+  oilChangeIntervalHours: 8000,
+  oilChangeIntervalMonths: 18,
+} as const;
+
 /* ---------------------------------------------------------------- commodity */
 
 /** Leading two digits of a part number encode the commodity group. */

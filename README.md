@@ -7,11 +7,30 @@ environment models a complete industrial enterprise spanning ERP, PLM, MES, CAD 
 enterprise documents. From that model the generator derives structured records, a
 knowledge graph, benchmark questions and evaluation artifacts.
 
-The generator takes an integer seed and is a pure function of it. The same seed
-produces byte-identical output on any machine.
+**The problem.** Industrial AI systems are hard to evaluate. Real ERP, PLM and MES
+extracts carry commercial and personal data and are rarely publishable. Public
+corpora are single-domain — maintenance logs, technical documents, sensor traces —
+and measure document retrieval. The questions that matter in an enterprise are
+answered by joining records across systems, and no public corpus measures that.
 
-DRT Loom is the reference implementation of the Digital Reasoning Thread (DRT)
-concept, developed under AI², the Association Industrial AI.
+**The unit of work.** Answering *"which customer deliveries are affected by a
+supplier delay?"* means traversing supplier → purchase order → part → bill of
+material → production order → sales order → customer. ERP, PLM and MES each hold
+one segment. No system holds the join and no document records it. That chain is a
+**Digital Reasoning Thread**.
+
+**The approach.** Generate the enterprise instead of collecting it. Because the
+environment is constructed, every relationship in it is known exactly, so ground
+truth for a traversal can be derived rather than annotated. Because generation is a
+pure function of an integer seed, the same seed reproduces the same environment
+byte-for-byte on any machine, and a new seed produces a new environment with the
+same schema and the same reasoning categories.
+
+The generator is the primary artifact. The knowledge graph, the benchmark questions
+and the committed reference environment are all derived from it.
+
+DRT Loom is the reference implementation of the Digital Reasoning Thread concept,
+developed under AI², the Association Industrial AI.
 
 ---
 
@@ -247,36 +266,13 @@ traverses across enterprise systems to answer a business question.
 
 ![A Digital Reasoning Thread crossing ERP, PLM and MES: Supplier → Purchase Order → Part → Bill of Material → Production Order → Sales Order → Customer](docs/assets/drt-thread.svg)
 
-Consider the question *"Which customer deliveries are affected by a supplier
-delay?"* ERP holds the purchase order and the sales order. PLM holds the bill of
-material. MES holds the production order. No single system holds the join, and no
-document records it. Answering the question requires traversing the relationships
-between them.
-
-DRT Loom generates thousands of such paths as a by-product of generating the
-enterprise. They are the unit of evaluation used throughout this repository.
-
----
-
-## Motivation
-
-Industrial AI is difficult to evaluate for three reasons.
-
-Real ERP, PLM and MES extracts carry commercial, personal and contractual
-constraints, so the data that would support a credible evaluation is rarely
-publishable.
-
 Enterprise knowledge is distributed across disconnected systems with different
-identifiers, granularity and owners. A corpus drawn from a single system reproduces
-neither that distribution nor the joins across it.
+identifiers, different granularity and different owners. A corpus drawn from one
+system reproduces neither that distribution nor the joins across it. A generated
+environment reproduces both, and it is publishable.
 
-Public corpora are typically single-domain — maintenance logs, technical documents,
-sensor traces — and measure retrieval quality. Cross-domain reasoning goes
-unmeasured.
-
-Generated environments address all three. They are publishable, they span multiple
-systems by construction, and their relationships are known exactly because they
-were generated rather than extracted.
+The reference environment contains 5,309 typed relations across 25 relation types.
+Paths through them are the unit of evaluation used throughout this repository.
 
 ---
 
@@ -296,9 +292,6 @@ were generated rather than extracted.
 
 All domains are generated together from one enterprise model, so cross-domain
 relationships are part of the model rather than annotations added over it.
-
-The generator is the primary artifact of this repository. The committed reference
-environment, the knowledge graph and the benchmark are derived from it.
 
 ---
 

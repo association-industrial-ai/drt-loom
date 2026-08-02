@@ -13,6 +13,213 @@ produces byte-identical output on any machine.
 DRT Loom is the reference implementation of the Digital Reasoning Thread (DRT)
 concept, developed under AI², the Association Industrial AI.
 
+---
+
+## Quick start
+
+```bash
+git clone https://github.com/association-industrial-ai/drt-loom.git
+cd drt-loom
+npm install
+npm run gen
+```
+
+Node 20+. No network access, no API keys, no database. The run takes about 30 ms.
+
+```
+Generating Kestrel Drive Systems dataset (seed 20260728, today 2026-07-28)…
+
+  entities   2793
+  relations  5309
+  documents  204
+  NX components 27
+  gold questions 18
+
+  Act 2 — orders at risk: 16, exposure 2739771.54 EUR
+  Act 3 — blockers: 30-1177/eco_effectivity, 10-1668/unreleased_revision, 10-1654/no_approved_supplier
+
+✓ wrote data/generated in 33 ms
+```
+
+### What you get
+
+```
+data/generated/
+├── dataset.json     2.1 MB    2,793 entities and 5,309 typed relations
+├── gold.json         12 KB    18 questions with expected IDs and values
+├── documents/       204 Markdown files
+└── nx/                1 NX assembly export
+```
+
+Entities record the source file they would have originated from. Relations are
+typed and carry a provenance tag.
+
+```jsonc
+// dataset.json → entities[]
+{
+  "id": "SUP-001",
+  "type": "Supplier",
+  "label": "Nordwerk Guss GmbH",
+  "sourceFile": "erp/suppliers.json",
+  "sourceLocation": "L1",
+  "attrs": { "country": "DE", "onTimeDeliveryRate": 0.817, "riskFlag": true }
+}
+
+// dataset.json → relations[]
+{
+  "source": "PART-10-1798",
+  "target": "SUP-001",
+  "relation": "approved_supplier",
+  "confidence": "EXTRACTED",
+  "sourceFile": "erp/approved_vendor_list.json",
+  "attrs": { "framework": "frame contract" }
+}
+```
+
+Nine relations are tagged `AMBIGUOUS`, all of them CAD-to-ERP joins that a real
+integration could not make cleanly:
+
+```jsonc
+{
+  "source": "PART-20-1081",
+  "target": "CADC-20-1081",
+  "relation": "modeled_as",
+  "confidence": "AMBIGUOUS",
+  "attrs": { "via": "name similarity — DB_PART_NO missing in CAD" }
+}
+```
+
+Each question in `gold.json` carries the entity IDs a correct answer should cite
+and the scalar values it should state.
+
+```jsonc
+{
+  "id": "Q-MH-01",
+  "category": "multi_hop",
+  "question": "Nordwerk Guss GmbH has told us bearing housing 30-1177 will slip by
+               three weeks. Which customer deliveries due before the end of November
+               are at risk, and what is the total value exposed?",
+  "expectedIds": ["SO-4711", "SO-4716", "SO-4720", "…"],
+  "expectedValues": { "ordersAtRisk": 16, "customersAffected": 11, "exposureEur": 2739771.54 },
+  "reference": "Traverse: part 30-1177 → BOM parents → variants (3) → sales order
+                lines → open sales orders (16) → customers (11)."
+}
+```
+
+Documents are Markdown, and some facts appear only here:
+
+```markdown
+<!-- DOC-0004 · eco_notice · 2026-06-18 -->
+
+# Engineering change notice ECO-4711
+
+**Title:** Bearing housing 30-1177: increase bearing seat tolerance, rev B → C
+**Effective from:** 2026-09-15
+**Disposition:** use-up existing stock, then switch
+
+## Reason
+
+Field returns from three marine installations showed fretting corrosion on the
+bearing seat.
+```
+
+### Build the knowledge graph
+
+Optional. Evaluating document retrieval alone needs only the corpus above.
+
+```bash
+npm run graph
+```
+
+```
+Extracted 2793 nodes / 5309 edges from Kestrel Drive Systems
+  note: 181 duplicate edge(s) collapsed (same pair, same relation)
+Built directed graph: 2793 nodes, 5128 edges, 274 communities
+
+  provenance: AMBIGUOUS 9, EXTRACTED 5119
+  wrote data/graph/graph.json (2.55 MB), graph.html, graph.cypher
+```
+
+The first run creates a Python virtualenv and installs
+[Graphify](https://github.com/Graphify-Labs/graphify); later runs take seconds.
+Open `data/graph/graph.html` to search nodes, inspect neighbours and filter by
+community. `graph.cypher` loads the same graph into a graph database.
+
+Node and relation counts are reproducible. The community count is not — Leiden
+clustering is re-run on each build and the committed graph was built at 272.
+
+### Score an answer
+
+`src/score/score.ts` has no dependencies and does not require an LLM judge.
+
+```ts
+import { readFileSync } from "node:fs";
+import { enrichCitations, scoreCitations, scoreValues } from "./src/score/score";
+
+const gold = JSON.parse(readFileSync("data/generated/gold.json", "utf8"));
+const q = gold.find((g) => g.id === "Q-MH-01");
+
+// whatever the system under evaluation produced
+const answer =
+  "16 orders are at risk, exposing 2,739,771.54 EUR across 11 customers, " +
+  "including Nordhavn Marine A/S.";
+const citedIds = ["SO-4711", "SO-4716"];
+
+scoreCitations(enrichCitations(citedIds, answer), q.expectedIds);
+// → { precision: 1, recall: 0.125, f1: 0.22, hit: 2, expected: 16, cited: 2 }
+
+scoreValues(answer, q.expectedValues);
+// → { matched: 3, total: 3, missing: [] }
+```
+
+`enrichCitations` reads `data/generated/dataset.json` relative to the working
+directory, and resolves entity names in the answer text back to IDs — an answer
+naming "Nordhavn Marine A/S" gets credit for `CUST-001`.
+
+### Generate a different environment
+
+```bash
+SEED=7 OUT_DIR=data/generated-seed7 npm run gen
+```
+
+Same schema, same 18 questions, different world: 2,832 entities and 5,404 relations
+instead of 2,793 and 5,309, and Q-MH-01 resolves to 6 orders worth €723,681.01
+instead of 16 worth €2,739,771.54.
+
+### Check determinism
+
+```bash
+OUT_DIR=/tmp/a npm run gen
+OUT_DIR=/tmp/b npm run gen
+diff -r /tmp/a /tmp/b && echo identical
+```
+
+### Configuration and layout
+
+`SEED` (default `20260728`) and `OUT_DIR` (relative to cwd, or absolute) control the
+generator. `BENCH_ROOT` points the extractor at a different tree.
+
+```
+src/generate/     the generator — deterministic, no network
+src/score/        citation F1 and scalar matching
+src/types.ts      the Dataset type every artifact conforms to
+extractor/        Python: Graphify build of dataset.json into a knowledge graph
+data/generated/   dataset.json, gold.json, documents, NX export   (reference)
+data/graph/       graph.json                                      (reference)
+docs/             SCHEMA.md, QUESTIONS.md
+```
+
+### Next
+
+- [What the questions test](#reasoning-categories) and the full list in [docs/QUESTIONS.md](docs/QUESTIONS.md)
+- [Entity and relation schema](docs/SCHEMA.md)
+- [Adding your own domain](#appendix-adding-a-domain)
+- [Known defects in the ground truth](KNOWN-ISSUES.md) — read before quoting a number
+
+---
+
+## Context
+
 ```
 AI²                                          Association Industrial AI
 └── Digital Reasoning Thread (DRT)           the unit of reasoning
@@ -158,18 +365,10 @@ environment; see [Status](#status).
 
 ### Seeds
 
-The same seed produces an identical environment. A different seed produces a new
-environment with the same schema and the same reasoning categories.
-
-```bash
-SEED=7 OUT_DIR=data/generated-seed7 npm run gen
-```
-
 Comparing the reference environment against seed 7: schema, question set and
 category structure are identical. 7 of the 18 answers have different scalar values
-and 9 have different expected entity sets. Multi-hop exposure moves from
-€2,739,771.54 across 16 orders to €723,681.01 across 6. The assembly tree grows
-from 27 components to 30.
+and 9 have different expected entity sets. The assembly tree grows from 27
+components to 30.
 
 Re-rolling the seed is not a contamination guarantee. A model trained on the
 reference environment will still recognise it, and domain vocabulary transfers
@@ -181,33 +380,16 @@ its fresh-seed score is measurable evidence of memorisation. Report both.
 
 ## Artifacts
 
-One generator run produces:
-
-| Artifact | Path | Contents |
-|---|---|---|
-| Enterprise records | `dataset.json` | typed entities and relations across ERP, PLM, MES and CAD |
-| Document corpus | `documents/` | narrative Markdown, one file per document |
-| CAD export | `nx/` | NX assembly tree with instance names and drawings |
-| Ground truth | `gold.json` | expected entity IDs and scalar values per question |
-| Knowledge graph | `data/graph/graph.json` | typed, directed, provenance-tagged edges (Graphify) |
-| Graph explorer | `data/graph/graph.html` | interactive viewer, self-contained |
-| Cypher export | `data/graph/graph.cypher` | the same graph as statements, for loading into a graph database |
-
-The first five are committed for the reference environment. The explorer and the
-Cypher export are ~4 MB of derived view and are rebuilt by `npm run graph`.
-
 ![The knowledge graph of one generated environment, with the node inspector showing a supplier, its source file and its neighbouring parts](docs/assets/knowledge-graph.jpeg)
 
-The explorer supports full-text node search, neighbour inspection with source file
-and degree, and filtering by community.
+`dataset.json`, `gold.json`, `documents/` and `nx/` are committed for the reference
+environment, as is `data/graph/graph.json`. The explorer and the Cypher export are
+~4 MB of derived view and are rebuilt by `npm run graph`.
 
 Every entity records the source file and location it would have originated from.
 Every graph edge carries a provenance tag of `EXTRACTED`, `INFERRED` or
 `AMBIGUOUS`. Citation scoring uses the source file; the provenance tags let a
 system report uncertainty about its own inputs.
-
-The graph build is optional. Evaluating document retrieval alone requires only the
-generated corpus.
 
 ---
 
@@ -277,26 +459,15 @@ comparisons against it are uninformative.
 
 ### Scoring
 
-Each question carries `expectedIds` (entity IDs a correct answer should cite) and
-`expectedValues` (scalar facts such as counts and totals). Correctness does not
-require an LLM judge, though a judge is useful on top for answer quality.
+Correctness does not require an LLM judge, though a judge is useful on top for
+answer quality. The call sequence is in [Score an answer](#score-an-answer);
+[`src/score/score.ts`](src/score/score.ts) is dependency-free.
 
-[`src/score/score.ts`](src/score/score.ts) is dependency-free:
-
-```ts
-import { enrichCitations, scoreCitations, scoreValues } from "./src/score/score";
-
-const cited = enrichCitations(idsTheSystemCited, answerText);
-const c = scoreCitations(cited, gold.expectedIds);        // precision / recall / F1
-const v = scoreValues(answerText, gold.expectedValues);   // { matched, total, missing }
-```
-
-`enrichCitations` resolves distinctive entity names back to IDs before scoring. A
-good answer writes "Nordhavn Marine A/S" rather than "CUST-001", and matching raw ID
-regexes would penalise correct answers across every system equally.
-
-`scoreCitations` returns `NaN` where the gold answer contains no entity IDs, so
-those questions are excluded from the average instead of scoring a free 1.0.
+Two behaviours matter when aggregating. `enrichCitations` resolves entity names back
+to IDs, because matching raw ID regexes would penalise correct answers across every
+system equally. `scoreCitations` returns `NaN` where the gold answer contains no
+entity IDs, so those questions are excluded from the average instead of scoring a
+free 1.0.
 
 Report latency, token counts and tool-call counts alongside accuracy. Accuracy alone
 does not distinguish a system that is right and slow from one that is right and
@@ -359,33 +530,6 @@ orders, shipments and a CAD assembly tree.
 
 Entity and relation types, graph format and the NX schema:
 [docs/SCHEMA.md](docs/SCHEMA.md).
-
----
-
-## Quick start
-
-```bash
-npm install
-npm run gen      # generate an environment + questions → data/generated
-npm run graph    # Graphify builds the knowledge graph → data/graph/graph.json
-```
-
-`npm run gen` requires Node 20+ and takes about 30 ms. `npm run graph` creates a
-Python virtualenv on first use and installs
-[Graphify](https://github.com/Graphify-Labs/graphify); subsequent runs take seconds.
-
-Environment variables: `SEED` (default `20260728`) and `OUT_DIR` (relative to cwd,
-or absolute) for the generator; `BENCH_ROOT` for the extractor.
-
-```
-src/generate/     the generator — deterministic, no network
-src/score/        citation F1 and scalar matching
-src/types.ts      the Dataset type every artifact conforms to
-extractor/        Python: Graphify build of dataset.json into a knowledge graph
-data/generated/   dataset.json, gold.json, documents, NX export   (reference)
-data/graph/       graph.json                                      (reference)
-docs/             SCHEMA.md, QUESTIONS.md
-```
 
 ---
 

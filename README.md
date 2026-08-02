@@ -20,11 +20,12 @@ constructs a synthetic industrial company spanning ERP, PLM, MES, CAD and enterp
 documents, then derives structured records, a knowledge graph, benchmark questions
 and ground truth from that one model.
 
-Because the environment is constructed, every relationship in it is known exactly,
-so ground truth for a multi-hop question can be derived rather than annotated.
-Because generation is a pure function of the seed, the same seed reproduces the same
-environment byte-for-byte, and a new seed produces a new environment with the same
-schema and the same reasoning categories.
+Because the environment is constructed, every relationship in it is known to the
+generator, so ground truth for a multi-hop question can be derived from the model
+rather than annotated by hand. Deriving all of it this way is in progress — see
+[Current status](#current-status). Because generation is a pure function of the
+seed, the same seed reproduces the same environment byte-for-byte, and a new seed
+produces a new environment with the same schema and the same reasoning categories.
 
 The generator is the primary artifact. The knowledge graph, the benchmark and the
 committed reference environment are applications built on top of it.
@@ -166,7 +167,7 @@ const q = gold.find((g) => g.id === "Q-MH-01");
 const answer = "16 orders are at risk, exposing 2,739,771.54 EUR across 11 customers.";
 
 scoreCitations(enrichCitations(["SO-4711", "SO-4716"], answer), q.expectedIds);
-// → { precision: 1, recall: 0.125, f1: 0.22, hit: 2, expected: 16, cited: 2 }
+// → { precision: 1, recall: 0.074, f1: 0.138, hit: 2, expected: 27, cited: 2 }
 
 scoreValues(answer, q.expectedValues);
 // → { matched: 3, total: 3, missing: [] }

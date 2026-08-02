@@ -83,7 +83,8 @@ const answer =
 const citedIds = ["SO-4711", "SO-4716"];
 
 scoreCitations(enrichCitations(citedIds, answer), q.expectedIds);
-// → { precision: 1, recall: 0.125, f1: 0.22, hit: 2, expected: 16, cited: 2 }
+// → { precision: 1, recall: 0.111, f1: 0.2, hit: 3, expected: 27, cited: 3 }
+//   "Nordhavn Marine A/S" in the answer resolves to CUST-001, so cited is 3, not 2
 
 scoreValues(answer, q.expectedValues);
 // → { matched: 3, total: 3, missing: [] }

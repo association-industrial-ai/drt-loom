@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["20", "22"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm run test --if-present
+
+      - name: Generate an environment
+        run: OUT_DIR="$RUNNER_TEMP/gen-a" npm run gen
+
+      - name: Check expected artifacts exist
+        run: |
+          cd "$RUNNER_TEMP/gen-a"
+          test -s dataset.json
+          test -s gold.json
+          test -d documents && [ "$(ls -A documents)" ]
+          test -d nx && [ "$(ls -A nx)" ]
+
+      - name: Check the same seed is reproducible
+        run: |
+          OUT_DIR="$RUNNER_TEMP/gen-b" npm run gen
+          diff -r "$RUNNER_TEMP/gen-a" "$RUNNER_TEMP/gen-b"
+
+      - name: Check a different seed produces a different environment
+        run: |
+          SEED=7 OUT_DIR="$RUNNER_TEMP/gen-seed7" npm run gen
+          if diff -rq "$RUNNER_TEMP/gen-a" "$RUNNER_TEMP/gen-seed7" >/dev/null; then
+            echo "seed 7 produced identical output to the default seed" >&2
+            exit 1
+          fi

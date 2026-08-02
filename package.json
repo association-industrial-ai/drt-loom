@@ -15,7 +15,10 @@
     "gen": "tsx src/generate/index.ts",
     "graph": "extractor/run.sh",
     "build:all": "npm run gen && npm run graph",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify": "tsx src/verify/self-consistency.ts",
+    "verify:seeds": "tsx src/verify/seeds.ts",
+    "test": "npm run typecheck && npm run verify && npm run verify:seeds"
   },
   "keywords": [
     "industrial-agentic-ai",

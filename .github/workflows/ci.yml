@@ -25,8 +25,11 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
-      - name: Tests
-        run: npm run test --if-present
+      - name: Self-consistency and scorer compatibility
+        run: npm run verify
+
+      - name: Invariants across seeds
+        run: npm run verify:seeds
 
       - name: Generate an environment
         run: OUT_DIR="$RUNNER_TEMP/gen-a" npm run gen

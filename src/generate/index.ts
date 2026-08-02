@@ -1,5 +1,5 @@
 /**
- * Synthetic dataset generator — `npm run gen`.
+ * Synthetic environment generator — `npm run gen`.
  *
  * Deterministic: same seed in, byte-identical corpus out. Writes everything the
  * rest of the pipeline consumes, plus the gold answers for the eval harness.
@@ -7,22 +7,16 @@
 
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { Builder } from "./builder";
 import { COMPANY, SCRIPTED } from "./catalog";
-import { buildMasterData } from "./master-data";
-import { buildTransactions } from "./transactions";
-import { stageScriptedBlockers } from "./blockers";
-import { buildDocuments } from "./documents";
-import { buildNxExport, countNxComponents } from "./nx";
-import { buildGold } from "./gold";
-import { makeRng, TODAY } from "./rng";
-import type { Dataset } from "../types";
+import { buildEnvironment } from "./environment";
+import { checkInvariants } from "./invariants";
+import { TODAY } from "./rng";
 
 /**
  * The reference corpus ships at seed 20260728. Override it to roll a fresh
- * world with identical structure and different numbers — which is the point of
- * publishing a generator rather than a fixed dataset. A model that memorised
- * the reference corpus gains nothing on `SEED=7 npm run gen`.
+ * environment with identical structure and different numbers — which is the
+ * point of publishing a generator rather than a fixed dataset. A model that
+ * memorised the reference corpus gains nothing on `SEED=7 npm run gen`.
  */
 const SEED = Number(process.env.SEED ?? 20260728);
 if (!Number.isInteger(SEED)) {
@@ -40,31 +34,11 @@ function write(rel: string, content: string): void {
 
 function main(): void {
   const t0 = Date.now();
-  const rng = makeRng(SEED);
-  const b = new Builder();
 
   console.log(`Generating ${COMPANY} dataset (seed ${SEED}, today ${TODAY})…`);
 
-  const md = buildMasterData(b, rng);
-  const tx = buildTransactions(b, md, rng);
-  const blockers = stageScriptedBlockers(b, md);
-  const documents = buildDocuments(b, md, tx, rng);
-  const nx = buildNxExport(b, md, rng);
-  const gold = buildGold(b, md, blockers);
-
-  b.verify();
-
-  const dataset: Dataset = {
-    meta: {
-      generatedAt: TODAY,
-      seed: SEED,
-      company: COMPANY,
-      counts: b.counts(),
-    },
-    entities: b.entities,
-    relations: b.relations,
-    documents,
-  };
+  const env = buildEnvironment(SEED);
+  const { dataset, gold, nx, documents, builder: b } = env;
 
   rmSync(ROOT, { recursive: true, force: true });
   mkdirSync(ROOT, { recursive: true });
@@ -77,6 +51,9 @@ function main(): void {
   }
 
   /* ------------------------------------------------------- sanity gates */
+  // Shape-based, not value-based: every check below must hold at any seed. The
+  // scripted spine is the one intentional exception, because those identifiers
+  // are part of the published reference environment's contract.
   const problems: string[] = [];
   for (const id of [
     SCRIPTED.salesOrder,
@@ -88,15 +65,8 @@ function main(): void {
   ]) {
     if (!b.has(id)) problems.push(`missing scripted entity ${id}`);
   }
-  if (blockers.length !== 3) {
-    problems.push(`expected 3 Act-3 blockers, staged ${blockers.length}`);
-  }
-  const mh = gold.find((q) => q.id === "Q-MH-01")!;
-  if (Number(mh.expectedValues.ordersAtRisk) < 2) {
-    problems.push(
-      `Act 2 is not compelling: only ${mh.expectedValues.ordersAtRisk} order(s) at risk`,
-    );
-  }
+  problems.push(...checkInvariants(dataset, gold, nx));
+
   if (problems.length) {
     console.error("\n✗ sanity gates failed:");
     for (const p of problems) console.error(`   - ${p}`);
@@ -108,11 +78,20 @@ function main(): void {
   console.log(`\n  entities   ${c._entities}`);
   console.log(`  relations  ${c._relations}`);
   console.log(`  documents  ${documents.length}`);
-  console.log(`  NX components ${countNxComponents(nx)}`);
+  console.log(`  NX components ${env.nxComponentCount}`);
   console.log(`  gold questions ${gold.length}`);
-  console.log(`\n  Act 2 — orders at risk: ${mh.expectedValues.ordersAtRisk}, ` +
-    `exposure ${mh.expectedValues.exposureEur} EUR`);
-  console.log(`  Act 3 — blockers: ${blockers.map((x) => `${x.partNumber}/${x.kind}`).join(", ")}`);
+
+  const mh = gold.find((q) => q.id === "Q-MH-01")!;
+  const nx01 = gold.find((q) => q.id === "Q-NX-01")!;
+  console.log(
+    `\n  Q-MH-01 — orders at risk: ${mh.expectedValues.ordersAtRisk}, ` +
+      `exposure ${mh.expectedValues.exposureEur} EUR`,
+  );
+  console.log(
+    `  Q-NX-01 — derived blockers: ${nx01.expectedValues.blockerCount} ` +
+      `(${nx01.expectedIds.join(", ")})`,
+  );
+
   const rel = relative(process.cwd(), ROOT);
   const where = rel.startsWith("..") ? ROOT : rel;
   console.log(`\n✓ wrote ${where} in ${Date.now() - t0} ms`);

@@ -20,12 +20,18 @@ constructs a synthetic industrial company spanning ERP, PLM, MES, CAD and enterp
 documents, then derives structured records, a knowledge graph, benchmark questions
 and ground truth from that one model.
 
+The core enterprise is generated programmatically in TypeScript. No LLM is used to
+invent entities, relationships, or benchmark ground truth.
+
 Because the environment is constructed, every relationship in it is known to the
-generator, so ground truth for a multi-hop question can be derived from the model
-rather than annotated by hand. Deriving all of it this way is in progress — see
-[Current status](#current-status). Because generation is a pure function of the
-seed, the same seed reproduces the same environment byte-for-byte, and a new seed
-produces a new environment with the same schema and the same reasoning categories.
+generator. All 18 gold answers are derived from the finished environment rather
+than annotated by hand. A gold answer is the exact correct answer for a benchmark
+question inside the generated enterprise: the entity IDs a correct response must
+cite, and the scalar values it must state.
+
+Because generation is a pure function of the seed, the same seed reproduces the
+same environment byte-for-byte, and a new seed produces a new environment with the
+same schema and the same reasoning categories.
 
 The generator is the primary artifact. The knowledge graph, the benchmark and the
 committed reference environment are applications built on top of it.
@@ -291,7 +297,7 @@ Design rationale, scoring semantics and the staged reasoning obstacles:
 
 ## Current status
 
-Version 0.1.1.
+Version 0.1.0.
 
 **Implemented**
 
@@ -329,23 +335,17 @@ npm run verify:seeds   # invariants + deterministic regeneration across 6 seeds
 npm test               # typecheck + both of the above
 ```
 
-`verify` runs the invariant gates, then renders each gold answer into the response
-shape the scorer expects and scores it against itself. It proves that the
-generator, gold format, answer format, citation handling and scorer are
-mechanically compatible. It does not prove the answers are objectively correct —
-a wrong answer scored against itself still returns 1.0.
+`verify` proves that the generator, gold format, answer format, citation handling
+and scorer are mechanically compatible. It does not prove the answers are
+objectively correct — a wrong answer scored against itself still returns 1.0.
 
 `verify:seeds` is the evidence that gold matches the environment. For seeds
-`20260728, 1, 2, 3, 4, 5` it rebuilds from scratch, re-derives every answer and
+`20260728, 1, 2, 3, 4, 5` it rebuilds from scratch, re-derives every answer,
 compares it against gold, checks the cross-question invariants, and rebuilds again
-to confirm byte-identical output. Each seed gets its own oracle and its own alias
-table, so no state carries between them.
+to confirm byte-identical output.
 
-Gates include: every expected id exists and is unique; every count equals the size
-of its own id set; absence answers satisfy their anti-join; exposure totals equal
-the summed value of the contributing lines; NX answers reference only parts
-resolved from the assembly; and the `no_approved_supplier` blockers in `Q-NX-01`
-are exactly the intersection of the assembly with the `Q-ABS-01` answer.
+Full gate list, recorded results and what each command does and does not prove:
+[docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ---
 
@@ -367,10 +367,10 @@ scalar values and a track-blind LLM judge.
 
 These implementations currently live in a separate application repository and are
 not part of this repository. No comparative results are published here, for a
-specific reason: they were last exercised against the pre-v0.1.1 gold answers,
-which included the two defects now fixed. Numbers measured against `Q-NX-01` when
-it reported three blockers instead of five are not comparable to numbers measured
-now, so republishing them would be misleading.
+specific reason: they were last exercised against the gold answers that preceded
+the derivation work, which included the two defects now fixed. Numbers measured
+against `Q-NX-01` when it reported three blockers instead of five are not
+comparable to numbers measured now, so republishing them would be misleading.
 
 Consolidated results across multiple seeds will follow once the baselines have
 been re-run against the corrected ground truth.
@@ -405,18 +405,22 @@ that add questions.
 | [docs/QUESTIONS.md](docs/QUESTIONS.md) | All 18 questions with rationale and reference answers |
 | [docs/BENCHMARK.md](docs/BENCHMARK.md) | Benchmark design, scoring semantics, reasoning obstacles, seed behaviour |
 | [docs/EXTENDING.md](docs/EXTENDING.md) | Adding a domain: worked example, constraints, checklist |
+| [docs/VERIFICATION.md](docs/VERIFICATION.md) | What is verified, recorded results, what each check proves |
 | [KNOWN-ISSUES.md](KNOWN-ISSUES.md) | Documented ground-truth defects |
 
 Repository layout:
 
 ```
-src/generate/     the generator — deterministic, no network
-src/score/        citation F1 and scalar matching
-src/types.ts      the Dataset type every artifact conforms to
-extractor/        Python: Graphify build of dataset.json into a knowledge graph
-data/generated/   dataset.json, gold.json, documents, NX export   (reference)
-data/graph/       graph.json                                      (reference)
-docs/             SCHEMA.md, QUESTIONS.md, BENCHMARK.md, EXTENDING.md
+src/generate/                the generator — deterministic, no network
+src/generate/oracle.ts       reference oracle: derives every gold answer
+src/generate/invariants.ts   shape-based gates over the environment and gold
+src/verify/                  npm run verify and npm run verify:seeds
+src/score/                   citation F1 and scalar matching
+src/types.ts                 the Dataset type every artifact conforms to
+extractor/                   Python: Graphify build of dataset.json into a graph
+data/generated/              dataset.json, gold.json, documents, NX  (reference)
+data/graph/                  graph.json                              (reference)
+docs/                        SCHEMA · QUESTIONS · BENCHMARK · EXTENDING · VERIFICATION
 ```
 
 ---

@@ -94,8 +94,8 @@ The same chain in reverse, from one order down to every supplier that touches it
 Derived by walking the NX export, resolving every component to a canonical part
 and evaluating the three blocker predicates against the finished environment. The
 batch window is read from the production order's planned start and the sales
-order's requested delivery date. Earlier releases reported 3 here, taken from the
-staging list; that defect is fixed.
+order's requested delivery date. An earlier implementation reported 3 here, taken
+from the staging list; that defect is fixed.
 
 The question is the hardest in the set. It requires resolving a CAD
 assembly tree to ERP part numbers, then evaluating three unrelated predicates
@@ -163,9 +163,9 @@ The same absence, propagated up through the BOM.
 
 63 revision IDs · `revisionCount: 63`
 
-The complete canonical set is stored in gold. Earlier releases truncated the ID
-list to 60 while reporting a count of 63, which penalised a correct answer for
-three false positives; that defect is fixed. Apply any prompt-length cap when
+The complete canonical set is stored in gold. An earlier implementation truncated
+the ID list to 60 while reporting a count of 63, which penalised a correct answer
+for three false positives; that defect is fixed. Apply any prompt-length cap when
 constructing the prompt, not to the ground truth.
 
 ---

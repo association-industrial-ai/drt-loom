@@ -3,11 +3,12 @@
 Read this before quoting any number produced against this benchmark.
 
 The generator is deterministic and its output is verified byte-identical across
-independent runs. Since v0.1.1 every machine-checkable gold field — `expectedIds`
-and `expectedValues` — is derived from the finished environment by the reference
+independent runs. Every machine-checkable gold field — `expectedIds` and
+`expectedValues` — is derived from the finished environment by the reference
 oracle in `src/generate/oracle.ts`, and checked by the invariant gates in
 `src/generate/invariants.ts` at generation time and across six seeds by
-`npm run verify:seeds`.
+`npm run verify:seeds`. See [docs/VERIFICATION.md](docs/VERIFICATION.md) for the
+full gate list and recorded results.
 
 The two defects previously recorded here are fixed. What remains is disclosed
 below.

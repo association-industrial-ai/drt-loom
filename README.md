@@ -1,12 +1,13 @@
-![DRT Loom — weaving Digital Reasoning Threads. A deterministic generator for Synthetic Industrial Reasoning Environments. Part of the AI for Industrial Intelligence Initiative.](docs/assets/banner.png)
+![DRT Loom — connecting Digital Reasoning Threads. A deterministic generator for Synthetic Industrial Reasoning Environments. Association Industrial AI (AI²).](docs/assets/banner.png)
 
 # DRT Loom
 
 **A deterministic generator for Synthetic Industrial Reasoning Environments.**
 
-DRT Loom is a component of **AI²**, the AI for Industrial Intelligence Initiative —
-an open, vendor-neutral effort focused on Industrial Agentic AI. It is the
-reference implementation of the **Digital Reasoning Thread (DRT)** concept.
+DRT Loom is a component of **AI²**, the [Association Industrial AI](https://www.ai2n.eu)
+— an open, vendor-neutral initiative for Industrial Agentic AI. It is the reference
+implementation of the **Digital Reasoning Thread (DRT)** concept, which is specified
+at [digital-reasoning-thread.com](https://digital-reasoning-thread.com/).
 
 A loom does not make threads. It weaves them into fabric. DRT Loom does not
 generate synthetic data — it weaves ERP, PLM, MES, CAD, enterprise documents,
@@ -21,7 +22,7 @@ that connect them, a knowledge graph over the whole thing, and a set of benchmar
 questions instantiated against that specific world.
 
 ```
-AI²                                          AI for Industrial Intelligence Initiative
+AI²                                          Association Industrial AI
 └── Digital Reasoning Thread (DRT)           the unit of reasoning
     └── DRT Loom                             this repository
         ├── Synthetic Industrial Reasoning Environment Generator
@@ -30,6 +31,12 @@ AI²                                          AI for Industrial Intelligence Ini
         ├── Evaluation / Scoring
         └── Reference Worlds
 ```
+
+| | |
+|---|---|
+| Initiative | [Association Industrial AI (AI²)](https://www.ai2n.eu) |
+| Concept | [digital-reasoning-thread.com](https://digital-reasoning-thread.com/) · [vlarichev/digital-reasoning-thread](https://github.com/vlarichev/digital-reasoning-thread/) |
+| Implementation | this repository |
 
 ---
 
@@ -53,6 +60,11 @@ The DRT is therefore the fundamental unit of reasoning for Industrial Agentic AI
 and by extension the fundamental unit of evaluation. A system is not measured by
 whether it retrieves the right document, but by whether it can follow the thread
 to its end.
+
+The concept is specified separately from this implementation, at
+[digital-reasoning-thread.com](https://digital-reasoning-thread.com/)
+([source](https://github.com/vlarichev/digital-reasoning-thread/)). DRT Loom is
+where it becomes something you can generate and measure against.
 
 ---
 
@@ -156,6 +168,9 @@ equipment module → maintenance order → spare part → supplier — has a dif
 vocabulary from the manufacturing thread in §1 and the same shape. Both are chains
 of relationships spanning systems that no single system owns, and both are scored
 the same way.
+
+A worked, step-by-step guide to adding one: [Extending DRT Loom to a new
+domain](#appendix-extending-drt-loom-to-a-new-domain).
 
 **Status of this design goal.** Parts of the pipeline are already
 domain-independent: [`src/generate/rng.ts`](src/generate/rng.ts) is a pure seeded
@@ -480,6 +495,312 @@ quotes no comparative results.
    relation unions in `src/types.ts` behind a registered domain module, and remove
    the hardcoded entity-type filter in `src/score/score.ts`, so a second domain can
    be added without forking the generator.
+
+---
+
+## Appendix: extending DRT Loom to a new domain
+
+This is the concrete procedure behind the design goal in §4. It documents the
+current code as it stands — there is no plugin registry yet, so a new domain means
+editing the generator rather than installing into it. Everything below refers to
+real files and real function signatures.
+
+The worked example adds an **Industrial Automation / OT** layer to the existing
+environment: an alarm on a process tag, traced through control logic and equipment
+to a maintenance order, a spare part and the supplier who ships it.
+
+```
+Alarm → Tag → Control Loop → Equipment Module → Maintenance Order → Part → Supplier
+```
+
+Adding it to the existing world rather than starting a new one is the cheaper
+path, and the more interesting one: the thread terminates in the `Part` and
+`Supplier` entities the manufacturing domain already owns, so an OT question
+becomes answerable only by crossing into ERP.
+
+### Step 1 — declare the vocabulary
+
+Node and relation types are closed unions in [`src/types.ts`](src/types.ts).
+TypeScript will now flag every unhandled case, which is the point.
+
+```ts
+// src/types.ts
+export type NodeType =
+  | "Customer"
+  // … existing manufacturing types …
+  | "Shipment"
+  /* automation */
+  | "EquipmentModule"
+  | "ControlLoop"
+  | "Tag"
+  | "Alarm"
+  | "MaintenanceOrder";
+
+export type RelationType =
+  // … existing relations …
+  /* automation */
+  | "part_of_line"    // EquipmentModule  -> EquipmentModule
+  | "controls"        // ControlLoop      -> EquipmentModule
+  | "reads_tag"       // ControlLoop      -> Tag
+  | "raised_on"       // Alarm            -> Tag
+  | "triggered"       // Alarm            -> MaintenanceOrder
+  | "consumes_spare"; // MaintenanceOrder -> Part      ← crosses into ERP
+```
+
+One constraint to design around before you write any code: the graph build rejects
+**two different relation types between the same ordered pair** of entities. Graphify
+returns a `DiGraph`, so parallel edges collapse and a fact would be lost silently;
+[`extractor/extract.py`](extractor/extract.py) fails the build rather than allow it.
+Duplicate edges of the *same* type are fine and are collapsed with a note.
+
+### Step 2 — write the generator
+
+A domain module is a function over the shared [`Builder`](src/generate/builder.ts)
+and a seeded [`Rng`](src/generate/rng.ts). Create `src/generate/automation.ts`:
+
+```ts
+import type { Builder } from "./builder";
+import type { MasterData } from "./master-data";
+import { chance, dateBetween, int, pick, round, seq, type Rng } from "./rng";
+
+export interface AutomationIndex {
+  moduleIds: string[];
+  tagIds: string[];
+  alarmIds: string[];
+}
+
+export function buildAutomation(b: Builder, md: MasterData, rng: Rng): AutomationIndex {
+  const ix: AutomationIndex = { moduleIds: [], tagIds: [], alarmIds: [] };
+
+  for (let i = 1; i <= 12; i++) {
+    const modId = `EQM-${seq(i, 3)}`;
+    b.entity(modId, "EquipmentModule", `Equipment module ${seq(i, 3)}`, "ot/isa95_assets.json", {
+      isa95Level: "unit",
+      area: pick(rng, ["Machining", "Assembly", "Test", "Paint"]),
+      commissioned: dateBetween(rng, "2018-01-01", "2025-06-01"),
+    });
+    ix.moduleIds.push(modId);
+
+    const tagId = `TAG-${seq(i, 4)}`;
+    b.entity(tagId, "Tag", `${modId}.SpindleTemp`, "ot/tag_dictionary.csv", {
+      address: `DB${int(rng, 10, 99)}.DBD${int(rng, 0, 240)}`,
+      unit: "degC",
+      highLimit: round(70 + rng() * 20, 1),
+    });
+    ix.tagIds.push(tagId);
+
+    const loopId = `LOOP-${seq(i, 3)}`;
+    b.entity(loopId, "ControlLoop", `Thermal control ${seq(i, 3)}`, "ot/plc_program.json", {
+      block: `FB${int(rng, 100, 999)}`,
+      strategy: "PID",
+    });
+
+    b.rel(loopId, "controls", modId, { sourceFile: "ot/plc_program.json" });
+    b.rel(loopId, "reads_tag", tagId, { sourceFile: "ot/plc_program.json" });
+  }
+
+  return ix;
+}
+```
+
+Three rules the `Builder` enforces or assumes:
+
+- **Determinism.** Draw every random choice from `rng`. `Math.random()`, `Date.now()`
+  and `new Date()` break byte-identical rebuilds — use the `TODAY` constant and the
+  date helpers in `rng.ts` instead.
+- **Unique ids that survive the graph build.** `b.entity()` throws if an id repeats,
+  and also if the id slugifies to its own source file's stem — Graphify would
+  silently rewrite it. This is why source files are named `tag_dictionary.csv`
+  rather than `tag.csv`.
+- **`sourceFile` is a citation, not decoration.** It is what a system under
+  evaluation quotes back, and `extract.py` requires it on edges as well as nodes.
+  `b.rel()` inherits it from the source entity if you omit it.
+
+### Step 3 — weave the thread across domains
+
+This step is the whole point. A domain that only links to itself adds entities but
+no reasoning. The join into the existing manufacturing world is what creates a
+Digital Reasoning Thread:
+
+```ts
+// still in buildAutomation()
+for (const [i, tagId] of ix.tagIds.entries()) {
+  if (!chance(rng, 0.4)) continue;
+
+  const alarmId = `ALM-${seq(i + 1, 4)}`;
+  b.entity(alarmId, "Alarm", `High temperature — ${b.get(tagId).label}`, "ot/alarm_log.csv", {
+    severity: pick(rng, ["warning", "high", "critical"]),
+    raisedAt: dateBetween(rng, "2026-04-01", "2026-07-20"),
+    acknowledged: chance(rng, 0.7),
+  });
+  b.rel(alarmId, "raised_on", tagId, { sourceFile: "ot/alarm_log.csv" });
+  ix.alarmIds.push(alarmId);
+
+  const moId = `MO-${seq(i + 1, 4)}`;
+  b.entity(moId, "MaintenanceOrder", `Maintenance order ${seq(i + 1, 4)}`, "eam/maintenance_orders.json", {
+    status: pick(rng, ["open", "in_progress", "closed"]),
+    createdAt: dateBetween(rng, "2026-04-01", "2026-07-25"),
+  });
+  b.rel(alarmId, "triggered", moId, { sourceFile: "eam/maintenance_orders.json" });
+
+  // ── the cross-domain hop: an OT alarm now reaches an ERP part and its supplier
+  const spare = pick(rng, md.partIds);
+  b.rel(moId, "consumes_spare", spare, {
+    sourceFile: "eam/maintenance_orders.json",
+    confidence: "INFERRED", // the spare was matched by description, not by part number
+  });
+}
+```
+
+Mark an edge `INFERRED` or `AMBIGUOUS` wherever the join would be uncertain in a
+real integration. A system that treats an ambiguous edge as fact should be
+detectable, and the provenance tag is what makes that measurable.
+
+### Step 4 — add narrative documents
+
+Some facts must exist only in prose, or retrieval has nothing to win. Follow the
+`add()` helper pattern in [`src/generate/documents.ts`](src/generate/documents.ts),
+which registers the `Document` entity and both `references` / `documented_by`
+edges for you. Add any new family to the `DocFamily` union in `src/types.ts` first:
+
+```ts
+add(
+  `Shift handover — ${area} line, ${date}`,
+  "shift_log",
+  date,
+  [
+    `# Shift handover — ${area}`,
+    ``,
+    `Spindle temperature on ${b.get(modId).label} tripped twice during nights.`,
+    `Operator reduced feed by 15% as a workaround. Root cause not established;`,
+    `the coolant pump is suspected but has not been inspected.`,
+  ].join("\n"),
+  [modId, tagId, alarmId], // mentions → citation edges
+);
+```
+
+The workaround and the suspicion appear in no structured record. That is a
+`narrative` question, and a graph is no help with it — by design.
+
+### Step 5 — write questions and derive ground truth
+
+A question is a [`GoldAnswer`](src/generate/gold.ts). Derive `expectedIds` and
+`expectedValues` by walking the builder rather than hardcoding them, or the answer
+will not survive a change of seed:
+
+```ts
+// src/generate/gold.ts — inside buildGold(), which already has `ix` from indexRelations(b)
+const criticalAlarms = b
+  .all("Alarm")
+  .filter((a) => a.attrs.severity === "critical" && a.attrs.acknowledged === false);
+
+const exposedSuppliers = new Set<string>();
+for (const alarm of criticalAlarms) {
+  for (const mo of ix.out(alarm.id, "triggered")) {
+    for (const part of ix.out(mo, "consumes_spare")) {
+      for (const sup of ix.out(part, "approved_supplier")) exposedSuppliers.add(sup);
+    }
+  }
+}
+
+g.push({
+  id: "Q-OT-01",
+  category: "multi_hop",
+  question:
+    "Which suppliers would we need to contact to close out every unacknowledged " +
+    "critical alarm currently open on the shop floor?",
+  expectedIds: [...exposedSuppliers],
+  expectedValues: { supplierCount: exposedSuppliers.size },
+  reference:
+    `${criticalAlarms.length} unacknowledged critical alarms trace through maintenance ` +
+    `orders and spare parts to ${exposedSuppliers.size} approved suppliers.`,
+});
+```
+
+Four hops, three systems, and no document states the answer. Note that
+`expectedIds` and `expectedValues` are both derived from the same traversal, so
+they cannot disagree — the failure mode described in
+[KNOWN-ISSUES.md](KNOWN-ISSUES.md) #1 comes precisely from *not* doing this.
+
+Add a sanity gate in [`src/generate/index.ts`](src/generate/index.ts) that asserts
+on the shape of the result rather than a constant, so a different seed cannot
+quietly produce a degenerate question:
+
+```ts
+// good — survives a re-roll
+if (exposedSuppliers.size < 2) {
+  problems.push(`Q-OT-01 is trivial at this seed: ${exposedSuppliers.size} supplier(s)`);
+}
+
+// bad — this is the exact pattern that produced the known defect
+if (exposedSuppliers.size !== 7) problems.push("expected 7 suppliers");
+```
+
+### Step 6 — wire it into the pipeline
+
+```ts
+// src/generate/index.ts, inside main()
+const md = buildMasterData(b, rng);
+const tx = buildTransactions(b, md, rng);
+const ot = buildAutomation(b, md, rng);        // ← new, before documents
+const blockers = stageScriptedBlockers(b, md);
+const documents = buildDocuments(b, md, tx, rng);
+const nx = buildNxExport(b, md, rng);
+const gold = buildGold(b, md, blockers);
+
+b.verify();                                     // dangling endpoints fail here
+```
+
+Order matters: entities must exist before anything references them, and
+`b.verify()` fails the build on any dangling relation endpoint.
+
+### Step 7 — build the graph and score
+
+```bash
+npm run typecheck    # the closed unions catch every unhandled case
+npm run gen          # writes data/generated
+npm run graph        # Graphify → data/graph
+```
+
+The extractor needs **no changes**: `extract.py` copies `e["type"]` into
+`node_type` generically, and unknown attributes pass through verbatim. Two
+exceptions to know about:
+
+- `file_type` is a closed Graphify enum and an invalid value **drops the node
+  silently**. Everything maps to `concept` except `Document`, which maps to
+  `document`. If you add a second document-like type, extend that check at
+  [`extract.py:47`](extractor/extract.py#L47).
+- Scoring resolves entity names back to ids for citation credit, and the list of
+  name-bearing types is currently hardcoded at
+  [`score.ts:24`](src/score/score.ts#L24). Add your domain's types or answers
+  naming them will be scored as misses:
+
+```ts
+const NAME_BEARING: NodeType[] = [
+  "Customer", "Supplier", "Variant", "Part",
+  "EquipmentModule", "Tag",   // ← new
+];
+if (!NAME_BEARING.includes(e.type)) continue;
+```
+
+### Checklist
+
+| | |
+|---|---|
+| Types added to the `NodeType` / `RelationType` unions | `src/types.ts` |
+| No two relation types between the same ordered pair | enforced by `extract.py` |
+| All randomness drawn from the seeded `Rng` | no `Math.random`, no `Date.now` |
+| Entity ids unique and not colliding with their file stem | enforced by `Builder` |
+| At least one edge crossing into an existing domain | this is the thread |
+| Uncertain joins tagged `INFERRED` / `AMBIGUOUS` | `b.rel(..., { confidence })` |
+| At least one prose-only fact | so retrieval can win somewhere |
+| Gold derived by traversal, not hardcoded | `src/generate/gold.ts` |
+| Sanity gates assert on shape, not on constants | `src/generate/index.ts` |
+| Name-bearing types registered for scoring | `src/score/score.ts` |
+| Byte-identical output across two clean runs | `npm run gen` twice, `diff -r` |
+
+Contributions that add a domain are welcome, and so are contributions that break
+an existing gold answer.
 
 ---
 

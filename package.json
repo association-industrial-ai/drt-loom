@@ -1,0 +1,35 @@
+{
+  "name": "drt-loom",
+  "version": "0.1.0",
+  "description": "A deterministic generator for Synthetic Industrial Reasoning Environments. Weaves ERP, PLM, MES, CAD and enterprise documents into coherent industrial worlds containing Digital Reasoning Threads, for evaluating Industrial Agentic AI.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/association-industrial-ai/drt-loom.git"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "gen": "tsx src/generate/index.ts",
+    "graph": "extractor/run.sh",
+    "build:all": "npm run gen && npm run graph",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "industrial-agentic-ai",
+    "digital-reasoning-thread",
+    "synthetic-reasoning-environment",
+    "cross-domain-reasoning",
+    "knowledge-graph",
+    "manufacturing",
+    "erp",
+    "plm",
+    "mes"
+  ],
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

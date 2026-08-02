@@ -1,0 +1,379 @@
+[
+ {
+  "id": "Q-DIS-01",
+  "category": "disambiguation",
+  "question": "What is the status of order 4711?",
+  "expectedIds": [
+   "SO-4711",
+   "PRO-4711",
+   "PUR-4711",
+   "ECO-4711"
+  ],
+  "expectedValues": {
+   "distinctObjects": 4
+  },
+  "reference": "\"4711\" is ambiguous: four different objects share that number. SO-4711 is a sales order from Nordhavn Marine A/S for 12 × KDU-3-B-45-20-F, due 2026-09-12, status \"in production\". PRO-4711 is the production order fulfilling it, released to MONT-2, planned start 2026-08-10. PUR-4711 is a purchase order to Nordwerk Guss GmbH for part 30-1177, promised 2026-08-20. ECO-4711 is an engineering change order on the same part, effective 2026-09-15. They are not unrelated: the sales order is fulfilled by the production order, which consumes the part bought on the purchase order, which is the part the change order modifies. A correct answer must distinguish all four and should surface the chain."
+ },
+ {
+  "id": "Q-DIS-02",
+  "category": "disambiguation",
+  "question": "Someone told me 4711 is delayed by three weeks. Which 4711 do they mean, and what does it affect?",
+  "expectedIds": [
+   "PUR-4711",
+   "PART-30-1177",
+   "PRO-4711",
+   "SO-4711"
+  ],
+  "expectedValues": {
+   "intended": "PUR-4711"
+  },
+  "reference": "The three-week slip is on PUR-4711, the purchase order to Nordwerk Guss GmbH for bearing housing 30-1177. It was promised 2026-08-20. The slip propagates to PRO-4711 (which consumes that part and starts 2026-08-10) and therefore to SO-4711, due 2026-09-12."
+ },
+ {
+  "id": "Q-MH-01",
+  "category": "multi_hop",
+  "question": "Nordwerk Guss GmbH has told us bearing housing 30-1177 will slip by three weeks. Which customer deliveries due before the end of November are at risk, and what is the total value exposed?",
+  "expectedIds": [
+   "SO-4711",
+   "SO-4716",
+   "SO-4720",
+   "SO-4722",
+   "SO-4726",
+   "SO-4730",
+   "SO-4734",
+   "SO-4736",
+   "SO-4737",
+   "SO-4744",
+   "SO-4783",
+   "SO-4787",
+   "SO-4795",
+   "SO-4801",
+   "SO-4812",
+   "SO-4831",
+   "CUST-001",
+   "CUST-002",
+   "CUST-003",
+   "CUST-004",
+   "CUST-005",
+   "CUST-006",
+   "CUST-007",
+   "CUST-009",
+   "CUST-010",
+   "CUST-011",
+   "CUST-012"
+  ],
+  "expectedValues": {
+   "ordersAtRisk": 16,
+   "customersAffected": 11,
+   "exposureEur": 2739771.54
+  },
+  "reference": "Traverse: part 30-1177 → BOM parents → variants (3) → sales order lines → open sales orders (16) → customers (11). Total exposed net value is 2739771.54 EUR. Orders: SO-4711, SO-4716, SO-4720, SO-4722, SO-4726, SO-4730, SO-4734, SO-4736, SO-4737, SO-4744, SO-4783, SO-4787, SO-4795, SO-4801, SO-4812, SO-4831."
+ },
+ {
+  "id": "Q-MH-02",
+  "category": "multi_hop",
+  "question": "Which variants use bearing housing 30-1177?",
+  "expectedIds": [
+   "VAR-KDU-3-B-45-20-F",
+   "VAR-KDU-3-B-45-31.5-S",
+   "VAR-KDU-3-B-45-45-F"
+  ],
+  "expectedValues": {
+   "variantCount": 3
+  },
+  "reference": "3 variants use it: KDU-3-B-45-20-F, KDU-3-B-45-31.5-S, KDU-3-B-45-45-F."
+ },
+ {
+  "id": "Q-MH-03",
+  "category": "multi_hop",
+  "question": "Which suppliers ultimately feed into sales order SO-4711?",
+  "expectedIds": [
+   "SUP-001",
+   "SUP-002",
+   "SUP-007",
+   "SUP-008",
+   "SUP-009",
+   "SUP-011",
+   "SUP-012",
+   "SUP-015",
+   "SUP-016",
+   "SUP-018"
+  ],
+  "expectedValues": {},
+  "reference": "Path: SO-4711 → fulfilled_by → PRO-4711 → consumes → parts → purchased_via / approved_supplier → suppliers."
+ },
+ {
+  "id": "Q-AGG-01",
+  "category": "aggregation",
+  "question": "How many open production orders consume a part affected by an engineering change order that takes effect before October?",
+  "expectedIds": [
+   "PRO-4702",
+   "PRO-4703",
+   "PRO-4704",
+   "PRO-4705",
+   "PRO-4706",
+   "PRO-4711"
+  ],
+  "expectedValues": {
+   "productionOrderCount": 6,
+   "ecoCount": 19,
+   "partCount": 35
+  },
+  "reference": "19 change orders have effectivity before 2026-10-01, touching 35 parts. 6 open production orders (status planned, released or in progress) consume at least one of them."
+ },
+ {
+  "id": "Q-AGG-02",
+  "category": "aggregation",
+  "question": "How many suppliers are below the 85 % on-time delivery threshold, and which commodity groups do they cover?",
+  "expectedIds": [
+   "SUP-001",
+   "SUP-004",
+   "SUP-008",
+   "SUP-009",
+   "SUP-011",
+   "SUP-012",
+   "SUP-016",
+   "SUP-017"
+  ],
+  "expectedValues": {
+   "supplierCount": 8
+  },
+  "reference": "8 suppliers are below 85 % OTD: Nordwerk Guss GmbH, Lindqvist Seals AB, Kaskinen Castings Oy, Sensorik Weiss GmbH, Wisla Metalworks Sp. z o.o., Hanseatic Bearing Trade GmbH, Antwerp Coupling NV, Iberia Componentes SL."
+ },
+ {
+  "id": "Q-AGG-03",
+  "category": "aggregation",
+  "question": "What is the total net value of all sales orders that have not yet shipped?",
+  "expectedIds": [],
+  "expectedValues": {
+   "orderCount": 101,
+   "totalEur": 35686518.97
+  },
+  "reference": "101 unshipped sales orders totalling 35686518.97 EUR."
+ },
+ {
+  "id": "Q-ABS-01",
+  "category": "absence",
+  "question": "Which purchased parts have no approved supplier on the approved vendor list?",
+  "expectedIds": [
+   "PART-10-1298",
+   "PART-10-1654",
+   "PART-20-1158",
+   "PART-20-1673",
+   "PART-30-1206",
+   "PART-30-1382",
+   "PART-30-1446",
+   "PART-30-1926",
+   "PART-40-1829",
+   "PART-60-1576",
+   "PART-60-1871",
+   "PART-70-1221",
+   "PART-70-1859",
+   "PART-80-1655"
+  ],
+  "expectedValues": {
+   "partCount": 14
+  },
+  "reference": "14 purchased parts have no approved_supplier relationship. This is an absence: no document in the corpus states it, so it can only be found by checking the graph for a missing edge."
+ },
+ {
+  "id": "Q-ABS-02",
+  "category": "absence",
+  "question": "Which variants contain at least one part with no approved supplier?",
+  "expectedIds": [
+   "VAR-KDU-3-B-100-12.5-F",
+   "VAR-KDU-3-B-100-12.5-T",
+   "VAR-KDU-3-B-25-12.5-T",
+   "VAR-KDU-3-B-25-45-S",
+   "VAR-KDU-3-B-35-31.5-S",
+   "VAR-KDU-3-B-35-45-F",
+   "VAR-KDU-3-B-35-90-S",
+   "VAR-KDU-3-B-45-20-F",
+   "VAR-KDU-3-B-45-31.5-S",
+   "VAR-KDU-3-B-45-45-F",
+   "VAR-KDU-3-B-63-20-F",
+   "VAR-KDU-3-B-63-90-T",
+   "VAR-KDU-3-B-80-31.5-F",
+   "VAR-KDU-3-B-80-7.1-S",
+   "VAR-KDU-3-B-80-90-T",
+   "VAR-KDU-3-H-100-31.5-F",
+   "VAR-KDU-3-H-100-63-F",
+   "VAR-KDU-3-H-25-45-F",
+   "VAR-KDU-3-H-25-45-T",
+   "VAR-KDU-3-H-35-12.5-S",
+   "VAR-KDU-3-H-35-20-S",
+   "VAR-KDU-3-H-45-12.5-F",
+   "VAR-KDU-3-H-45-31.5-T",
+   "VAR-KDU-3-H-45-63-T",
+   "VAR-KDU-3-H-80-45-F",
+   "VAR-KDU-3-H-80-45-S",
+   "VAR-KDU-3-P-25-12.5-S",
+   "VAR-KDU-3-P-25-31.5-F",
+   "VAR-KDU-3-P-25-45-S",
+   "VAR-KDU-3-P-35-12.5-F",
+   "VAR-KDU-3-P-35-90-T",
+   "VAR-KDU-3-P-45-7.1-S",
+   "VAR-KDU-3-P-45-90-F",
+   "VAR-KDU-3-P-45-90-T",
+   "VAR-KDU-3-P-63-20-F",
+   "VAR-KDU-3-P-63-45-T",
+   "VAR-KDU-3-P-63-63-F",
+   "VAR-KDU-3-P-80-12.5-F",
+   "VAR-KDU-3-P-80-90-T"
+  ],
+  "expectedValues": {
+   "variantCount": 39
+  },
+  "reference": "39 variants contain at least one part with no approved vendor."
+ },
+ {
+  "id": "Q-ABS-03",
+  "category": "absence",
+  "question": "Which current part revisions have no released drawing?",
+  "expectedIds": [
+   "REV-10-1668-B",
+   "REV-10-1697-B",
+   "REV-10-1856-B",
+   "REV-30-1206-C",
+   "REV-30-1382-A",
+   "REV-30-1428-C",
+   "REV-30-1554-A",
+   "REV-30-1628-B",
+   "REV-40-1139-A",
+   "REV-40-1175-B",
+   "REV-40-1245-A",
+   "REV-40-1311-B",
+   "REV-40-1351-B",
+   "REV-40-1359-A",
+   "REV-40-1503-B",
+   "REV-40-1520-A",
+   "REV-40-1548-B",
+   "REV-40-1665-A",
+   "REV-40-1698-A",
+   "REV-40-1739-B",
+   "REV-40-1787-A",
+   "REV-40-1829-A",
+   "REV-40-1882-B",
+   "REV-40-1905-B",
+   "REV-40-1926-C",
+   "REV-50-1081-B",
+   "REV-50-1134-A",
+   "REV-50-1157-A",
+   "REV-50-1174-B",
+   "REV-50-1189-B",
+   "REV-50-1337-A",
+   "REV-50-1359-B",
+   "REV-50-1369-B",
+   "REV-50-1401-B",
+   "REV-50-1432-B",
+   "REV-50-1537-B",
+   "REV-50-1552-B",
+   "REV-50-1643-C",
+   "REV-50-1644-B",
+   "REV-50-1689-B",
+   "REV-50-1727-B",
+   "REV-50-1755-C",
+   "REV-50-1785-B",
+   "REV-50-1881-C",
+   "REV-50-1909-B",
+   "REV-50-1968-A",
+   "REV-50-1999-B",
+   "REV-60-1046-C",
+   "REV-60-1056-B",
+   "REV-60-1153-B",
+   "REV-60-1360-B",
+   "REV-60-1382-C",
+   "REV-60-1552-B",
+   "REV-60-1576-A",
+   "REV-60-1589-A",
+   "REV-60-1773-B",
+   "REV-60-1778-B",
+   "REV-60-1817-B",
+   "REV-60-1826-A",
+   "REV-60-1837-C"
+  ],
+  "expectedValues": {
+   "revisionCount": 63
+  },
+  "reference": "63 current revisions have no released_by edge to a drawing."
+ },
+ {
+  "id": "Q-LK-01",
+  "category": "lookup",
+  "question": "Who is the customer on SO-4711 and what is the requested delivery date?",
+  "expectedIds": [
+   "SO-4711",
+   "CUST-001"
+  ],
+  "expectedValues": {
+   "customer": "Nordhavn Marine A/S",
+   "due": "2026-09-12"
+  },
+  "reference": "Nordhavn Marine A/S, requested delivery 2026-09-12."
+ },
+ {
+  "id": "Q-LK-02",
+  "category": "lookup",
+  "question": "What does engineering change order ECO-4711 change, and when does it take effect?",
+  "expectedIds": [
+   "ECO-4711",
+   "PART-30-1177"
+  ],
+  "expectedValues": {
+   "effectivity": "2026-09-15"
+  },
+  "reference": "ECO-4711 takes bearing housing 30-1177 from revision B to C — tighter bearing seat tolerance and a material change to EN-GJS-500-7 — effective 2026-09-15."
+ },
+ {
+  "id": "Q-LK-03",
+  "category": "lookup",
+  "question": "What is the standard oil fill for a KDU-3 unit, and when should it be changed?",
+  "expectedIds": [],
+  "expectedValues": {
+   "grade": "ISO VG 220"
+  },
+  "reference": "ISO VG 220 mineral oil as standard; ISO VG 320 synthetic below -10 °C or above 80 °C. Change every 8,000 operating hours or 18 months, whichever comes first."
+ },
+ {
+  "id": "Q-NAR-01",
+  "category": "narrative",
+  "question": "Why can the Nordhavn Marine A/S delivery date not move?",
+  "expectedIds": [
+   "SO-4711"
+  ],
+  "expectedValues": {},
+  "reference": "The vessel is in dry dock from 20 September to 4 October. Missing that window pushes the retrofit to the next docking in February, and the contract carries liquidated damages of 0.5 % of order value per week. This is stated only in an email, not in any structured field."
+ },
+ {
+  "id": "Q-NAR-02",
+  "category": "narrative",
+  "question": "Under what conditions may assembly build with a superseded bearing housing revision?",
+  "expectedIds": [
+   "ECO-4711"
+  ],
+  "expectedValues": {},
+  "reference": "Only where the change order disposition is \"use-up existing stock\" and the unit is not for marine duty; the deviation must be recorded on the build card and quality informed. ECO-4711 additionally bars revision B from marine duty from approval onward, regardless of build date."
+ },
+ {
+  "id": "Q-NAR-03",
+  "category": "narrative",
+  "question": "What is the most common cause of premature bearing wear reported from the field?",
+  "expectedIds": [],
+  "expectedValues": {},
+  "reference": "Misalignment of the torque-arm reaction bracket beyond the specified 0.5° from the output axis."
+ },
+ {
+  "id": "Q-NX-01",
+  "category": "multi_hop",
+  "question": "Here is the NX assembly for KDU-3-B-45-20-F. Is it buildable for the September batch, and what is blocking it?",
+  "expectedIds": [
+   "PART-30-1177",
+   "PART-10-1668",
+   "PART-10-1654"
+  ],
+  "expectedValues": {
+   "blockerCount": 3
+  },
+  "reference": "Not buildable. 3 components block it, for three different reasons: 30-1177 (eco_effectivity) — Superseded by ECO-4711 with effectivity 2026-09-15, which falls after the September batch. The change notice additionally bars revision B from marine duty from approval onward, and this order is for a marine customer. 10-1668 (unreleased_revision) — Revision B is the current revision but has never been released, and has no released drawing. 10-1654 (no_approved_supplier) — No entry on the approved vendor list. Nothing in the document corpus says so — the fact is the absence of a relationship, which only the graph can see."
+ }
+]

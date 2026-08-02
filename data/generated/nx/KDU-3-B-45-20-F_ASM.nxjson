@@ -1,0 +1,661 @@
+{
+  "format": "NX-ASSEMBLY-EXPORT",
+  "version": "NX 2412",
+  "exportedAt": "2026-07-27T16:42:11Z",
+  "exportedBy": "M. Ehrlich",
+  "rootPrt": "kdu_3_b_45_20_f_asm.prt",
+  "displayName": "KDU-3-B-45-20-F assembly",
+  "components": [
+    {
+      "instanceName": "KDU3_HOU_GRO_90B45H",
+      "prtFile": "kdu3_hou_gro_90b45h.prt",
+      "attributes": {
+        "DB_PART_NO": "90-B45H",
+        "DESCRIPTION": "Housing group KDU-3-B-45",
+        "NX_REVISION": "A"
+      },
+      "quantity": 1,
+      "geometry": {
+        "shape": "box",
+        "size": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -3.6,
+          0,
+          0
+        ]
+      },
+      "children": [
+        {
+          "instanceName": "KDU3_MAI_HOU_101668",
+          "prtFile": "kdu3_mai_hou_101668.prt",
+          "attributes": {
+            "DB_PART_NO": "10-1668",
+            "DESCRIPTION": "Main housing",
+            "MATERIAL": "EN-GJL-250",
+            "NX_REVISION": "B"
+          },
+          "quantity": 5,
+          "geometry": {
+            "shape": "box",
+            "size": [
+              2.2,
+              1.8,
+              1.6
+            ],
+            "position": [
+              -3.204,
+              0,
+              0.4
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_INS_COV_101654",
+          "prtFile": "kdu3_ins_cov_101654.prt",
+          "attributes": {
+            "DB_PART_NO": "10-1654",
+            "DESCRIPTION": "Inspection cover",
+            "MATERIAL": "EN-GJL-250",
+            "NX_REVISION": "A"
+          },
+          "quantity": 8,
+          "geometry": {
+            "shape": "box",
+            "size": [
+              2.2,
+              1.8,
+              1.6
+            ],
+            "position": [
+              -3.478,
+              0.685,
+              -0.214
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_RAD_SHA_401905",
+          "prtFile": "kdu3_rad_sha_401905.prt",
+          "attributes": {
+            "DB_PART_NO": "40-1905",
+            "DESCRIPTION": "Radial shaft seal",
+            "MATERIAL": "NBR 70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 2,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.3,
+              0.3,
+              0.06
+            ],
+            "position": [
+              -3.92,
+              0.423,
+              -0.17
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_LAB_SEA_401892",
+          "prtFile": "kdu3_lab_sea_401892.prt",
+          "attributes": {
+            "DB_PART_NO": "40-1892",
+            "DESCRIPTION": "Labyrinth seal ring",
+            "MATERIAL": "NBR 70",
+            "NX_REVISION": "A"
+          },
+          "quantity": 1,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.3,
+              0.3,
+              0.06
+            ],
+            "position": [
+              -3.92,
+              -0.423,
+              0.397
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_RET_RIN_501909",
+          "prtFile": "kdu3_ret_rin_501909.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1909",
+            "DESCRIPTION": "Retaining ring",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 6,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              -3.371,
+              -1.284,
+              -0.255
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_SPR_WAS_501432",
+          "prtFile": "kdu3_spr_was_501432.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1432",
+            "DESCRIPTION": "Spring washer",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 5,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              -2.857,
+              0,
+              -0.124
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_RET_RIN_501157",
+          "prtFile": "kdu3_ret_rin_501157.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1157",
+            "DESCRIPTION": "Retaining ring",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "A"
+          },
+          "quantity": 6,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              -3.371,
+              1.284,
+              0.387
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_BRE_VAL_601056",
+          "prtFile": "kdu3_bre_val_601056.prt",
+          "attributes": {
+            "DB_PART_NO": "60-1056",
+            "DESCRIPTION": "Breather valve",
+            "MATERIAL": "n/a",
+            "NX_REVISION": "B"
+          },
+          "quantity": 8,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.16,
+              0.16,
+              0.22
+            ],
+            "position": [
+              -3.92,
+              0.423,
+              -0.292
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_DRA_PLU_601837",
+          "prtFile": "kdu3_dra_plu_601837.prt",
+          "attributes": {
+            "DB_PART_NO": "60-1837",
+            "DESCRIPTION": "Drain plug",
+            "MATERIAL": "n/a",
+            "NX_REVISION": "C"
+          },
+          "quantity": 8,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.16,
+              0.16,
+              0.22
+            ],
+            "position": [
+              -3.92,
+              -0.423,
+              -0.075
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "instanceName": "KDU3_GEA_SET_90B45G",
+      "prtFile": "kdu3_gea_set_90b45g.prt",
+      "attributes": {
+        "DB_PART_NO": "90-B45G",
+        "DESCRIPTION": "Gear set KDU-3-B-45",
+        "NX_REVISION": "A"
+      },
+      "quantity": 1,
+      "geometry": {
+        "shape": "box",
+        "size": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          -1.2,
+          0,
+          0
+        ]
+      },
+      "children": [
+        {
+          "instanceName": "KDU3_BEV_GEA_201904",
+          "prtFile": "kdu3_bev_gea_201904.prt",
+          "attributes": {
+            "DB_PART_NO": "20-1904",
+            "DESCRIPTION": "Bevel gear",
+            "MATERIAL": "18CrNiMo7-6",
+            "NX_REVISION": "B"
+          },
+          "quantity": 6,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.55,
+              0.55,
+              0.9
+            ],
+            "position": [
+              -0.804,
+              0,
+              0.4
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_RET_RIN_501909",
+          "prtFile": "kdu3_ret_rin_501909.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1909",
+            "DESCRIPTION": "Retaining ring",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 3,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              -0.971,
+              1.284,
+              -0.214
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "instanceName": "KDU3_BEA_GRO_90B45B",
+      "prtFile": "kdu3_bea_gro_90b45b.prt",
+      "attributes": {
+        "DB_PART_NO": "90-B45B",
+        "DESCRIPTION": "Bearing group KDU-3-B-45",
+        "NX_REVISION": "A"
+      },
+      "quantity": 1,
+      "geometry": {
+        "shape": "box",
+        "size": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          1.2,
+          0,
+          0
+        ]
+      },
+      "children": [
+        {
+          "instanceName": "KDU3_TAP_ROL_301862",
+          "prtFile": "kdu3_tap_rol_301862.prt",
+          "attributes": {
+            "DB_PART_NO": "30-1862",
+            "DESCRIPTION": "Taper roller bearing",
+            "MATERIAL": "100Cr6",
+            "NX_REVISION": "C"
+          },
+          "quantity": 2,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.42,
+              0.42,
+              0.18
+            ],
+            "position": [
+              1.596,
+              0,
+              0.4
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_BEA_SPA_301428",
+          "prtFile": "kdu3_bea_spa_301428.prt",
+          "attributes": {
+            "DB_PART_NO": "30-1428",
+            "DESCRIPTION": "Bearing spacer",
+            "MATERIAL": "100Cr6",
+            "NX_REVISION": "C"
+          },
+          "quantity": 4,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.42,
+              0.42,
+              0.18
+            ],
+            "position": [
+              1.322,
+              0.685,
+              -0.214
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_HOU_GAS_401548",
+          "prtFile": "kdu3_hou_gas_401548.prt",
+          "attributes": {
+            "DB_PART_NO": "40-1548",
+            "DESCRIPTION": "Housing gasket",
+            "MATERIAL": "NBR 70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 7,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.3,
+              0.3,
+              0.06
+            ],
+            "position": [
+              0.88,
+              0.423,
+              -0.17
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_RAD_SHA_401905",
+          "prtFile": "kdu3_rad_sha_401905.prt",
+          "attributes": {
+            "DB_PART_NO": "40-1905",
+            "DESCRIPTION": "Radial shaft seal",
+            "MATERIAL": "NBR 70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 8,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.3,
+              0.3,
+              0.06
+            ],
+            "position": [
+              0.88,
+              -0.423,
+              0.397
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_HEX_BOL_501134",
+          "prtFile": "kdu3_hex_bol_501134.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1134",
+            "DESCRIPTION": "Hex bolt M12",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "A"
+          },
+          "quantity": 4,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              1.429,
+              -1.284,
+              -0.255
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_SPR_WAS_501432",
+          "prtFile": "kdu3_spr_was_501432.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1432",
+            "DESCRIPTION": "Spring washer",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "B"
+          },
+          "quantity": 1,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              1.943,
+              0,
+              -0.124
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_BEA_HOU_301177",
+          "prtFile": "kdu3_bea_hou_301177.prt",
+          "attributes": {
+            "DB_PART_NO": "30-1177",
+            "DESCRIPTION": "Bearing housing",
+            "MATERIAL": "100Cr6",
+            "NX_REVISION": "B"
+          },
+          "quantity": 4,
+          "geometry": {
+            "shape": "torus",
+            "size": [
+              0.42,
+              0.42,
+              0.18
+            ],
+            "position": [
+              1.322,
+              0.685,
+              0.387
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "instanceName": "KDU3_INT_GRO_90B45I",
+      "prtFile": "kdu3_int_gro_90b45i.prt",
+      "attributes": {
+        "DB_PART_NO": "90-B45I",
+        "DESCRIPTION": "Interface group KDU-3-B-45",
+        "NX_REVISION": "A"
+      },
+      "quantity": 1,
+      "geometry": {
+        "shape": "box",
+        "size": [
+          1,
+          1,
+          1
+        ],
+        "position": [
+          3.6,
+          0,
+          0
+        ]
+      },
+      "children": [
+        {
+          "instanceName": "KDU3_MOT_ADA_701859",
+          "prtFile": "kdu3_mot_ada_701859.prt",
+          "attributes": {
+            "DB_PART_NO": "70-1859",
+            "DESCRIPTION": "Motor adapter",
+            "MATERIAL": "S355J2",
+            "NX_REVISION": "B"
+          },
+          "quantity": 2,
+          "geometry": {
+            "shape": "cone",
+            "size": [
+              0.7,
+              0.7,
+              0.5
+            ],
+            "position": [
+              3.996,
+              0,
+              0.4
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_FOO_MOU_701084",
+          "prtFile": "kdu3_foo_mou_701084.prt",
+          "attributes": {
+            "DB_PART_NO": "70-1084",
+            "DESCRIPTION": "Foot mount bracket",
+            "MATERIAL": "S355J2",
+            "NX_REVISION": "B"
+          },
+          "quantity": 3,
+          "geometry": {
+            "shape": "cone",
+            "size": [
+              0.7,
+              0.7,
+              0.5
+            ],
+            "position": [
+              3.722,
+              0.685,
+              -0.214
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_PT_TEM_801465",
+          "prtFile": "kdu3_pt_tem_801465.prt",
+          "attributes": {
+            "DESCRIPTION": "PT100 temperature sensor",
+            "MATERIAL": "n/a",
+            "NX_REVISION": "A"
+          },
+          "quantity": 5,
+          "geometry": {
+            "shape": "box",
+            "size": [
+              0.24,
+              0.2,
+              0.18
+            ],
+            "position": [
+              3.28,
+              0.423,
+              -0.17
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_VIB_SEN_801149",
+          "prtFile": "kdu3_vib_sen_801149.prt",
+          "attributes": {
+            "DB_PART_NO": "80-1149",
+            "DESCRIPTION": "Vibration sensor",
+            "MATERIAL": "n/a",
+            "NX_REVISION": "B"
+          },
+          "quantity": 5,
+          "geometry": {
+            "shape": "box",
+            "size": [
+              0.24,
+              0.2,
+              0.18
+            ],
+            "position": [
+              3.28,
+              -0.423,
+              0.397
+            ]
+          }
+        },
+        {
+          "instanceName": "KDU3_RET_RIN_501157",
+          "prtFile": "kdu3_ret_rin_501157.prt",
+          "attributes": {
+            "DB_PART_NO": "50-1157",
+            "DESCRIPTION": "Retaining ring",
+            "MATERIAL": "A4-70",
+            "NX_REVISION": "A"
+          },
+          "quantity": 8,
+          "geometry": {
+            "shape": "cylinder",
+            "size": [
+              0.07,
+              0.07,
+              0.34
+            ],
+            "position": [
+              3.829,
+              -1.284,
+              -0.255
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

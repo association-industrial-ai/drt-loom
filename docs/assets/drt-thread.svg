@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="1000" height="300" role="img" aria-label="A Digital Reasoning Thread running from Supplier through Purchase Order, Part, Bill of Material, Production Order and Sales Order to Customer, crossing ERP, PLM and MES system boundaries.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6a6a8e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="300" rx="10" fill="#0f0f1a"/>
+
+  <text x="30" y="36" font-family="ui-sans-serif,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="#e0e0e0">Digital Reasoning Thread</text>
+  <text x="30" y="60" font-family="ui-sans-serif,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-style="italic" fill="#8a8aae">&#8220;Which customer deliveries are affected by a supplier delay?&#8221;</text>
+
+  <!-- system bands -->
+  <rect x="22" y="92" width="271" height="116" rx="8" fill="#ffffff" fill-opacity="0.03" stroke="#2a2a4e" stroke-dasharray="4 4"/>
+  <text x="34" y="112" font-family="ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="600" letter-spacing="1.2" fill="#8a8aae">ERP &#183; PROCUREMENT</text>
+
+  <rect x="296" y="92" width="271" height="116" rx="8" fill="#ffffff" fill-opacity="0.03" stroke="#2a2a4e" stroke-dasharray="4 4"/>
+  <text x="308" y="112" font-family="ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="600" letter-spacing="1.2" fill="#8a8aae">PLM</text>
+
+  <rect x="570" y="92" width="134" height="116" rx="8" fill="#ffffff" fill-opacity="0.03" stroke="#2a2a4e" stroke-dasharray="4 4"/>
+  <text x="582" y="112" font-family="ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="600" letter-spacing="1.2" fill="#8a8aae">MES</text>
+
+  <rect x="707" y="92" width="271" height="116" rx="8" fill="#ffffff" fill-opacity="0.03" stroke="#2a2a4e" stroke-dasharray="4 4"/>
+  <text x="719" y="112" font-family="ui-sans-serif,-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="600" letter-spacing="1.2" fill="#8a8aae">ERP &#183; SALES</text>
+
+  <!-- nodes -->
+  <g font-family="ui-sans-serif,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#e0e0e0" text-anchor="middle">
+    <rect x="30" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#F28E2B" stroke-width="1.5"/>
+    <text x="89" y="161">Supplier</text>
+
+    <rect x="167" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#E15759" stroke-width="1.5"/>
+    <text x="226" y="153">Purchase</text><text x="226" y="169">Order</text>
+
+    <rect x="304" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#4E79A7" stroke-width="1.5"/>
+    <text x="363" y="161">Part</text>
+
+    <rect x="441" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#76B7B2" stroke-width="1.5"/>
+    <text x="500" y="153">Bill of</text><text x="500" y="169">Material</text>
+
+    <rect x="578" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#59A14F" stroke-width="1.5"/>
+    <text x="637" y="153">Production</text><text x="637" y="169">Order</text>
+
+    <rect x="715" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#EDC948" stroke-width="1.5"/>
+    <text x="774" y="153">Sales</text><text x="774" y="169">Order</text>
+
+    <rect x="852" y="128" width="118" height="56" rx="7" fill="#1a1a2e" stroke="#B07AA1" stroke-width="1.5"/>
+    <text x="911" y="161">Customer</text>
+  </g>
+
+  <!-- hops -->
+  <g stroke="#6a6a8e" stroke-width="1.6" marker-end="url(#arrow)">
+    <line x1="150" y1="156" x2="163" y2="156"/>
+    <line x1="287" y1="156" x2="300" y2="156"/>
+    <line x1="424" y1="156" x2="437" y2="156"/>
+    <line x1="561" y1="156" x2="574" y2="156"/>
+    <line x1="698" y1="156" x2="711" y2="156"/>
+    <line x1="835" y1="156" x2="848" y2="156"/>
+  </g>
+
+  <text x="30" y="248" font-family="ui-sans-serif,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#bfbfd4">Six hops, four systems, two of them the same system reached twice.</text>
+  <text x="30" y="270" font-family="ui-sans-serif,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#8a8aae">No document states the answer. No single system owns the path. It exists only as a traversal.</text>
+</svg>

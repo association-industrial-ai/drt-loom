@@ -1,0 +1,15 @@
+node_modules/
+extractor/.venv/
+extractor/graphify-out/
+
+# The reference corpus at the default seed IS committed — that is the point of
+# the repository. Corpora rolled at other seeds are not.
+data/generated-*/
+data/graph-*/
+
+# Derived viewer artifacts, ~4 MB, rebuilt by `npm run graph`. graph.json is
+# committed because rebuilding it needs Python; these two do not need to be.
+data/graph/graph.html
+data/graph/graph.cypher
+*.log
+.DS_Store

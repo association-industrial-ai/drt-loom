@@ -14,6 +14,7 @@ import { stageScriptedBlockers } from "./blockers";
 import { buildDocuments } from "./documents";
 import { buildNxExport, countNxComponents } from "./nx";
 import { buildGold, type GoldAnswer } from "./gold";
+import { buildExecution, type ExecutionSummary } from "./execution";
 import { makeRng, TODAY } from "./rng";
 import type { Dataset, DocumentRecord, NxAssemblyExport } from "../types";
 
@@ -24,6 +25,7 @@ export interface Environment {
   nx: NxAssemblyExport;
   documents: DocumentRecord[];
   nxComponentCount: number;
+  execution: ExecutionSummary;
   builder: Builder;
 }
 
@@ -41,6 +43,11 @@ export function buildEnvironment(seed: number): Environment {
   const nx = buildNxExport(b, md, rng);
   // Gold is built last, from the finished environment.
   const gold = buildGold(b, nx);
+
+  // Execution runs after gold, drawing from the RNG only once every other
+  // stage has finished, so adding it leaves the rest of the environment
+  // byte-identical and no gold answer moves.
+  const execution = buildExecution(b, md, tx, rng);
 
   b.verify();
 
@@ -63,6 +70,7 @@ export function buildEnvironment(seed: number): Environment {
     nx,
     documents,
     nxComponentCount: countNxComponents(nx),
+    execution,
     builder: b,
   };
 }

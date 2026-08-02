@@ -81,6 +81,18 @@ function main(): void {
   console.log(`  NX components ${env.nxComponentCount}`);
   console.log(`  gold questions ${gold.length}`);
 
+  const ex = env.execution;
+  console.log(
+    `\n  execution  ${ex.runs} operation runs, ${ex.issues} material issues, ` +
+      `${ex.checks} in-process checks, ${ex.deviations} deviations`,
+  );
+  if (ex.skippedNotStarted.length) {
+    console.log(
+      `             ${ex.skippedNotStarted.join(", ")} claim to be running but are ` +
+        `planned to start after ${TODAY}, so no actuals were recorded`,
+    );
+  }
+
   const mh = gold.find((q) => q.id === "Q-MH-01")!;
   const nx01 = gold.find((q) => q.id === "Q-NX-01")!;
   console.log(

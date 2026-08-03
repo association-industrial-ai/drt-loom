@@ -18,5 +18,11 @@ data/generated/*/
 # committed because rebuilding it needs Python; these two do not need to be.
 data/graph/graph.html
 data/graph/graph.cypher
+# The assembled landing page. site/ itself is committed; site/_out is the
+# deployable tree that `npm run site` builds from it, and site/assets is
+# copied there from docs/assets rather than kept twice.
+site/_out/
+site/assets/
+
 *.log
 .DS_Store

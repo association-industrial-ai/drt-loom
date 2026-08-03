@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DRT Loom — synthetic industrial enterprises, woven from one seed</title>
+    <meta
+      name="description"
+      content="An extensible Graph-Grounded Synthetic Data Generation framework. One integer seed builds a synthetic industrial company across ERP, PLM, MES, CAD and documents, with a knowledge graph, benchmark questions and ground truth derived from the same model."
+    />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://association-industrial-ai.github.io/drt-loom/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DRT Loom" />
+    <meta
+      property="og:description"
+      content="No system holds the join. DRT Loom weaves ERP, PLM, MES, CAD and the document corpus into one synthetic enterprise, from one integer seed."
+    />
+    <!-- Absolute: a scraper resolves og:image against nothing. -->
+    <meta
+      property="og:image"
+      content="https://association-industrial-ai.github.io/drt-loom/assets/banner.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" href="fonts/archivo-400-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="masthead">
+      <a class="mark" href="./" aria-label="DRT Loom, home">
+        <svg class="mark__glyph" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <g stroke-width="3.4" stroke-linecap="round" fill="none">
+            <path d="M6 12 L18 24" stroke="var(--cyan)" />
+            <path d="M14 8 L26 20" stroke="var(--violet)" />
+            <path d="M26 12 L14 24" stroke="var(--violet)" />
+            <path d="M18 8 L6 20" stroke="var(--cyan)" />
+          </g>
+        </svg>
+        <span class="mark__word"><b>DRT</b> LOOM</span>
+      </a>
+
+      <nav class="masthead__nav" aria-label="Primary">
+        <a href="#thread">The problem</a>
+        <a href="#output">Output</a>
+        <a href="#truth">Verification</a>
+        <a href="#extend">Extend</a>
+        <a class="masthead__repo" href="https://github.com/association-industrial-ai/drt-loom">
+          GitHub
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <!-- ============================================================ hero -->
+      <section class="hero">
+        <p class="eyebrow">
+          <span>Association Industrial AI — AI²</span>
+          <span class="eyebrow__sep" aria-hidden="true">/</span>
+          <span>Reference implementation of the Digital Reasoning Thread</span>
+        </p>
+
+        <h1 class="hero__title">No system<br />holds the join.</h1>
+
+        <p class="hero__lede">
+          A factory’s real questions are answered across ERP, PLM, MES and CAD at once.
+          Extracts of those systems carry commercial and personal data and are almost never
+          publishable; the public corpora that do exist contain one system each.
+          <strong>DRT Loom generates the enterprise instead</strong> — every domain woven into
+          a single model from one integer seed, with every relationship known by construction.
+        </p>
+
+        <div class="hero__actions">
+          <div class="clone">
+            <code id="clone-cmd">git clone https://github.com/association-industrial-ai/drt-loom</code>
+            <button class="clone__copy" type="button" data-copy="#clone-cmd">
+              <span class="clone__label">Copy</span>
+            </button>
+          </div>
+          <a class="link-arrow" id="graph-link" href="graph/">
+            Explore the knowledge graph<span aria-hidden="true"> →</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== the loom -->
+      <section class="loom" aria-labelledby="loom-heading">
+        <div class="loom__intro">
+          <h2 class="kicker" id="loom-heading">The weave draft</h2>
+          <p>
+            Weaving is notated as a grid: which threads a pass goes over, and which it goes
+            under. So is this generator. Six domains are the warp, eight phases are the weft,
+            and the eleven crossings below are
+            <a href="https://github.com/association-industrial-ai/drt-loom/blob/main/src/domains/registry.ts"><code>PIPELINE</code></a>
+            — in the exact order the generator draws from its random stream.
+          </p>
+          <p class="loom__hint">
+            Pull a thread out. The enterprise is rebuilt without it, and the numbers below are
+            what the generator actually produced for that selection.
+          </p>
+        </div>
+
+        <div class="loom__controls" role="group" aria-label="Domains included in the enterprise">
+          <!-- populated by loom.js -->
+        </div>
+
+        <figure class="loom__figure">
+          <div class="loom__scroll">
+            <svg class="loom__svg" role="img" aria-labelledby="loom-svg-title loom-svg-desc">
+              <title id="loom-svg-title">The DRT Loom generation pipeline as a weave draft</title>
+              <desc id="loom-svg-desc">
+                Eight generation phases run in sequence down the page. Six domain threads run
+                across it. Eleven marked crossings show which domain contributes to which
+                phase, numbered in generation order.
+              </desc>
+            </svg>
+          </div>
+          <p class="loom__swipe" hidden>Scroll sideways →</p>
+          <figcaption class="loom__caption">
+            Logistics has no phase of its own: its shipments are emitted inside ERP’s
+            operations pass, which is why its thread is tied to ERP rather than crossing
+            on its own.
+          </figcaption>
+        </figure>
+
+        <div class="readout" aria-live="polite">
+          <div class="readout__item">
+            <span class="readout__value" data-readout="entities">—</span>
+            <span class="readout__label">entities</span>
+          </div>
+          <div class="readout__item">
+            <span class="readout__value" data-readout="relations">—</span>
+            <span class="readout__label">typed relations</span>
+          </div>
+          <div class="readout__item">
+            <span class="readout__value" data-readout="crossing">—</span>
+            <span class="readout__label">cross a domain boundary</span>
+          </div>
+          <div class="readout__item">
+            <span class="readout__value" data-readout="documents">—</span>
+            <span class="readout__label">documents</span>
+          </div>
+          <div class="readout__item readout__item--accent">
+            <span class="readout__value" data-readout="questions">—</span>
+            <span class="readout__label">answerable questions</span>
+          </div>
+        </div>
+
+        <p class="readout__note">
+          Questions follow the domains. Each benchmark question declares the domains its
+          reasoning path crosses, and one that crosses a domain you did not select is not
+          emitted — an unanswerable question measures nothing.
+        </p>
+      </section>
+
+      <!-- ========================================================== 4711 -->
+      <section class="section" id="thread">
+        <h2 class="kicker">Why the join is the hard part</h2>
+        <p class="section__title">Four objects. One number.</p>
+        <p class="section__lede">
+          Ask the generated company <q>what is the status of order 4711?</q> and there is no
+          single answer, because four different business objects carry that number. Retrieval
+          on the string <code>4711</code> returns all of them and cannot tell you which is
+          which — and they are all links in one causal chain.
+        </p>
+
+        <ol class="objects">
+          <li class="object">
+            <p class="object__id">PUR-4711</p>
+            <p class="object__type">Purchase order</p>
+            <p class="object__body">
+              60 × bearing housing 30-1177 from Nordwerk Guss GmbH, €12,870.
+            </p>
+            <p class="object__src">erp/purchase_orders.json</p>
+          </li>
+          <li class="object">
+            <p class="object__id">ECO-4711</p>
+            <p class="object__type">Engineering change order</p>
+            <p class="object__body">
+              Bearing housing 30-1177, revision&nbsp;B&nbsp;→&nbsp;C. Bearing-seat tolerance
+              tightened after field returns showed fretting.
+            </p>
+            <p class="object__src">plm/engineering_changes.json</p>
+          </li>
+          <li class="object">
+            <p class="object__id">PRO-4711</p>
+            <p class="object__type">Production order</p>
+            <p class="object__body">
+              12 × KDU-3-B-45-20-F, released, planned 2026-08-10 to 2026-08-30, eight routing
+              steps.
+            </p>
+            <p class="object__src">mes/production_orders.json</p>
+          </li>
+          <li class="object">
+            <p class="object__id">SO-4711</p>
+            <p class="object__type">Sales order</p>
+            <p class="object__body">
+              Nordhavn Marine A/S, €173,430, requested for 2026-09-12, in production.
+            </p>
+            <p class="object__src">erp/sales_orders.json</p>
+          </li>
+        </ol>
+
+        <div class="chain">
+          <p class="chain__title">And they are the same thread</p>
+          <p class="chain__path">
+            <span class="chain__node">Nordwerk Guss GmbH</span>
+            <span class="chain__edge">supplies</span>
+            <span class="chain__node">PUR-4711</span>
+            <span class="chain__edge">delivers</span>
+            <span class="chain__node chain__node--hot">part 30-1177</span>
+            <span class="chain__edge">consumed by</span>
+            <span class="chain__node">PRO-4711</span>
+            <span class="chain__edge">fulfils</span>
+            <span class="chain__node">SO-4711</span>
+            <span class="chain__edge">ordered by</span>
+            <span class="chain__node">Nordhavn Marine A/S</span>
+          </p>
+          <p class="chain__foot">
+            Five hops across three systems. ERP holds the first and the last, PLM holds the
+            part, MES holds the production order. No system holds the path, and no document
+            in the corpus states it — but the generator knows it, because it built it.
+            That is what makes an exact answer available to score against.
+          </p>
+        </div>
+      </section>
+
+      <!-- ======================================================== output -->
+      <section class="section section--tint" id="output">
+        <h2 class="kicker">Output</h2>
+        <p class="section__title">One seed, one enterprise.</p>
+        <p class="section__lede">
+          Records, documents, a knowledge graph, benchmark questions and ground truth all
+          derive from the same model, so they cannot disagree with each other. Generation
+          takes about 30 ms, with no network, no API keys and no runtime dependencies.
+        </p>
+
+        <div class="grid-2">
+          <div class="panel">
+            <p class="panel__head">Everything a company produces, in one directory</p>
+            <pre class="code"><code>data/generated/alpine-drive-systems/
+├── config.yaml      the exact configuration this was built from
+├── generation.json  seed, domains, counts, cross-domain edges
+├── dataset.json     entities and typed relations
+├── gold.json        only the questions these domains can answer
+├── documents/       when the documents domain is selected
+├── nx/              when CAD is selected
+└── graph/           after `npm run graph`</code></pre>
+            <p class="panel__foot">
+              The resolved configuration is written next to the output, so a company can
+              always be rebuilt from its own artifacts — byte for byte.
+            </p>
+          </div>
+
+          <div class="panel">
+            <p class="panel__head">Every relation is typed and carries its provenance</p>
+            <pre class="code"><code><span class="c">// dataset.json → relations[]</span>
+{
+  <span class="k">"source"</span>: <span class="s">"PART-10-1798"</span>,
+  <span class="k">"target"</span>: <span class="s">"SUP-001"</span>,
+  <span class="k">"relation"</span>: <span class="s">"approved_supplier"</span>,
+  <span class="k">"confidence"</span>: <span class="s">"EXTRACTED"</span>,
+  <span class="k">"sourceFile"</span>: <span class="s">"erp/approved_vendor_list.json"</span>
+}</code></pre>
+            <p class="panel__foot">
+              <code>EXTRACTED</code>, <code>INFERRED</code> or <code>AMBIGUOUS</code>. Where
+              CAD carries no part number the link stays <code>AMBIGUOUS</code> rather than
+              being silently resolved, so the uncertainty is in the graph instead of hidden
+              behind it.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel panel--wide">
+          <p class="panel__head">Each question carries the answer it must produce</p>
+          <pre class="code"><code>{
+  <span class="k">"id"</span>: <span class="s">"Q-MH-01"</span>,
+  <span class="k">"category"</span>: <span class="s">"multi_hop"</span>,
+  <span class="k">"question"</span>: <span class="s">"Nordwerk Guss GmbH has told us bearing housing 30-1177 will slip by
+                three weeks. Which customer deliveries due before the end of
+                November are at risk, and what is the total value exposed?"</span>,
+  <span class="k">"expectedIds"</span>: [<span class="s">"SO-4711"</span>, <span class="s">"SO-4716"</span>, <span class="s">"SO-4720"</span>, <span class="c">…</span>],
+  <span class="k">"expectedValues"</span>: { <span class="k">"ordersAtRisk"</span>: 16, <span class="k">"customersAffected"</span>: 11,
+                      <span class="k">"exposureEur"</span>: 2739771.54 }
+}</code></pre>
+          <p class="panel__foot">
+            Eighteen questions across six categories: disambiguation, multi-hop, aggregation,
+            absence, lookup and narrative. The narrative questions are answerable only from
+            prose, and a knowledge graph contributes nothing to them. That is deliberate — if
+            one architecture wins every category, the benchmark is measuring its own
+            construction rather than the systems under test.
+          </p>
+        </div>
+      </section>
+
+      <!-- ==================================================== verification -->
+      <section class="section" id="truth">
+        <h2 class="kicker">Verification</h2>
+        <p class="section__title">Ground truth is derived, not annotated.</p>
+        <p class="section__lede">
+          No LLM invents an entity, a relationship or an answer. Every gold answer is computed
+          from the finished environment by a reference oracle that shares no code with anything
+          being evaluated, and no machine-checkable field is copied from a scripted constant.
+        </p>
+
+        <dl class="checks">
+          <div class="check">
+            <dt><code>npm run verify</code></dt>
+            <dd>
+              Generator, gold format, citation handling and scorer are mechanically
+              compatible on the reference seed.
+            </dd>
+          </div>
+          <div class="check">
+            <dt><code>npm run verify:seeds</code></dt>
+            <dd>
+              Six seeds rebuilt from scratch: every answer re-derived and compared to gold,
+              cross-question invariants checked, then rebuilt again to confirm the output is
+              byte-identical.
+            </dd>
+          </div>
+          <div class="check">
+            <dt><code>npm run verify:domains</code></dt>
+            <dd>
+              Ten domain configurations held to the same standard as the full one, including
+              that relations still cross domain boundaries — one enterprise, not several
+              datasets sharing a directory.
+            </dd>
+          </div>
+          <div class="check">
+            <dt><code>npm run verify:config</code></dt>
+            <dd>
+              Configuration round-trips unchanged, dependency closure handles chains and
+              cycles, and every kind of bad input is rejected with a message naming the actual
+              mistake.
+            </dd>
+          </div>
+        </dl>
+
+        <p class="caveat">
+          <strong>What this does not prove.</strong> That the answers are objectively correct.
+          A wrong answer scored against itself still returns 1.0. The verification proves
+          self-consistency, determinism and shape — read
+          <a href="https://github.com/association-industrial-ai/drt-loom/blob/main/KNOWN-ISSUES.md">KNOWN-ISSUES.md</a>
+          before publishing any number measured here.
+        </p>
+      </section>
+
+      <!-- ======================================================== extend -->
+      <section class="section section--tint" id="extend">
+        <h2 class="kicker">Extending it</h2>
+        <p class="section__title">A domain is code, not a key in a YAML file.</p>
+        <p class="section__lede">
+          Configuration selects meaning; it does not define it. Adding <code>scada: true</code>
+          to <code>config.yaml</code> is a configuration error naming the typo, not a new
+          domain. Registering a module is what makes a domain real.
+        </p>
+
+        <div class="grid-2 grid-2--wide-first">
+          <div class="panel">
+            <p class="panel__head">The contract</p>
+            <pre class="code"><code><span class="kw">export interface</span> <span class="t">DomainModule</span> {
+  <span class="k">id</span>: DomainId;
+  <span class="k">label</span>: <span class="t">string</span>;
+  <span class="k">dependencies</span>?: <span class="t">readonly</span> DomainId[];
+  <span class="k">contributes</span>: <span class="t">readonly</span> NodeType[];
+
+  <span class="c">// Keyed by phase, not a single generate(), because</span>
+  <span class="c">// domains genuinely interleave in the random stream.</span>
+  <span class="k">generate</span>?: Partial&lt;Record&lt;Phase, (ctx) =&gt; <span class="t">void</span>&gt;&gt;;
+
+  <span class="c">// Optional. A domain with nothing to assert omits it</span>
+  <span class="c">// rather than implementing an empty method.</span>
+  <span class="k">validate</span>?(ctx, problems: <span class="t">string</span>[]): <span class="t">void</span>;
+}</code></pre>
+          </div>
+
+          <div class="panel">
+            <p class="panel__head">Registered today</p>
+            <table class="domains">
+              <thead>
+                <tr><th scope="col">Domain</th><th scope="col">Needs</th><th scope="col">Contributes</th></tr>
+              </thead>
+              <tbody><!-- populated by loom.js --></tbody>
+            </table>
+            <p class="panel__foot">
+              Dependencies are closed automatically and the addition is reported, never
+              applied silently. <code>erp</code> and <code>plm</code> are core: an enterprise
+              with no parts and no orders is not a smaller enterprise, it is an incoherent
+              one.
+            </p>
+          </div>
+        </div>
+
+        <p class="section__foot">
+          <a class="link-arrow" href="https://github.com/association-industrial-ai/drt-loom/blob/main/docs/EXTENDING.md">
+            The contract, a worked PLC Engineering example, and the checklist<span aria-hidden="true"> →</span>
+          </a>
+        </p>
+      </section>
+
+      <!-- ========================================================== start -->
+      <section class="section closing">
+        <p class="section__title">Build one.</p>
+        <pre class="code code--wide"><code>npm run generate -- --name <span class="s">"Alpine Drive Systems"</span> --domains erp,plm,cad --size small</code></pre>
+        <p class="closing__note">
+          Or run it with no options and it asks — company name, seed, size, and which optional
+          domains to include. Node 20 or newer. Nothing else.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <p class="footer__head">Repository</p>
+          <ul>
+            <li><a href="https://github.com/association-industrial-ai/drt-loom">association-industrial-ai/drt-loom</a></li>
+            <li><a href="https://github.com/association-industrial-ai/drt-loom/blob/main/docs/SCHEMA.md">Schema</a></li>
+            <li><a href="https://github.com/association-industrial-ai/drt-loom/blob/main/docs/QUESTIONS.md">All 18 questions</a></li>
+            <li><a href="https://github.com/association-industrial-ai/drt-loom/blob/main/docs/BENCHMARK.md">Benchmark design</a></li>
+            <li><a href="https://github.com/association-industrial-ai/drt-loom/blob/main/docs/VERIFICATION.md">Verification</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__head">Concept</p>
+          <ul>
+            <li><a href="https://digital-reasoning-thread.com/">digital-reasoning-thread.com</a></li>
+            <li><a href="https://github.com/vlarichev/digital-reasoning-thread/">The DRT specification</a></li>
+            <li><a href="https://www.ai2n.eu">Association Industrial AI (AI²)</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__head">Licence</p>
+          <ul>
+            <li>Code — MIT</li>
+            <li>Generated environments and ground truth — CC BY 4.0</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="footer__synthetic">
+        <span>
+          All content is synthetic. Kestrel Drive Systems, its customers, its suppliers and
+          every person named in the documents are fictional. The corpus contains no real
+          company data, personal data or confidential material.
+        </span>
+      </p>
+
+      <p class="footer__meta">
+        <span>DRT Loom v0.1.0 — reference environment at seed <span class="mono">20260728</span></span>
+        <span>Developed under AI², the Association Industrial AI</span>
+      </p>
+    </footer>
+
+    <script src="site-data.js"></script>
+    <script src="loom.js"></script>
+  </body>
+</html>

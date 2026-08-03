@@ -196,6 +196,26 @@ clustering is re-run on each build and the committed graph was built at 272.
 
 ![The knowledge graph of one generated environment, with the node inspector showing a supplier, its source file and its neighbouring parts](docs/assets/knowledge-graph.jpeg)
 
+### Build the landing page
+
+```bash
+npm run site        # write site/site-data.js, assemble site/_out
+npm run site:serve  # open it
+npm run site:check  # fail if site-data.js no longer matches the generator
+```
+
+Every number the page states — entity and relation counts, how many questions
+each domain selection can answer, which phase each domain runs in — is produced
+by running the generator across all sixteen optional-domain combinations, not
+typed into the HTML. `site-data.js` is committed and CI regenerates it, so a
+change to a size profile fails the build rather than quietly making the page
+wrong. `npm run build:all` does the corpus, the graph and the page in order.
+
+Pushing to `main` deploys `site/_out` to GitHub Pages via
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml), rebuilding it from
+the generator on the runner. The graph step is allowed to fail — the page hides
+the graph link when the file is absent.
+
 ### Score an answer
 
 `src/score/score.ts` is dependency-free and does not require an LLM judge.

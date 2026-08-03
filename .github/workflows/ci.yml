@@ -25,6 +25,12 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
+      # site-data.js is generated, committed and read by the landing page. If
+      # the generator has changed, the page is quoting numbers that no longer
+      # describe it.
+      - name: Landing-page data is current
+        run: npm run site:check
+
       - name: Self-consistency and scorer compatibility
         run: npm run verify
 

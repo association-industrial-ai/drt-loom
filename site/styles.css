@@ -56,7 +56,7 @@
   --rule-strong: #cfd3e0;
   /* The weft is structure, not a hairline: it has to read as a thread the warp
      is woven through, which --rule-strong at 1.3:1 on the paper does not. */
-  --weft: #a9b0c6;
+  --weft: #737d99;
 
   /* Accents */
   --violet: #7a5af0;
@@ -487,8 +487,8 @@ pre,
   height: auto;
 }
 
-/* Weave drawing order matters: weft under, warp over, then the crossing
-   segment back on top — which is how the over/under reads as cloth. */
+/* Drawing order: guides, warp, links, ties, crossings. The links come after
+   the warp so a pass can break the threads it runs over. */
 .warp {
   transition: stroke 200ms ease, opacity 200ms ease;
 }
@@ -498,9 +498,20 @@ pre,
   stroke-dasharray: 2 7;
 }
 
-.weft {
+/* The row guide carries no information — it exists so a phase label stays
+   attached to its row. Anything heavier competes with the link. */
+.weft-guide {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+/* The link: one pass of the shuttle, spanning the domains that phase ties
+   together. This is the line that says something, so it is the darkest thing
+   in the drawing after the crossings themselves. */
+.weft-link {
   stroke: var(--weft);
-  stroke-width: 2;
+  stroke-width: 3;
+  stroke-linecap: round;
 }
 
 /* The short piece of weft that passes over a warp where the phase does not
@@ -514,13 +525,13 @@ pre,
    pick stays continuous. The warp goes under, visibly. */
 .weft-clear {
   stroke: var(--paper);
-  stroke-width: 7;
+  stroke-width: 8;
   stroke-linecap: butt;
 }
 
 .weft-over {
   stroke: var(--weft);
-  stroke-width: 2;
+  stroke-width: 3;
   stroke-linecap: butt;
 }
 

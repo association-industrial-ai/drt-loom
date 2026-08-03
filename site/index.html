@@ -97,7 +97,9 @@
             under. So is this generator. Six domains are the warp, eight phases are the weft,
             and the eleven crossings below are
             <a href="https://github.com/association-industrial-ai/drt-loom/blob/main/src/domains/registry.ts"><code>PIPELINE</code></a>
-            — in the exact order the generator draws from its random stream.
+            — in the exact order the generator draws from its random stream. Where a pass ties
+            two systems together, a line joins them; most passes draw from one system only,
+            and the cross-system structure is built by the ones that do not.
           </p>
           <p class="loom__hint">
             Pull a thread out. The enterprise is rebuilt without it, and the numbers below are
@@ -114,9 +116,12 @@
             <svg class="loom__svg" role="img" aria-labelledby="loom-svg-title loom-svg-desc">
               <title id="loom-svg-title">The DRT Loom generation pipeline as a weave draft</title>
               <desc id="loom-svg-desc">
-                Eight generation phases run in sequence down the page. Six domain threads run
-                across it. Eleven marked crossings show which domain contributes to which
-                phase, numbered in generation order.
+                Six domain threads run down the page as columns; eight generation phases run
+                across it as rows, in the order they execute. Eleven marked crossings show
+                which domain contributes to which phase, numbered in generation order. Where a
+                phase draws from more than one domain, a horizontal link joins them: parties
+                ties ERP to MES, catalog ties ERP to PLM, engineering ties PLM to CAD. The
+                remaining five phases draw from a single domain and so have no link.
               </desc>
             </svg>
           </div>

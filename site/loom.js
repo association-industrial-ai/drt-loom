@@ -4,6 +4,8 @@
  * PIPELINE is a phase × domain matrix, which is exactly how weaving is
  * notated: six domain threads run down the page as the warp, eight phases
  * run across it as the weft, and a crossing is a phase drawing from a domain.
+ * A phase's pick is drawn as a link spanning the domains it ties together, so
+ * the horizontal reach of a row is the reach of that pass.
  * Nothing here is illustrative — the grid, the numbering and every count come
  * from site-data.js, which `npm run site` produces by running the generator.
  */
@@ -80,12 +82,14 @@
     }
   }
 
-  // 1. Weft: one pass per phase, running under the warp.
+  /* 1. Row guides. Faint on purpose: they tie a phase's label to its row and
+        nothing more. The line that carries meaning is the link drawn in step
+        3, which spans only the domains the phase actually draws from. */
   for (let i = 0; i < phases.length; i++) {
     el(
       "line",
       {
-        class: "weft",
+        class: "weft-guide",
         x1: colX(0) - 34,
         y1: rowY(i),
         x2: colX(warp.length - 1) + 34,
@@ -124,23 +128,52 @@
     labels.set(d.id, text);
   }
 
-  /* 3. The other half of the weave. A draft's cells are binary: either the
-        warp is over or the weft is. A crossing puts the warp over, and step 2
-        drew all six warps unbroken over every pick, so every cell currently
-        reads as a crossing. These are the rest — the phase does not draw from
-        this domain, so here the weft passes over the thread. */
+  /* 3. The links — what the picture is for.
+
+        A phase is one pass of the shuttle, and the systems it draws from are
+        what that pass ties together: `parties` joins ERP to MES, `catalog`
+        joins PLM to ERP. Drawing the pick at full width said nothing, because
+        every row then looked identical and connected everything to everything.
+        A link spans from the leftmost to the rightmost domain the phase
+        touches, so its length is the reach of that pass — and five of the
+        eight phases draw from a single domain, which is why they have no link
+        at all. That is the fact, not an omission.
+
+        Where a link passes a domain the phase does not use, the weft goes over
+        and the warp is broken: casing first so the thread is cut cleanly, then
+        the weft redrawn across the gap. This is the interlacing, and it now
+        appears only where it means something.
+
+        Redrawn on every toggle, because switching MES off genuinely shortens
+        the `parties` pass. */
   const OVER = 13;
-  const crossed = new Set(data.pipeline.map((s) => `${s.phase}|${s.domain}`));
-  for (const [pi, p] of phases.entries()) {
-    for (const [di, d] of warp.entries()) {
-      if (crossed.has(`${p.id}|${d.id}`)) continue;
+  const links = el("g", { class: "links" }, svg);
+
+  const drawLinks = () => {
+    while (links.firstChild) links.removeChild(links.firstChild);
+
+    for (const [pi, p] of phases.entries()) {
+      const cols = data.pipeline
+        .filter((s) => s.phase === p.id && on.has(s.domain))
+        .map((s) => domainIndex.get(s.domain));
+      if (cols.length < 2) continue;
+
+      const lo = Math.min(...cols);
+      const hi = Math.max(...cols);
       const y = rowY(pi);
-      const x = colX(di);
-      const span = { x1: x - OVER, y1: y, x2: x + OVER, y2: y };
-      el("line", { class: "weft-clear", ...span }, svg);
-      el("line", { class: "weft-over", ...span }, svg);
+      const touched = new Set(cols);
+
+      el("line", { class: "weft-link", x1: colX(lo), y1: y, x2: colX(hi), y2: y }, links);
+
+      for (let di = lo + 1; di < hi; di++) {
+        if (touched.has(di)) continue;
+        const x = colX(di);
+        const span = { x1: x - OVER, y1: y, x2: x + OVER, y2: y };
+        el("line", { class: "weft-clear", ...span }, links);
+        el("line", { class: "weft-over", ...span }, links);
+      }
     }
-  }
+  };
 
   /* 4. Ties: a domain with `inlineIn` never gets a pass of its own — its
         records are emitted inside the host's. Logistics is the whole reason
@@ -291,6 +324,7 @@
     for (const t of ties) {
       t.node.style.opacity = on.has(t.domain) && on.has(t.host) ? "1" : "0";
     }
+    drawLinks();
 
     const state = data.states[stateKey()];
     if (!state) return;

@@ -54,6 +54,9 @@
   --slate: #6e768c;
   --rule: #e2e4ec;
   --rule-strong: #cfd3e0;
+  /* The weft is structure, not a hairline: it has to read as a thread the warp
+     is woven through, which --rule-strong at 1.3:1 on the paper does not. */
+  --weft: #a9b0c6;
 
   /* Accents */
   --violet: #7a5af0;
@@ -496,8 +499,29 @@ pre,
 }
 
 .weft {
-  stroke: var(--rule-strong);
+  stroke: var(--weft);
   stroke-width: 2;
+}
+
+/* The short piece of weft that passes over a warp where the phase does not
+   draw from that domain. This is the interlacing: without it the weft is
+   always underneath, the warp threads run unbroken, and the drawing is six
+   vertical lines rather than cloth.
+
+   A 2px thread laid over a 5px one only dents it, so the pair is drawn as
+   casing + thread: a paper-coloured band the width of the crossing breaks the
+   warp outright, and the weft is then redrawn across the full break so the
+   pick stays continuous. The warp goes under, visibly. */
+.weft-clear {
+  stroke: var(--paper);
+  stroke-width: 7;
+  stroke-linecap: butt;
+}
+
+.weft-over {
+  stroke: var(--weft);
+  stroke-width: 2;
+  stroke-linecap: butt;
 }
 
 .cross {

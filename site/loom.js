@@ -124,7 +124,25 @@
     labels.set(d.id, text);
   }
 
-  /* 3. Ties: a domain with `inlineIn` never gets a pass of its own — its
+  /* 3. The other half of the weave. A draft's cells are binary: either the
+        warp is over or the weft is. A crossing puts the warp over, and step 2
+        drew all six warps unbroken over every pick, so every cell currently
+        reads as a crossing. These are the rest — the phase does not draw from
+        this domain, so here the weft passes over the thread. */
+  const OVER = 13;
+  const crossed = new Set(data.pipeline.map((s) => `${s.phase}|${s.domain}`));
+  for (const [pi, p] of phases.entries()) {
+    for (const [di, d] of warp.entries()) {
+      if (crossed.has(`${p.id}|${d.id}`)) continue;
+      const y = rowY(pi);
+      const x = colX(di);
+      const span = { x1: x - OVER, y1: y, x2: x + OVER, y2: y };
+      el("line", { class: "weft-clear", ...span }, svg);
+      el("line", { class: "weft-over", ...span }, svg);
+    }
+  }
+
+  /* 4. Ties: a domain with `inlineIn` never gets a pass of its own — its
         records are emitted inside the host's. Logistics is the whole reason
         this notation is honest rather than tidy. */
   const ties = [];
@@ -153,7 +171,7 @@
     }
   }
 
-  // 4. Crossings: the weft binding over the warp, numbered in generation order.
+  // 5. Crossings: the warp bound over the weft, numbered in generation order.
   const knots = [];
   for (const step of data.pipeline) {
     const x = colX(domainIndex.get(step.domain));

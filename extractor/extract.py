@@ -27,8 +27,28 @@ from graphify import build, cluster, export, validate
 import os
 
 ROOT = Path(os.environ.get("BENCH_ROOT", Path(__file__).resolve().parents[1]))
-DATASET = ROOT / "data" / "generated" / "dataset.json"
-OUT_DIR = ROOT / "data" / "graph"
+
+# Which dataset to build a graph from.
+#
+#   npm run graph                                       the reference corpus
+#   DRT_DATASET=data/generated/<slug>/dataset.json \
+#     npm run graph                                     one generated company
+#
+# DRT_DATASET is the same variable src/score/score.ts reads, so a company is
+# selected once and every tool follows. With a company dataset and no explicit
+# DRT_GRAPH_OUT, the graph is written into that company's own directory, which
+# keeps each generated enterprise self-contained.
+_dataset_env = os.environ.get("DRT_DATASET")
+if _dataset_env:
+    DATASET = Path(_dataset_env).expanduser().resolve()
+    _default_out = DATASET.parent / "graph"
+else:
+    DATASET = ROOT / "data" / "generated" / "dataset.json"
+    _default_out = ROOT / "data" / "graph"
+
+OUT_DIR = Path(os.environ["DRT_GRAPH_OUT"]).expanduser().resolve() if os.environ.get(
+    "DRT_GRAPH_OUT"
+) else _default_out
 SCRATCH = Path(__file__).resolve().parent / "graphify-out"
 
 # Graphify's closed enum. Everything domain-specific goes in `node_type`.
@@ -73,7 +93,12 @@ def to_extraction(dataset: dict) -> dict:
 
 def main() -> int:
     if not DATASET.is_file():
-        print(f"✗ {DATASET.relative_to(REPO)} not found — run `npm run gen` first", file=sys.stderr)
+        hint = (
+            "run `npm run gen` first"
+            if not os.environ.get("DRT_DATASET")
+            else "check DRT_DATASET, or run `npm run generate` for that company first"
+        )
+        print(f"✗ {DATASET} not found — {hint}", file=sys.stderr)
         return 1
 
     dataset = json.loads(DATASET.read_text())
@@ -155,7 +180,11 @@ def main() -> int:
         by_conf[c] = by_conf.get(c, 0) + 1
 
     print(f"\n  provenance: " + ", ".join(f"{k} {v}" for k, v in sorted(by_conf.items())))
-    print(f"  wrote data/graph/graph.json ({size_mb:.2f} MB), graph.html, graph.cypher")
+    try:
+        where = OUT_DIR.relative_to(Path.cwd())
+    except ValueError:
+        where = OUT_DIR
+    print(f"  wrote {where}/graph.json ({size_mb:.2f} MB), graph.html, graph.cypher")
     print("\n✓ graph build complete")
     return 0
 

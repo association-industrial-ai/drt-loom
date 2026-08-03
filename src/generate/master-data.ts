@@ -78,6 +78,12 @@ export interface MasterData {
   bomChildren: Map<string, string[]>;
   /** child part -> parents, the reverse index that powers where_used */
   bomParents: Map<string, string[]>;
+  /**
+   * "<commodityGroup>:<sizeClass>" -> leaf part ids, the pool sub-assemblies are
+   * populated from. Built by the item master, consumed by product structure —
+   * so it lives on the shared model rather than in a closure.
+   */
+  leafByGroupSize: Map<string, string[]>;
   /** variant id -> CAD assembly id */
   cadAssemblyOf: Map<string, string>;
   /** part id -> CAD component id */
@@ -85,8 +91,8 @@ export interface MasterData {
   ecoIds: string[];
 }
 
-export function buildMasterData(b: Builder, rng: Rng): MasterData {
-  const md: MasterData = {
+export function emptyMasterData(): MasterData {
+  return {
     customerIds: [],
     supplierIds: [],
     supplierByGroup: new Map(),
@@ -96,11 +102,20 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
     parts: new Map(),
     bomChildren: new Map(),
     bomParents: new Map(),
+    leafByGroupSize: new Map(),
     cadAssemblyOf: new Map(),
     cadComponentOf: new Map(),
     ecoIds: [],
   };
+}
 
+/**
+ * ERP, `parties` phase — the commercial counterparties.
+ *
+ * First step in the pipeline, so these draws sit at the head of the random
+ * stream and every later value depends on them.
+ */
+export function buildParties(b: Builder, md: MasterData, rng: Rng): void {
   /* ------------------------------------------------------------ customers */
   CUSTOMERS.forEach((c, i) => {
     const id = `CUST-${seq(i + 1, 3)}`;
@@ -134,6 +149,10 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
     }
   });
 
+}
+
+/** MES, `parties` phase — the production resources routing steps are booked to. */
+export function buildWorkCenters(b: Builder, md: MasterData, rng: Rng): void {
   /* --------------------------------------------------------- work centres */
   for (const wc of WORK_CENTERS) {
     const id = `WC-${wc.code}`;
@@ -146,6 +165,13 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
     md.workCenterIds.push(id);
   }
 
+}
+
+/**
+ * PLM, `catalog` phase — the item master: parts, their revision history and the
+ * drawings that release them.
+ */
+export function buildItemMaster(b: Builder, md: MasterData, rng: Rng): void {
   /* -------------------------------------------------------------- parts */
   // The scripted part is created first so its number (30-1177) is reserved.
   const scriptedPartId = `PART-${SCRIPTED.partNumber}`;
@@ -159,7 +185,7 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
   });
 
   const usedNumbers = new Set<string>([SCRIPTED.partNumber]);
-  const leafByGroupSize = new Map<string, string[]>();
+  const leafByGroupSize = md.leafByGroupSize;
 
   for (const group of Object.keys(PART_FAMILIES) as CommodityGroup[]) {
     for (const sc of ["small", "medium", "large"] as SizeClass[]) {
@@ -231,6 +257,16 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
     });
   }
 
+}
+
+/**
+ * ERP, `catalog` phase — the approved vendor list.
+ *
+ * An ERP fact about a PLM part, which is why it is its own step: it has to run
+ * after the item master exists and before anything reads supplier coverage.
+ * The ~6 % of parts left without an entry are the absence Q-ABS-01 asks about.
+ */
+export function buildApprovedSuppliers(b: Builder, md: MasterData, rng: Rng): void {
   /* -------------------------------------------------- approved suppliers */
   for (const [partId, p] of md.parts) {
     if (p.isAssembly) continue; // sub-assemblies are made in-house
@@ -249,6 +285,16 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
     }
     md.parts.get(partId)!.hasApprovedSupplier = true;
   }
+
+}
+
+/**
+ * PLM, `structure` phase — products, configured variants and the multi-level
+ * BOM that ties them to the item master.
+ */
+export function buildProductStructure(b: Builder, md: MasterData, rng: Rng): void {
+  const leafByGroupSize = md.leafByGroupSize;
+  const scriptedPartId = `PART-${SCRIPTED.partNumber}`;
 
   /* ------------------------------------------------- products & variants */
   for (const t of PRODUCT_TYPES) {
@@ -348,14 +394,6 @@ export function buildMasterData(b: Builder, rng: Rng): MasterData {
 
   // The demo variant must exist verbatim.
   ensureScriptedVariant(b, md, rng);
-
-  /* ------------------------------------------------------------------ CAD */
-  buildCad(b, md, rng);
-
-  /* ------------------------------------------------------------------ ECOs */
-  buildEcos(b, md, rng);
-
-  return md;
 }
 
 /* ========================================================================== */
@@ -480,7 +518,11 @@ function ensureScriptedVariant(b: Builder, md: MasterData, rng: Rng): void {
 
 /* ------------------------------------------------------------------- CAD */
 
-function buildCad(b: Builder, md: MasterData, rng: Rng): void {
+/**
+ * CAD, `engineering` phase — assemblies, components and the CAD mirror of the
+ * BOM tree. Runs after product structure because it mirrors it.
+ */
+export function buildCad(b: Builder, md: MasterData, rng: Rng): void {
   for (const [vId, v] of md.variants) {
     const vCode = String(b.get(vId).attrs.code);
     const asmId = `CAD-${vCode}`;
@@ -563,7 +605,13 @@ function cadInstanceName(partNumber: string, name: string): string {
 
 /* ------------------------------------------------------------------ ECOs */
 
-function buildEcos(b: Builder, md: MasterData, rng: Rng): void {
+/**
+ * PLM, `engineering` phase — engineering change orders over the item master.
+ *
+ * `count` is the size profile's `changeOrders`; at `medium` it is 24, the
+ * literal this loop used to carry.
+ */
+export function buildEcos(b: Builder, md: MasterData, rng: Rng, count: number): void {
   const partIds = [...md.parts.keys()].filter((id) => !md.parts.get(id)!.isAssembly);
 
   // The scripted ECO first, so its number is deterministic.
@@ -603,7 +651,7 @@ function buildEcos(b: Builder, md: MasterData, rng: Rng): void {
     "Material substitution to shorten lead time.",
   ];
 
-  for (let i = 0; i < 24; i++) {
+  for (let i = 0; i < count; i++) {
     const num = 4700 + i;
     const id = `ECO-${num}`;
     if (b.has(id)) continue;

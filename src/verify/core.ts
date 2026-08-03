@@ -12,10 +12,11 @@
  *                        format drift between generator, gold and scorer.
  */
 
+import type { Environment } from "../generate/environment";
 import { checkInvariants } from "../generate/invariants";
 import type { GoldAnswer } from "../generate/gold";
 import { aliasesFromDataset, enrichCitations, scoreCitations, scoreValues } from "../score/score";
-import type { Dataset, NxAssemblyExport } from "../types";
+import type { Dataset } from "../types";
 
 /**
  * The canonical response: exactly the entity ids and scalar values gold says a
@@ -115,19 +116,30 @@ export function scoreGoldAgainstItself(
   return { problems, citationScored };
 }
 
+/**
+ * Run every gate over a built environment.
+ *
+ * Takes the whole `Environment` rather than loose arguments so that the domain
+ * selection travels with the artifacts. The gates need it: which questions must
+ * exist is a function of which domains were generated.
+ */
 export function verifyEnvironment(
-  dataset: Dataset,
-  gold: GoldAnswer[],
-  nx: NxAssemblyExport,
+  env: Environment,
   label: string,
   opts: { scorer?: boolean } = {},
 ): VerifyReport {
-  const problems = checkInvariants(dataset, gold, nx).map((p) => `${label}: ${p}`);
+  const problems = checkInvariants(env.dataset, env.gold, env.nx, env.config.domains).map(
+    (p) => `${label}: ${p}`,
+  );
+
+  // Each selected domain checks its own contribution to the shared model.
+  problems.push(...env.domainProblems.map((p) => `${label}: ${p}`));
+
   let citationScored = 0;
   if (opts.scorer !== false) {
-    const s = scoreGoldAgainstItself(dataset, gold, label);
+    const s = scoreGoldAgainstItself(env.dataset, env.gold, label);
     problems.push(...s.problems);
     citationScored = s.citationScored;
   }
-  return { problems, goldCount: gold.length, citationScored };
+  return { problems, goldCount: env.gold.length, citationScored };
 }

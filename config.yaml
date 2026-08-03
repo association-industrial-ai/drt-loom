@@ -1,0 +1,24 @@
+# DRT Loom — synthetic industrial enterprise definition.
+#
+# This file selects which implemented domains take part and how large the
+# company is. It cannot invent a domain: what each one means lives in code,
+# under src/domains/. See docs/EXTENDING.md to add one.
+#
+# size scales transaction and document volume: small | medium | large.
+company:
+  name: Alpine Drive Systems
+  size: small
+
+# Any integer, or "reference" for the published seed (20260728).
+# The same seed and the same domains reproduce byte-identical output.
+seed: 42
+
+# erp and plm are core and cannot be disabled.
+# Dependencies are added automatically: cad needs plm, mes needs erp + plm.
+domains:
+  erp: true
+  plm: true
+  mes: false
+  cad: true
+  documents: false
+  logistics: false

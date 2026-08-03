@@ -10,6 +10,7 @@
  */
 
 import type { Builder } from "./builder";
+import type { SizeProfile } from "../config/schema";
 import { ROUTING_TEMPLATE, SCRIPTED, STAFF } from "./catalog";
 import type { MasterData } from "./master-data";
 import {
@@ -42,26 +43,50 @@ const SO_STATUS_OPEN = ["open", "open", "open", "confirmed", "in production"] as
 const PRO_STATUS = ["planned", "released", "released", "in progress", "complete"] as const;
 const PUR_STATUS = ["open", "open", "confirmed", "delivered", "part-delivered"] as const;
 
-export function buildTransactions(b: Builder, md: MasterData, rng: Rng): TransactionIndex {
-  const idx: TransactionIndex = {
+export function emptyTransactionIndex(): TransactionIndex {
+  return {
     salesOrderIds: [],
     productionOrderIds: [],
     purchaseOrderIds: [],
     purchasesOfPart: new Map(),
     productionOfVariant: new Map(),
   };
+}
 
+/**
+ * What the domains contribute to the operational flow.
+ *
+ * ERP owns this loop because a sales order is an ERP record, but the order it
+ * places on the shop floor is MES and the shipment that closes it is logistics.
+ * Those two are created inline rather than in a later pass, because that is
+ * where they belong causally — and moving them would reorder the random stream.
+ */
+export interface OperationsOptions {
+  scale: SizeProfile;
+  /** MES selected: production orders, routing and work-centre bookings. */
+  mes: boolean;
+  /** Logistics selected: shipments against dispatched sales orders. */
+  logistics: boolean;
+}
+
+export function buildTransactions(
+  b: Builder,
+  md: MasterData,
+  idx: TransactionIndex,
+  rng: Rng,
+  opts: OperationsOptions,
+): TransactionIndex {
   const variantIds = [...md.variants.keys()];
   const buyParts = [...md.parts.entries()]
     .filter(([, p]) => !p.isAssembly)
     .map(([id]) => id);
 
   /* ------------------------------------------------- scripted 4711 chain */
-  buildScriptedChain(b, md, idx, rng);
+  buildScriptedChain(b, md, idx, rng, opts);
 
   /* -------------------------------------------------------- sales orders */
   let soN = 4700;
-  for (let i = 0; i < 118; i++) {
+  for (let i = 0; i < opts.scale.salesOrders; i++) {
     soN += int(rng, 1, 2);
     const soId = `SO-${soN}`;
     if (b.has(soId)) continue;
@@ -117,27 +142,21 @@ export function buildTransactions(b: Builder, md: MasterData, rng: Rng): Transac
       b.rel(lineId, "line_for_variant", l.vId, { sourceFile: "erp/sales_order_lines.json" });
     }
 
-    // Most orders have a production order behind them.
-    if (status !== "open" || chance(rng, 0.55)) {
+    // Most orders have a production order behind them. Without MES there is no
+    // shop floor to place one on, so the order simply has no fulfilment record.
+    if (opts.mes && (status !== "open" || chance(rng, 0.55))) {
       const proId = makeProductionOrder(b, md, idx, rng, lines[0]!.vId, lines[0]!.qty, dueDate);
       if (proId) b.rel(soId, "fulfilled_by", proId, { sourceFile: "erp/sales_orders.json" });
     }
 
-    if (status === "shipped") {
-      const shpId = `SHP-${soN}`;
-      b.entity(shpId, "Shipment", `Shipment for ${soId}`, "logistics/shipments.json", {
-        salesOrder: soId,
-        shippedOn: addDays(dueDate, -int(rng, 0, 9)),
-        carrier: pick(rng, ["DSV", "Kuehne+Nagel", "DB Schenker", "Dachser"]),
-        grossWeightKg: round(int(rng, 300, 9000) + rng()),
-      });
-      b.rel(soId, "shipped_in", shpId, { sourceFile: "logistics/shipments.json" });
+    if (opts.logistics && status === "shipped") {
+      emitShipment(b, rng, soId, soN, dueDate);
     }
   }
 
   /* ----------------------------------------------------- purchase orders */
   let purN = 4600;
-  for (let i = 0; i < 210; i++) {
+  for (let i = 0; i < opts.scale.purchaseOrders; i++) {
     purN += int(rng, 1, 2);
     const purId = `PUR-${purN}`;
     if (b.has(purId)) continue;
@@ -189,6 +208,31 @@ export function buildTransactions(b: Builder, md: MasterData, rng: Rng): Transac
 }
 
 /* ========================================================================== */
+
+/**
+ * Logistics — the dispatch record that closes a sales order.
+ *
+ * Owned by the logistics domain but invoked from the ERP loop above: a shipment
+ * comes into existence at the moment the order is dispatched, not in a sweep
+ * afterwards. Lifting it into its own pass would also reorder every draw that
+ * follows it, so the reference environment would change.
+ */
+export function emitShipment(
+  b: Builder,
+  rng: Rng,
+  soId: string,
+  soN: number,
+  dueDate: string,
+): void {
+  const shpId = `SHP-${soN}`;
+  b.entity(shpId, "Shipment", `Shipment for ${soId}`, "logistics/shipments.json", {
+    salesOrder: soId,
+    shippedOn: addDays(dueDate, -int(rng, 0, 9)),
+    carrier: pick(rng, ["DSV", "Kuehne+Nagel", "DB Schenker", "Dachser"]),
+    grossWeightKg: round(int(rng, 300, 9000) + rng()),
+  });
+  b.rel(soId, "shipped_in", shpId, { sourceFile: "logistics/shipments.json" });
+}
 
 function makeProductionOrder(
   b: Builder,
@@ -272,6 +316,7 @@ function buildScriptedChain(
   md: MasterData,
   idx: TransactionIndex,
   rng: Rng,
+  opts: OperationsOptions,
 ): void {
   const custId = md.customerIds[0]!; // Nordhavn Marine A/S
   const supId = md.supplierIds[0]!; // Nordwerk Guss GmbH
@@ -311,26 +356,31 @@ function buildScriptedChain(
   b.rel(lineId, "line_for_variant", variantId, { sourceFile: "erp/sales_order_lines.json" });
 
   /* -- Production order ---------------------------------------------- */
-  makeProductionOrder(
-    b,
-    md,
-    idx,
-    rng,
-    variantId,
-    SCRIPTED.quantity,
-    SCRIPTED.salesOrderDue,
-    SCRIPTED.productionOrder,
-    "released",
-    SCRIPTED.productionOrderStart,
-  );
-  b.rel(SCRIPTED.salesOrder, "fulfilled_by", SCRIPTED.productionOrder, {
-    sourceFile: "erp/sales_orders.json",
-  });
-  // Guarantee the critical link even if the sparse reservation logic skipped it.
-  b.rel(SCRIPTED.productionOrder, "consumes", partId, {
-    sourceFile: "mes/production_orders.json",
-    attrs: { quantityPerUnit: 5 },
-  });
+  // The MES leg of the 4711 collision. Without MES the arc still runs
+  // SO -> part -> PO -> ECO; it just loses the shop-floor hop, and the gold
+  // answers that traverse it are not emitted (see REQUIRES in gold.ts).
+  if (opts.mes) {
+    makeProductionOrder(
+      b,
+      md,
+      idx,
+      rng,
+      variantId,
+      SCRIPTED.quantity,
+      SCRIPTED.salesOrderDue,
+      SCRIPTED.productionOrder,
+      "released",
+      SCRIPTED.productionOrderStart,
+    );
+    b.rel(SCRIPTED.salesOrder, "fulfilled_by", SCRIPTED.productionOrder, {
+      sourceFile: "erp/sales_orders.json",
+    });
+    // Guarantee the critical link even if the sparse reservation logic skipped it.
+    b.rel(SCRIPTED.productionOrder, "consumes", partId, {
+      sourceFile: "mes/production_orders.json",
+      attrs: { quantityPerUnit: 5 },
+    });
+  }
 
   /* -- Purchase order ------------------------------------------------- */
   b.entity(SCRIPTED.purchaseOrder, "PurchaseOrder", `Purchase order ${SCRIPTED.purchaseOrder}`, "erp/purchase_orders.json", {

@@ -16,15 +16,15 @@
  * `npm run verify:seeds`.
  */
 
-import { buildEnvironment } from "../generate/environment";
+import { buildEnvironment, referenceConfig } from "../generate/environment";
 import { verifyEnvironment } from "./core";
 
 const seed = Number(process.env.SEED ?? 20260728);
 
 console.log(`Verifying environment at seed ${seed}…\n`);
 
-const env = buildEnvironment(seed);
-const report = verifyEnvironment(env.dataset, env.gold, env.nx, `seed ${seed}`);
+const env = buildEnvironment(referenceConfig(seed));
+const report = verifyEnvironment(env, `seed ${seed}`);
 
 console.log(`  entities              ${env.dataset.entities.length}`);
 console.log(`  relations             ${env.dataset.relations.length}`);

@@ -25,9 +25,16 @@
   const LEFT = 232;
   const COL = 148;
   const ROW = 52;
-  const TOP = 58;
   const RIGHT = 26;
   const BOTTOM = 26;
+
+  /* The head: domain labels, then the dependency band, then the top of the
+     warp. The band is where the six threads are shown to be one enterprise —
+     see step 0. Longer reaches ride in higher lanes, so the number of lanes
+     is the longest dependency measured in columns. */
+  const LABEL_Y = 16;
+  const BAND_TOP = 32;
+  const LANE = 15;
 
   const phases = data.phases;
   const domains = data.domains;
@@ -44,14 +51,43 @@
   const rank = (d) => (d.inlineIn.length ? firstStep(d.inlineIn[0]) + 0.5 : firstStep(d.id));
   const warp = [...domains].sort((a, b) => rank(a) - rank(b));
 
+  const domainIndex = new Map(warp.map((d, i) => [d.id, i]));
+  const phaseIndex = new Map(phases.map((p, i) => [p.id, i]));
+
+  /* Every domain but ERP depends on another, so the six columns are one tree
+     rather than six lists. Draw the reduction, not the closure: MES declares
+     erp and plm, but plm already reaches erp, so only plm is its own edge. */
+  const byId = new Map(domains.map((d) => [d.id, d]));
+  const reaches = (id, seen = new Set()) => {
+    for (const p of byId.get(id).dependencies) {
+      if (!seen.has(p)) {
+        seen.add(p);
+        reaches(p, seen);
+      }
+    }
+    return seen;
+  };
+  const deps = domains
+    .map((d) => {
+      const parent = d.dependencies.find(
+        (p) => !d.dependencies.some((q) => q !== p && reaches(q).has(p)),
+      );
+      if (parent === undefined) return null;
+      const from = domainIndex.get(d.id);
+      const to = domainIndex.get(parent);
+      return { child: d.id, parent, from, to, span: Math.abs(from - to) };
+    })
+    .filter(Boolean);
+
+  const LANES = deps.length ? Math.max(...deps.map((e) => e.span)) : 0;
+  const WARP_TOP = BAND_TOP + LANE * LANES + 12;
+  const TOP = WARP_TOP + 34;
+
   const W = LEFT + COL * warp.length + RIGHT;
   const H = TOP + ROW * phases.length + BOTTOM;
 
   const colX = (i) => LEFT + COL * i + COL / 2;
   const rowY = (i) => TOP + ROW * i + ROW / 2;
-
-  const domainIndex = new Map(warp.map((d, i) => [d.id, i]));
-  const phaseIndex = new Map(phases.map((p, i) => [p.id, i]));
 
   /** Domains a reader can switch off; the rest are structural. */
   const optional = new Set(data.optional);
@@ -82,6 +118,41 @@
     }
   }
 
+  /* 0. The dependency band. A phase link says which systems one pass ties
+        together, and most passes tie none — but that does not make the columns
+        independent, and the draft read as though it did. Every domain but ERP
+        is defined in terms of another: CAD is assemblies of PLM's parts, MES
+        schedules them, Documents describe them, Logistics ships ERP's orders.
+        Selecting CAD without PLM is not a smaller enterprise, it is an
+        incoherent one, and this is that constraint drawn.
+
+        A bracket rises from the dependent column, crosses to the one it needs
+        and comes back down, in the dependent's own colour because the need is
+        its. Reaches of one column ride the lowest lane and longer ones stack
+        above, which keeps the five brackets from tangling and makes PLM's stem
+        — three children above ERP below — the trunk it actually is. */
+  const bands = [];
+  for (const e of deps) {
+    const ly = BAND_TOP + LANE * (LANES - e.span);
+    const cx = colX(e.from);
+    const px = colX(e.to);
+    const s = Math.sign(px - cx);
+    const r = 6;
+    const path = el(
+      "path",
+      {
+        class: "dep",
+        d:
+          `M ${cx} ${WARP_TOP} V ${ly + r} Q ${cx} ${ly} ${cx + s * r} ${ly} ` +
+          `H ${px - s * r} Q ${px} ${ly} ${px} ${ly + r} V ${WARP_TOP}`,
+        fill: "none",
+        stroke: colorOf(e.child),
+      },
+      svg,
+    );
+    bands.push({ node: path, child: e.child, parent: e.parent });
+  }
+
   /* 1. Row guides. Faint on purpose: they tie a phase's label to its row and
         nothing more. The line that carries meaning is the link drawn in step
         3, which spans only the domains the phase actually draws from. */
@@ -104,7 +175,7 @@
   const labels = new Map();
   for (const [i, d] of warp.entries()) {
     const x = colX(i);
-    const y1 = TOP - 34;
+    const y1 = WARP_TOP;
     const y2 = H - 10;
     const line = el(
       "line",
@@ -123,7 +194,7 @@
     );
     warps.set(d.id, line);
 
-    const text = el("text", { class: "axis-domain", x, y: TOP - 44, fill: colorOf(d.id) }, svg);
+    const text = el("text", { class: "axis-domain", x, y: LABEL_Y, fill: colorOf(d.id) }, svg);
     text.textContent = d.id;
     labels.set(d.id, text);
   }
@@ -177,7 +248,13 @@
 
   /* 4. Ties: a domain with `inlineIn` never gets a pass of its own — its
         records are emitted inside the host's. Logistics is the whole reason
-        this notation is honest rather than tidy. */
+        this notation is honest rather than tidy.
+
+        The tie ends in an open marker on the inline domain's thread. Without
+        it the curve stopped in mid-air and ERP's operations crossing looked
+        like a step that produced nothing anyone else touches — when in fact
+        it is the pass in which shipments are written. Open rather than filled
+        and unnumbered, because it consumes no step of its own. */
   const ties = [];
   for (const d of domains) {
     for (const hostId of d.inlineIn) {
@@ -187,10 +264,10 @@
       const y = rowY(phaseIndex.get(step.phase));
       const x1 = colX(domainIndex.get(hostId));
       const x2 = colX(domainIndex.get(d.id));
-      const tie = el(
+      const g = el("g", { class: "tie" }, svg);
+      el(
         "path",
         {
-          class: "tie",
           d: `M ${x1} ${y} C ${(x1 + x2) / 2} ${y - 22}, ${(x1 + x2) / 2} ${y - 22}, ${x2} ${y}`,
           fill: "none",
           stroke: colorOf(d.id),
@@ -198,9 +275,23 @@
           "stroke-dasharray": "1 5",
           "stroke-linecap": "round",
         },
-        svg,
+        g,
       );
-      ties.push({ node: tie, domain: d.id, host: hostId });
+      el(
+        "rect",
+        {
+          class: "tie__mark",
+          x: x2 - 20,
+          y: y - 11,
+          width: 40,
+          height: 22,
+          rx: 3,
+          fill: "var(--paper)",
+          stroke: colorOf(d.id),
+        },
+        g,
+      );
+      ties.push({ node: g, domain: d.id, host: hostId });
     }
   }
 
@@ -323,6 +414,9 @@
     for (const k of knots) k.node.classList.toggle("cross--off", !on.has(k.domain));
     for (const t of ties) {
       t.node.style.opacity = on.has(t.domain) && on.has(t.host) ? "1" : "0";
+    }
+    for (const b of bands) {
+      b.node.classList.toggle("dep--off", !(on.has(b.child) && on.has(b.parent)));
     }
     drawLinks();
 

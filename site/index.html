@@ -98,8 +98,9 @@
             and the eleven crossings below are
             <a href="https://github.com/association-industrial-ai/drt-loom/blob/main/src/domains/registry.ts"><code>PIPELINE</code></a>
             — in the exact order the generator draws from its random stream. Where a pass ties
-            two systems together, a line joins them; most passes draw from one system only,
-            and the cross-system structure is built by the ones that do not.
+            two systems together, a line joins them. Most passes draw from one system only:
+            what holds the six together is not the passes but the brackets above them, which
+            are the dependencies the generator closes before it draws anything at all.
           </p>
           <p class="loom__hint">
             Pull a thread out. The enterprise is rebuilt without it, and the numbers below are
@@ -117,19 +118,24 @@
               <title id="loom-svg-title">The DRT Loom generation pipeline as a weave draft</title>
               <desc id="loom-svg-desc">
                 Six domain threads run down the page as columns; eight generation phases run
-                across it as rows, in the order they execute. Eleven marked crossings show
+                across it as rows, in the order they execute. Brackets above the columns show
+                what each domain needs before it can mean anything: PLM needs ERP, MES and CAD
+                and Documents each need PLM, Logistics needs ERP. Eleven marked crossings show
                 which domain contributes to which phase, numbered in generation order. Where a
                 phase draws from more than one domain, a horizontal link joins them: parties
-                ties ERP to MES, catalog ties ERP to PLM, engineering ties PLM to CAD. The
-                remaining five phases draw from a single domain and so have no link.
+                ties ERP to MES, catalog ties ERP to PLM, engineering ties PLM to CAD. An open
+                marker on the Logistics thread at the operations row is where its shipments are
+                written, inside ERP’s pass rather than in one of its own.
               </desc>
             </svg>
           </div>
           <p class="loom__swipe" hidden>Scroll sideways →</p>
           <figcaption class="loom__caption">
-            Logistics has no phase of its own: its shipments are emitted inside ERP’s
-            operations pass, which is why its thread is tied to ERP rather than crossing
-            on its own.
+            The brackets above the columns are what each domain needs in order to mean
+            anything — CAD is assemblies of PLM’s parts, and PLM’s parts are bought and sold
+            through ERP. Logistics has no phase of its own: its shipments are emitted inside
+            ERP’s operations pass, which is why it is tied there and marked with an open
+            crossing rather than a numbered one.
           </figcaption>
         </figure>
 

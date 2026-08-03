@@ -487,8 +487,22 @@ pre,
   height: auto;
 }
 
-/* Drawing order: guides, warp, links, ties, crossings. The links come after
-   the warp so a pass can break the threads it runs over. */
+/* Drawing order: dependency band, guides, warp, links, ties, crossings. The
+   links come after the warp so a pass can break the threads it runs over. */
+
+/* The brackets above the columns: what each domain needs in order to mean
+   anything. Thin and half-strength — this is the standing structure the
+   passes are woven into, so it must not compete with them. */
+.dep {
+  stroke-width: 1.5;
+  opacity: 0.55;
+  transition: opacity 200ms ease;
+}
+
+.dep--off {
+  opacity: 0.12;
+}
+
 .warp {
   transition: stroke 200ms ease, opacity 200ms ease;
 }
@@ -581,6 +595,14 @@ pre,
 
 .tie {
   transition: opacity 200ms ease;
+}
+
+/* Open, and the same size as a crossing, so it is legible as the same kind of
+   event — records written here — while the missing fill and missing number say
+   it took no pass of its own. */
+.tie__mark {
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
 }
 
 .axis-domain--off {

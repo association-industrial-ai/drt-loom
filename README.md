@@ -608,7 +608,9 @@ that add questions.
 Repository layout:
 
 ```
-config.yaml                  which domains, how big, which seed
+config.yaml                  which domains, how big, which seed — written by
+                             npm run generate, not committed
+
 src/cli/                     npm run generate — interactive and flag-driven
 src/config/                  config schema, validation, minimal YAML reader
 src/domains/                 one module per domain

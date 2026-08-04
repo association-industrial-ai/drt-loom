@@ -25,11 +25,23 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
+      # site-data.js is generated, committed and read by the landing page. If
+      # the generator has changed, the page is quoting numbers that no longer
+      # describe it.
+      - name: Landing-page data is current
+        run: npm run site:check
+
       - name: Self-consistency and scorer compatibility
         run: npm run verify
 
       - name: Invariants across seeds
         run: npm run verify:seeds
+
+      - name: Domain configurations
+        run: npm run verify:domains
+
+      - name: Configuration parsing and validation
+        run: npm run verify:config
 
       - name: Generate an environment
         run: OUT_DIR="$RUNNER_TEMP/gen-a" npm run gen
@@ -52,5 +64,38 @@ jobs:
           SEED=7 OUT_DIR="$RUNNER_TEMP/gen-seed7" npm run gen
           if diff -rq "$RUNNER_TEMP/gen-a" "$RUNNER_TEMP/gen-seed7" >/dev/null; then
             echo "seed 7 produced identical output to the default seed" >&2
+            exit 1
+          fi
+
+      # The default configuration must reproduce the published corpus exactly.
+      # This is the compatibility guarantee the domain refactor rests on: if it
+      # ever fails, the CLI path and the reference path have diverged.
+      - name: Check the default config reproduces the reference corpus
+        run: |
+          npm run generate -- --yes --out "$RUNNER_TEMP/cli-default"
+          diff -r "$RUNNER_TEMP/gen-a" "$RUNNER_TEMP/cli-default" \
+            --exclude=config.yaml --exclude=generation.json
+
+      - name: Check a named company with a domain subset
+        run: |
+          npm run generate -- --name "Alpine Drive Systems" \
+            --domains erp,cad --seed 42 --size small --out "$RUNNER_TEMP/alpine-a"
+          test -s "$RUNNER_TEMP/alpine-a/dataset.json"
+          test -s "$RUNNER_TEMP/alpine-a/config.yaml"
+          test -s "$RUNNER_TEMP/alpine-a/generation.json"
+          # cad pulls in plm; documents were not selected, so there are none.
+          test -d "$RUNNER_TEMP/alpine-a/nx"
+          test ! -d "$RUNNER_TEMP/alpine-a/documents"
+
+      - name: Check a company rebuilds identically from its own config
+        run: |
+          npm run generate -- --config "$RUNNER_TEMP/alpine-a/config.yaml" \
+            --out "$RUNNER_TEMP/alpine-b"
+          diff -r "$RUNNER_TEMP/alpine-a" "$RUNNER_TEMP/alpine-b"
+
+      - name: Check invalid configuration is rejected
+        run: |
+          if npm run generate -- --domains erp,scada --out "$RUNNER_TEMP/nope"; then
+            echo "an unknown domain was accepted" >&2
             exit 1
           fi

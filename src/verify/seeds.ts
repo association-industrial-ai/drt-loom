@@ -10,7 +10,7 @@
  * belt-and-braces measure against any cache reached through the default path.
  */
 
-import { buildEnvironment } from "../generate/environment";
+import { buildEnvironment, referenceConfig } from "../generate/environment";
 import { resetAliasCache } from "../score/score";
 import { verifyEnvironment } from "./core";
 
@@ -21,7 +21,7 @@ const SEEDS = (process.env.SEEDS ?? "20260728,1,2,3,4,5")
 
 /** Stable serialisation of everything the generator writes to disk. */
 function fingerprint(seed: number): string {
-  const env = buildEnvironment(seed);
+  const env = buildEnvironment(referenceConfig(seed));
   return JSON.stringify({
     dataset: env.dataset,
     gold: env.gold,
@@ -37,8 +37,8 @@ let ok = 0;
 
 for (const seed of SEEDS) {
   resetAliasCache();
-  const env = buildEnvironment(seed);
-  const report = verifyEnvironment(env.dataset, env.gold, env.nx, `seed ${seed}`);
+  const env = buildEnvironment(referenceConfig(seed));
+  const report = verifyEnvironment(env, `seed ${seed}`);
 
   // Deterministic regeneration: same seed, byte-identical artifacts.
   const a = JSON.stringify({

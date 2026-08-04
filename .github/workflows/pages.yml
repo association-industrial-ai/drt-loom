@@ -1,0 +1,69 @@
+name: Pages
+
+# The landing page states numbers about the generator, so it is not deployed
+# from a checked-in build: every push runs the generator and rebuilds the page
+# from its output. If a number on the page could ever be wrong, it is because
+# `npm run site` failed here — and then nothing is published.
+
+on:
+  push:
+    branches: [main]
+  # Lets the page be redeployed from the Actions tab without a commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and let a newer push win: this only publishes a
+# static site, so there is nothing half-finished to protect.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # enablement turns Pages on and sets its source to Actions the first time
+      # this runs, so the repository needs no click in Settings to go live.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate the reference corpus
+        run: npm run gen
+
+      # Graphify's interactive view is a nice-to-have: the page hides the link
+      # when the file is absent, so a failure here costs one link, not the
+      # deploy. Python is already on the runner; the script makes its own venv.
+      - name: Build the interactive graph
+        continue-on-error: true
+        run: npm run graph
+
+      - name: Build the page
+        run: npm run site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/_out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

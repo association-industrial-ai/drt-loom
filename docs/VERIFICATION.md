@@ -10,26 +10,59 @@ npm run typecheck
 npm run gen
 npm run verify
 npm run verify:seeds
-npm test              # typecheck + verify + verify:seeds
+npm run verify:domains
+npm run verify:config
+npm test              # typecheck + all four verify commands
 npm run graph         # optional; requires Python
 ```
 
 ## Recorded results
 
-Run on Node 24.18.0, macOS, at commit `b6140db`, version 0.1.0.
+Run on Node 24.18.0, macOS, version 0.1.0, after the domain-module refactor.
 
 | Command | Result | Output |
 |---|---|---|
 | `npm ci` | pass | clean install from `package-lock.json` |
 | `npm run typecheck` | pass | `tsc --noEmit`, no errors |
-| `npm run gen` | pass | 2,793 entities · 5,309 relations · 204 documents · 18 answers, 45 ms |
+| `npm run gen` | pass | 2,793 entities · 5,309 relations · 204 documents · 18 answers, 50 ms |
 | `npm run verify` | pass | 18 gold answers, 15 citation-scored, all gates pass |
 | `npm run verify:seeds` | pass | 6/6 seeds |
+| `npm run verify:domains` | pass | 10/10 configurations |
+| `npm run verify:config` | pass | 25 checks |
 | `npm test` | pass | exit 0 |
 | `npm run graph` | pass | 2,793 nodes · 5,128 edges |
 
 `npm run gen` reproduced the committed reference environment byte-for-byte: no
 diff against `data/generated`.
+
+### Compatibility across the domain refactor
+
+Splitting the generator into registered domain modules preserved the published
+environment exactly. Two checks establish that, and both are enforced in CI:
+
+| Check | Result |
+|---|---|
+| `npm run gen` then `git status data/` | clean — the committed corpus is unchanged |
+| Default `config.yaml` through `npm run generate` vs the reference corpus | `dataset.json`, `gold.json`, `documents/` and `nx/` byte-identical |
+
+The second is the stronger statement: the new CLI path and the original
+reference path converge on the same artifacts, so the refactor did not fork the
+pipeline.
+
+### Domain configurations covered
+
+`npm run verify:domains` runs the full invariant suite over ten configurations:
+the complete domain set, core only (`erp` + `plm`), each optional domain omitted
+in turn, dependency closure from a partial request, and both non-default sizes.
+Each is additionally checked for:
+
+- **question coverage** — every question the selection can answer was emitted,
+  and none that it cannot;
+- **cross-domain connectivity** — relations still cross domain boundaries, so
+  the output is one enterprise rather than several datasets sharing a directory;
+- **determinism** — the configuration rebuilds byte-identically.
+
+A reduced environment is held to the same standard as the full one.
 
 ### Seeds covered
 

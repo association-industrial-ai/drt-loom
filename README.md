@@ -196,6 +196,47 @@ clustering is re-run on each build and the committed graph was built at 272.
 
 ![The knowledge graph of one generated environment, with the node inspector showing a supplier, its source file and its neighbouring parts](docs/assets/knowledge-graph.jpeg)
 
+### Browse the environment
+
+Optional. Static files and a standard-library server: no build step, no
+dependencies, nothing fetched.
+
+```bash
+npm run view      # node viewer/serve.mjs — serves the repository root on :5173
+```
+
+Then open `http://localhost:5173/viewer/`.
+
+`viewer/` renders the environment the way the source systems would hold it: one
+screen per system, each showing only the records whose `sourceFile` belongs to
+it. Relations that leave a system are drawn but greyed, with the owning system
+named, because the system you are looking at does not record them. Following one
+says so.
+
+The generator derives its answers at generation time from its internal model.
+The viewer re-derives them in the browser from the published `dataset.json`,
+which is a different route to the same claim: where the two agree, the answer
+has been reached twice by independent code.
+
+Four further tabs do the joins the silos cannot, each computing its numbers from
+`dataset.json` in the browser rather than restating them:
+
+- **Thread** walks `Q-MH-01` hop by hop, labels each hop with the system that
+  holds it, and checks the result against `gold.json` — 16 orders, 11 customers,
+  2,739,771.54 EUR, none of it hard-coded. It then evaluates the three blocker
+  predicates against the NX assembly, over a batch window read from the
+  production order and its sales order rather than assumed.
+- **Orders** is a dossier per production order: every dated event from every
+  system on one timeline, plus the parts consumed, the blockers and the routing.
+- **Questions** re-derives all 18 gold answers and compares them with
+  `gold.json`. Thirteen are reachable from the published dataset alone, and all
+  thirteen agree exactly with the oracle.
+- **Score** runs the same algorithm as `src/score/score.ts` against any answer
+  you paste, including the name-to-id enrichment.
+
+Views are addressable: `#PLM/PART-30-1177`, `#ERP/SO-4711`, `#ORDERS/PRO-4711`,
+`#THREAD`, `#QUESTIONS`, `#SCORE`.
+
 ### Build the landing page
 
 ```bash
@@ -383,6 +424,7 @@ reference-corpus commands, which are unchanged.
 | `BENCH_ROOT` | repository root | Tree the extractor reads and writes |
 | `DRT_DATASET` | reference corpus | Dataset the scorer and the graph build read. Point it at a company's `dataset.json` to work on that company. |
 | `DRT_GRAPH_OUT` | `<dataset dir>/graph` | Where the graph build writes |
+| `PORT` | `5173` | Viewer port, or pass it as an argument: `node viewer/serve.mjs 8080` |
 
 ```bash
 # Build the graph for a generated company, into that company's directory.
@@ -657,6 +699,7 @@ src/verify/                  verify · verify:seeds · verify:domains · verify:
 src/score/                   citation F1 and scalar matching
 src/types.ts                 the Dataset type every artifact conforms to
 extractor/                   Python: Graphify build of dataset.json into a graph
+viewer/                      static system browser, npm run view
 data/generated/              dataset.json, gold.json, documents, NX  (reference)
 data/generated/<slug>/       one generated company, self-contained
 data/graph/                  graph.json                              (reference)

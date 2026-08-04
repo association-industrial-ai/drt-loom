@@ -17,6 +17,7 @@ import type { Builder } from "./builder";
 import { SCRIPTED, STAFF } from "./catalog";
 import type { MasterData } from "./master-data";
 import type { TransactionIndex } from "./transactions";
+import type { SizeProfile } from "../config/schema";
 import { chance, dateBetween, int, pick, pickMany, seq, type Rng } from "./rng";
 import type { DocFamily, DocumentRecord } from "../types";
 
@@ -35,11 +36,24 @@ function fileSlug(title: string): string {
   );
 }
 
+export interface DocumentOptions {
+  scale: SizeProfile;
+  /**
+   * How the company refers to itself in prose — the first word of its name, the
+   * way people actually write in an internal email. "Kestrel Drive Systems"
+   * becomes "Kestrel".
+   */
+  shortName: string;
+  /** MES selected: minutes may discuss production orders and the shop floor. */
+  mes: boolean;
+}
+
 export function buildDocuments(
   b: Builder,
   md: MasterData,
   tx: TransactionIndex,
   rng: Rng,
+  opts: DocumentOptions,
 ): DocumentRecord[] {
   const docs: DocumentRecord[] = [];
   let n = 0;
@@ -72,7 +86,7 @@ export function buildDocuments(
   };
 
   /* ================================================== the four 4711 documents */
-  buildScriptedDocs(add, b, md);
+  buildScriptedDocs(add, b, md, opts);
 
   /* ------------------------------------------------------- product specs */
   for (const prodId of md.productIds) {
@@ -116,7 +130,7 @@ export function buildDocuments(
   }
 
   /* --------------------------------------------------- work instructions */
-  for (const prodId of pickMany(rng, md.productIds, 14)) {
+  for (const prodId of pickMany(rng, md.productIds, opts.scale.workInstructions)) {
     const code = String(b.get(prodId).attrs.code);
     const subs = md.bomChildren.get(prodId) ?? [];
     add(
@@ -164,7 +178,7 @@ export function buildDocuments(
         ``,
         `## Obligations`,
         ``,
-        `The supplier shall notify Kestrel within two working days of any event likely to delay a`,
+        `The supplier shall notify ${opts.shortName} within two working days of any event likely to delay a`,
         `confirmed delivery date by more than five working days. First-article inspection reports are`,
         `required for every new revision.`,
         ``,
@@ -219,7 +233,7 @@ export function buildDocuments(
 
   /* --------------------------------------------------- inspection reports */
   const buyParts = [...md.parts.entries()].filter(([, p]) => !p.isAssembly).map(([id]) => id);
-  for (const partId of pickMany(rng, buyParts, 38)) {
+  for (const partId of pickMany(rng, buyParts, opts.scale.inspectionReports)) {
     const p = md.parts.get(partId)!;
     const pass = !chance(rng, 0.22);
     add(
@@ -245,7 +259,7 @@ export function buildDocuments(
   }
 
   /* --------------------------------------------------------- minutes */
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < opts.scale.meetingMinutes; i++) {
     const date = dateBetween(rng, "2026-02-03", "2026-07-24");
     const sos = pickMany(rng, tx.salesOrderIds, int(rng, 2, 4));
     add(
@@ -280,7 +294,7 @@ export function buildDocuments(
   }
 
   /* ------------------------------------------------- service bulletins */
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < opts.scale.serviceBulletins; i++) {
     const partId = pick(rng, buyParts);
     const p = md.parts.get(partId)!;
     add(
@@ -321,7 +335,7 @@ export function buildDocuments(
   }
 
   /* ------------------------------------------------------------- emails */
-  for (let i = 0; i < 55; i++) {
+  for (let i = 0; i < opts.scale.emails; i++) {
     const so = pick(rng, tx.salesOrderIds);
     const a = b.get(so).attrs;
     const from = pick(rng, STAFF);
@@ -365,6 +379,7 @@ function buildScriptedDocs(
   add: (t: string, f: DocFamily, d: string, body: string, m: string[]) => void,
   b: Builder,
   md: MasterData,
+  opts: DocumentOptions,
 ): void {
   const partId = `PART-${SCRIPTED.partNumber}`;
   const variantId = `VAR-${SCRIPTED.variant}`;
@@ -397,7 +412,11 @@ function buildScriptedDocs(
     [SCRIPTED.salesOrder, variantId],
   );
 
-  add(
+  // The shop-floor leg of the 4711 ambiguity. Skipped without MES: there is no
+  // production order for the minutes to release, and prose that discussed one
+  // would describe an entity the environment does not contain.
+  if (opts.mes) {
+    add(
     `Production planning meeting — 2026-07-16`,
     "meeting_minutes",
     "2026-07-16",
@@ -425,7 +444,8 @@ function buildScriptedDocs(
       `- P. Nowak: hold the MONT-2 slot until we have that date.`,
     ].join("\n"),
     [SCRIPTED.productionOrder, partId],
-  );
+    );
+  }
 
   add(
     `Nordwerk Guss — confirmation for order 4711`,

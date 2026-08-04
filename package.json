@@ -12,14 +12,20 @@
     "node": ">=20"
   },
   "scripts": {
+    "generate": "tsx src/cli/generate.ts",
     "gen": "tsx src/generate/index.ts",
     "graph": "extractor/run.sh",
     "view": "node viewer/serve.mjs",
-    "build:all": "npm run gen && npm run graph",
+    "site": "tsx src/site/build.ts",
+    "site:check": "tsx src/site/build.ts --check",
+    "site:serve": "npx --yes serve site/_out",
+    "build:all": "npm run gen && npm run graph && npm run site",
     "typecheck": "tsc --noEmit",
     "verify": "tsx src/verify/self-consistency.ts",
     "verify:seeds": "tsx src/verify/seeds.ts",
-    "test": "npm run typecheck && npm run verify && npm run verify:seeds"
+    "verify:domains": "tsx src/verify/domains.ts",
+    "verify:config": "tsx src/verify/config.ts",
+    "test": "npm run typecheck && npm run verify && npm run verify:seeds && npm run verify:domains && npm run verify:config"
   },
   "keywords": [
     "industrial-agentic-ai",

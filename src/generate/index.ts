@@ -1,16 +1,21 @@
 /**
- * Synthetic environment generator — `npm run gen`.
+ * Reference corpus generator — `npm run gen`.
  *
- * Deterministic: same seed in, byte-identical corpus out. Writes everything the
- * rest of the pipeline consumes, plus the gold answers for the eval harness.
+ * Builds the published environment: every domain selected, medium size, the
+ * original company, written flat into data/generated/ exactly as before domains
+ * existed. Byte-for-byte identical to the pre-refactor output at a given seed.
+ *
+ * For a named company, a subset of domains, or a different size, use
+ * `npm run generate` — that command writes a per-company directory and leaves
+ * this corpus alone.
  */
 
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
-import { COMPANY, SCRIPTED } from "./catalog";
-import { buildEnvironment } from "./environment";
+import { relative, resolve, join } from "node:path";
+import { SCRIPTED } from "./catalog";
+import { buildEnvironment, referenceConfig } from "./environment";
 import { checkInvariants } from "./invariants";
 import { TODAY } from "./rng";
+import { writeArtifacts } from "./write";
 
 /**
  * The reference corpus ships at seed 20260728. Override it to roll a fresh
@@ -26,29 +31,16 @@ if (!Number.isInteger(SEED)) {
 /** Relative to cwd, or absolute if you pass an absolute OUT_DIR. */
 const ROOT = resolve(process.cwd(), process.env.OUT_DIR ?? join("data", "generated"));
 
-function write(rel: string, content: string): void {
-  const p = join(ROOT, rel);
-  mkdirSync(dirname(p), { recursive: true });
-  writeFileSync(p, content);
-}
-
 function main(): void {
   const t0 = Date.now();
 
-  console.log(`Generating ${COMPANY} dataset (seed ${SEED}, today ${TODAY})…`);
+  const config = referenceConfig(SEED);
+  console.log(`Generating ${config.company.name} dataset (seed ${SEED}, today ${TODAY})…`);
 
-  const env = buildEnvironment(SEED);
-  const { dataset, gold, nx, documents, builder: b } = env;
+  const env = buildEnvironment(config);
+  const { dataset, gold, builder: b } = env;
 
-  rmSync(ROOT, { recursive: true, force: true });
-  mkdirSync(ROOT, { recursive: true });
-
-  write("dataset.json", JSON.stringify(dataset, null, 1));
-  write("gold.json", JSON.stringify(gold, null, 1));
-  write(`nx/${SCRIPTED.variant}_ASM.nxjson`, JSON.stringify(nx, null, 2));
-  for (const d of documents) {
-    write(d.path, `<!-- ${d.id} · ${d.family} · ${d.date} -->\n\n${d.body}\n`);
-  }
+  writeArtifacts(env, ROOT);
 
   /* ------------------------------------------------------- sanity gates */
   // Shape-based, not value-based: every check below must hold at any seed. The
@@ -65,7 +57,8 @@ function main(): void {
   ]) {
     if (!b.has(id)) problems.push(`missing scripted entity ${id}`);
   }
-  problems.push(...checkInvariants(dataset, gold, nx));
+  problems.push(...checkInvariants(dataset, gold, env.nx, config.domains));
+  problems.push(...env.domainProblems);
 
   if (problems.length) {
     console.error("\n✗ sanity gates failed:");
@@ -77,7 +70,7 @@ function main(): void {
   const c = dataset.meta.counts;
   console.log(`\n  entities   ${c._entities}`);
   console.log(`  relations  ${c._relations}`);
-  console.log(`  documents  ${documents.length}`);
+  console.log(`  documents  ${env.documents.length}`);
   console.log(`  NX components ${env.nxComponentCount}`);
   console.log(`  gold questions ${gold.length}`);
 

@@ -1,32 +1,86 @@
 # Adding a domain
 
-This documents the current code. There is no plugin registry, so adding a domain
-means editing the generator. All file paths and signatures below are real.
+Domains are registered modules. Adding one means writing a module in
+[`src/domains/`](../src/domains/), declaring what it needs, and slotting its phases
+into the pipeline — not editing a monolithic generator. All file paths and
+signatures below are real.
 
-The worked example adds an Industrial Automation / OT layer to the existing
-environment: an alarm on a process tag, traced through control logic and equipment
-to a maintenance order, a spare part and its supplier.
+The worked example adds **PLC Engineering** to the existing enterprise: an alarm on
+a process tag, traced through control logic and equipment to a maintenance order, a
+spare part and its supplier.
 
 ```
 Alarm → Tag → Control Loop → Equipment Module → Maintenance Order → Part → Supplier
 ```
 
 The example extends the existing environment rather than starting a new one. The
-thread terminates in the `Part` and `Supplier` entities the manufacturing domain
-already owns, so answering an OT question requires crossing into ERP.
+thread terminates in the `Part` and `Supplier` entities PLM and ERP already own, so
+answering a PLC question requires crossing domains. That crossing is the point —
+a domain that only talks to itself adds a dataset, not a reasoning thread.
 
-## What is domain-independent today
+## The module contract
 
-Three components are already domain-independent.
+A domain module is defined by
+[`DomainModule`](../src/domains/types.ts). The whole contract:
+
+```ts
+export interface DomainModule {
+  id: DomainId;
+  label: string;
+  description: string;
+  dependencies?: readonly DomainId[];
+  required?: boolean;
+  contributes: readonly NodeType[];
+  generate?: Partial<Record<Phase, (ctx: GenerationContext) => void>>;
+  inlineIn?: readonly DomainId[];
+  validate?(ctx: GenerationContext, problems: string[]): void;
+}
+```
+
+Two things about it are worth understanding before you write one.
+
+**`generate` is keyed by phase, not a single call.** The obvious contract is one
+`generate(ctx)` per domain. It does not survive contact with an enterprise: the
+approved-vendor list is an ERP fact about a PLM part, a production order is created
+inside the sales-order loop because that is what it fulfils, and CAD structure
+mirrors a BOM that must already exist. Forcing one call per domain would mean
+either fabricating an independence the domains do not have, or reordering the
+random stream and changing every value in the published environment. The record is
+sparse — implement only the phases you take part in, and write no empty methods.
+
+The phases, in execution order:
+
+| Phase | State of the model when it runs |
+|---|---|
+| `parties` | Nothing yet. Counterparties and resources. |
+| `catalog` | Parties exist. The item master and who may supply it. |
+| `structure` | Items exist. Products, variants, BOM. |
+| `engineering` | Structure exists. CAD, change orders. |
+| `operations` | The catalogue is complete. What was sold, made, bought, shipped. |
+| `staging` | The operational model is finished. Scenario obstacles. |
+| `narrative` | Everything exists. Prose that can reference any of it. |
+| `export` | Foreign-schema exports, e.g. the NX dump. |
+
+**One shared model.** Every selected domain writes into the same `Builder`, the
+same `MasterData` and the same seeded `Rng`, reached through
+[`GenerationContext`](../src/domains/types.ts). That is what makes the output one
+enterprise. Do not create your own RNG, and never call `Math.random()` or
+`Date.now()` — determinism is load-bearing, and `verify:domains` will catch you.
+
+## What the framework already gives you
+
 [`src/generate/rng.ts`](../src/generate/rng.ts) is a seeded PRNG.
 [`extractor/extract.py`](../extractor/extract.py) maps any entity type into the
 graph generically. [`src/score/score.ts`](../src/score/score.ts) scores against the
 `Dataset` contract, with one hardcoded entity-type filter used for name enrichment.
+The registry closes your dependencies, the CLI lists you automatically, and
+`verify:domains` holds a configuration that includes you to the same standard as
+the full one.
 
-Two are not. [`src/types.ts`](../src/types.ts) declares the manufacturing node and
-relation types as closed unions, and `src/generate/` is a single pipeline rather
-than a registered domain module. Separating them behind a stable contract is on the
-roadmap. Until then, follow the steps below.
+One thing is still centralised: [`src/types.ts`](../src/types.ts) declares node and
+relation types as closed unions, so a new domain extends them. That is deliberate —
+TypeScript then flags every unhandled case — but it does mean a domain is not yet a
+drop-in package.
 
 ## 1. Declare the vocabulary
 
@@ -39,7 +93,7 @@ export type NodeType =
   | "Customer"
   // … existing manufacturing types …
   | "Shipment"
-  /* automation */
+  /* plc engineering */
   | "EquipmentModule"
   | "ControlLoop"
   | "Tag"
@@ -48,7 +102,7 @@ export type NodeType =
 
 export type RelationType =
   // … existing relations …
-  /* automation */
+  /* plc engineering */
   | "part_of_line"    // EquipmentModule  -> EquipmentModule
   | "controls"        // ControlLoop      -> EquipmentModule
   | "reads_tag"       // ControlLoop      -> Tag
@@ -67,21 +121,22 @@ edges of the same type are collapsed with a note.
 
 A domain module is a function over the shared
 [`Builder`](../src/generate/builder.ts) and a seeded
-[`Rng`](../src/generate/rng.ts). Create `src/generate/automation.ts`:
+[`Rng`](../src/generate/rng.ts). Create `src/generate/plc.ts` — the generation
+code itself, which the module in `src/domains/plc.ts` will call:
 
 ```ts
 import type { Builder } from "./builder";
 import type { MasterData } from "./master-data";
 import { chance, dateBetween, int, pick, round, seq, type Rng } from "./rng";
 
-export interface AutomationIndex {
+export interface PlcIndex {
   moduleIds: string[];
   tagIds: string[];
   alarmIds: string[];
 }
 
-export function buildAutomation(b: Builder, md: MasterData, rng: Rng): AutomationIndex {
-  const ix: AutomationIndex = { moduleIds: [], tagIds: [], alarmIds: [] };
+export function buildPlcAssets(b: Builder, md: MasterData, rng: Rng): PlcIndex {
+  const ix: PlcIndex = { moduleIds: [], tagIds: [], alarmIds: [] };
 
   for (let i = 1; i <= 12; i++) {
     const modId = `EQM-${seq(i, 3)}`;
@@ -132,7 +187,7 @@ A domain that links only to itself adds entities without adding reasoning paths.
 edge into the manufacturing world is what creates a thread:
 
 ```ts
-// still in buildAutomation()
+// still in the plc generator
 for (const [i, tagId] of ix.tagIds.entries()) {
   if (!chance(rng, 0.4)) continue;
 
@@ -152,7 +207,7 @@ for (const [i, tagId] of ix.tagIds.entries()) {
   });
   b.rel(alarmId, "triggered", moId, { sourceFile: "eam/maintenance_orders.json" });
 
-  // the cross-domain hop: an OT alarm now reaches an ERP part and its supplier
+  // the cross-domain hop: a PLC alarm now reaches an ERP part and its supplier
   const spare = pick(rng, md.partIds);
   b.rel(moId, "consumes_spare", spare, {
     sourceFile: "eam/maintenance_orders.json",
@@ -248,23 +303,106 @@ if (exposedSuppliers.size < 2) {
 if (exposedSuppliers.size !== 7) problems.push("expected 7 suppliers");
 ```
 
-## 6. Wire it into the pipeline
+## 6. Register the module
+
+Four edits, all mechanical.
+
+**a. Add the id** to [`src/config/schema.ts`](../src/config/schema.ts):
 
 ```ts
-// src/generate/index.ts, inside main()
-const md = buildMasterData(b, rng);
-const tx = buildTransactions(b, md, rng);
-const ot = buildAutomation(b, md, rng);        // new, before documents
-const blockers = stageScriptedBlockers(b, md);
-const documents = buildDocuments(b, md, tx, rng);
-const nx = buildNxExport(b, md, rng);
-const gold = buildGold(b, md, blockers);
+export const DOMAIN_IDS = [
+  "erp", "plm", "mes", "cad", "documents", "logistics",
+  "plc",                                    // new
+] as const;
 
-b.verify();                                     // dangling endpoints fail here
+export const DEFAULT_CONFIG: LoomConfig = {
+  // …
+  domains: { erp: true, plm: true, mes: true, cad: true, documents: true,
+             logistics: true, plc: false },  // opt-in until it is proven
+};
 ```
 
-Order matters: entities must exist before anything references them. `b.verify()`
-fails the build on any dangling relation endpoint.
+**b. Write the module** at `src/domains/plc.ts`:
+
+```ts
+import type { DomainModule } from "./types";
+import { report, sourcesOf } from "./util";
+import { buildPlcAssets, buildAlarmsAndOrders } from "../generate/plc";
+
+export const plc: DomainModule = {
+  id: "plc",
+  label: "PLC Engineering",
+  description: "Equipment modules, control loops, tags, alarms, maintenance orders",
+  // Maintenance orders consume spare parts (PLM) from approved vendors (ERP),
+  // and alarms are raised against equipment that MES books production to.
+  dependencies: ["erp", "plm", "mes"],
+  contributes: ["EquipmentModule", "ControlLoop", "Tag", "Alarm", "MaintenanceOrder"],
+
+  generate: {
+    // Equipment is a resource, like a work centre: it exists before the work.
+    parties: (ctx) => buildPlcAssets(ctx.b, ctx.md, ctx.rng),
+    // Alarms are things that happened, so they belong with the other events.
+    operations: (ctx) => buildAlarmsAndOrders(ctx.b, ctx.md, ctx.rng, ctx.config.scale),
+  },
+
+  validate(ctx, problems) {
+    const { b } = ctx;
+    if (b.all("Tag").length === 0) problems.push("plc: no tags were generated");
+
+    const raised = sourcesOf(b, "raised_on");
+    report(problems, "plc: alarm not raised on a tag",
+      b.all("Alarm").filter((e) => !raised.has(e.id)).map((e) => e.id));
+
+    // The thread has to leave the domain, or this is an isolated dataset.
+    const spares = sourcesOf(b, "consumes_spare");
+    if (b.all("MaintenanceOrder").length > 0 && spares.size === 0) {
+      problems.push("plc: no maintenance order consumes a spare part — the thread never reaches ERP");
+    }
+  },
+};
+```
+
+**c. Register it and schedule its phases** in
+[`src/domains/registry.ts`](../src/domains/registry.ts):
+
+```ts
+export const DOMAIN_MODULES = [erp, plm, mes, cad, documents, logistics, plc];
+
+export const PIPELINE: readonly PipelineStep[] = [
+  { phase: "parties", domain: "erp" },
+  { phase: "parties", domain: "mes" },
+  { phase: "parties", domain: "plc" },      // after work centres, before the catalogue
+  // …
+  { phase: "operations", domain: "erp" },
+  { phase: "operations", domain: "plc" },   // after the orders alarms attach to
+  // …
+];
+```
+
+Position within a phase is the execution order and therefore the order of random
+draws. Appending is the safe choice: inserting a step ahead of an existing one
+changes every value after it. `checkRegistry()` fails the build if you implement a
+phase and forget to schedule it, schedule one with no handler behind it, or put the
+list out of phase order — so the mistake surfaces immediately rather than as a
+domain that silently generates nothing.
+
+**d. Declare which questions need you** in
+[`src/generate/gold.ts`](../src/generate/gold.ts), so a configuration without your
+domain does not emit questions it cannot answer:
+
+```ts
+export const QUESTION_REQUIRES: Record<string, readonly DomainId[]> = {
+  // …
+  "Q-OT-01": ["plc"],
+};
+```
+
+That is the whole registration. The domain now appears in the interactive CLI, is
+selectable with `--domains plc`, pulls in its dependencies automatically, takes part
+in generation and validation, and is covered by `verify:domains`.
+
+Entities must exist before anything references them; `b.verify()` fails the build on
+any dangling relation endpoint.
 
 ## 7. Build and score
 
@@ -298,8 +436,14 @@ if (!NAME_BEARING.includes(e.type)) continue;
 | | |
 |---|---|
 | Types added to the `NodeType` / `RelationType` unions | `src/types.ts` |
+| Domain id added | `src/config/schema.ts` |
+| Module written, with `dependencies` and `contributes` | `src/domains/<id>.ts` |
+| Module registered and its phases scheduled | `src/domains/registry.ts` |
+| Only the phases you take part in implemented | no empty methods |
+| `validate()` written, pushing problems rather than throwing | runs in every gate |
+| Questions declare the domains they need | `QUESTION_REQUIRES` in `gold.ts` |
 | No two relation types between the same ordered pair | enforced by `extract.py` |
-| All randomness drawn from the seeded `Rng` | no `Math.random`, no `Date.now` |
+| All randomness drawn from `ctx.rng` | no `Math.random`, no `Date.now` |
 | Entity ids unique and not colliding with their file stem | enforced by `Builder` |
 | At least one edge crossing into an existing domain | forms the thread |
 | Uncertain joins tagged `INFERRED` / `AMBIGUOUS` | `b.rel(..., { confidence })` |
@@ -309,19 +453,26 @@ if (!NAME_BEARING.includes(e.type)) continue;
 | Name-bearing types registered for scoring | `src/score/score.ts` |
 | `npm run verify` passes | scorer compatibility |
 | `npm run verify:seeds` passes | invariants hold at every seed |
+| `npm run verify:domains` passes | coherent with and without your domain |
+| The reference corpus is unchanged | `npm run gen`, then `git status data/` |
 | Byte-identical output across two clean runs | `npm run gen` twice, `diff -r` |
+
+The last two matter most. A new domain that is off by default must not change the
+published environment at all — if `git status data/` is dirty after `npm run gen`,
+something reordered the random stream.
 
 ## Candidate domains
 
 The same structure applies to other industrial landscapes:
 
-- Industrial Automation — PLC projects, control logic, alarms, HMI, tags, ISA-95 assets
+- Industrial Automation — HMI, ISA-95 asset hierarchies (the worked example above
+  covers PLC projects, control logic, tags and alarms)
 - Process Industries
 - Energy systems
 - Building Automation
 - Maintenance & Asset Management
 - Quality Management
-- OT / SCADA environments
+- SCADA historians and time-series tags
 - Robotics
 - Digital Twins
 

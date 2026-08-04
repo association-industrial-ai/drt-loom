@@ -18,6 +18,7 @@
  */
 
 import type { Builder } from "./builder";
+import type { DomainId } from "../config/schema";
 import { SCRIPTED } from "./catalog";
 import type { NxAssemblyExport } from "../types";
 import {
@@ -61,9 +62,43 @@ export const ECO_CUTOFF = "2026-10-01";
 /** On-time-delivery threshold for the supplier-risk question. */
 export const OTD_THRESHOLD = 0.85;
 
-export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
+/**
+ * Which domains a question needs in order to be answerable at all.
+ *
+ * A benchmark question whose reasoning path crosses a domain that was not
+ * generated is not a hard question — it is an unanswerable one, and scoring a
+ * system against it would measure nothing. Those questions are not emitted.
+ *
+ * Everything not listed here needs only the two core domains, so the default
+ * configuration emits the full set exactly as before.
+ */
+export const QUESTION_REQUIRES: Record<string, readonly DomainId[]> = {
+  "Q-DIS-02": ["mes"], // slip propagates via consumes / fulfilled_by
+  "Q-MH-03": ["mes"], // supplier roll-up runs through the production order
+  "Q-AGG-01": ["mes"], // counts open production orders
+  "Q-NAR-01": ["documents"], // the dry-dock window exists only in an email
+  "Q-NAR-02": ["documents"], // the marine-duty workaround, likewise
+  "Q-NAR-03": ["documents"], // field-failure cause, stated only in prose
+  // CAD supplies the assembly to drop in; MES supplies the batch window it has
+  // to be buildable for. Without a production order there is no planned start,
+  // so "buildable for the September batch" has no window to evaluate against —
+  // the question would be ill-posed rather than merely harder.
+  "Q-NX-01": ["cad", "mes"],
+};
+
+export function buildGold(
+  b: Builder,
+  nx: NxAssemblyExport | null,
+  domains: ReadonlySet<DomainId>,
+): GoldAnswer[] {
   const o = makeOracle(b.entities, b.relations);
   const g: GoldAnswer[] = [];
+
+  /** Emit `q` only if every domain its reasoning path crosses is present. */
+  const push = (q: GoldAnswer): void => {
+    const needs = QUESTION_REQUIRES[q.id] ?? [];
+    if (needs.every((d) => domains.has(d))) g.push(q);
+  };
 
   /* ------------------------------------------------ 1. disambiguation */
 
@@ -74,18 +109,20 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
     ),
   );
   const salesOrderId = four.find((id) => o.get(id).type === "SalesOrder")!;
-  const productionOrderId = four.find((id) => o.get(id).type === "ProductionOrder")!;
+  // Present only when MES is selected — without a shop floor there is no
+  // production order to collide with the other three.
+  const productionOrderId = four.find((id) => o.get(id).type === "ProductionOrder");
   const purchaseOrderId = four.find((id) => o.get(id).type === "PurchaseOrder")!;
   const ecoId = four.find((id) => o.get(id).type === "EngineeringChangeOrder")!;
 
   const so = o.get(salesOrderId).attrs;
-  const pro = o.get(productionOrderId).attrs;
+  const pro = productionOrderId ? o.get(productionOrderId).attrs : null;
   const pur = o.get(purchaseOrderId).attrs;
   const eco = o.get(ecoId).attrs;
   const customerId = o.out(salesOrderId, "ordered_by")[0]!;
   const customerName = str(o.get(customerId).attrs.name);
 
-  g.push({
+  push({
     id: "Q-DIS-01",
     category: "disambiguation",
     question: `What is the status of order ${SCRIPTED.suffix}?`,
@@ -94,12 +131,19 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
     reference:
       `"${SCRIPTED.suffix}" is ambiguous: ${four.length} different objects share that number. ` +
       `${salesOrderId} is a sales order from ${customerName}, due ${str(so.requestedDeliveryDate)}, ` +
-      `status "${str(so.status)}". ${productionOrderId} is the production order fulfilling it, ` +
-      `planned start ${str(pro.plannedStart)}. ${purchaseOrderId} is a purchase order to ` +
+      `status "${str(so.status)}". ` +
+      (pro
+        ? `${productionOrderId} is the production order fulfilling it, ` +
+          `planned start ${str(pro.plannedStart)}. `
+        : "") +
+      `${purchaseOrderId} is a purchase order to ` +
       `${str(pur.supplier)} for part ${str(pur.partNumber)}. ${ecoId} is an engineering change ` +
       `order on the same part, effective ${str(eco.effectivityDate)}. They are not unrelated: the ` +
-      `sales order is fulfilled by the production order, which consumes the part bought on the ` +
-      `purchase order, which is the part the change order modifies.`,
+      (pro
+        ? `sales order is fulfilled by the production order, which consumes the part bought on the ` +
+          `purchase order, which is the part the change order modifies.`
+        : `sales order needs the part bought on the purchase order, which is the part the change ` +
+          `order modifies.`),
   });
 
   // Derived: the purchase order is the object a delivery slip can apply to, and
@@ -115,7 +159,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
       o.inc(p, "consumes").flatMap((proId) => o.inc(proId, "fulfilled_by")),
     ),
   ];
-  g.push({
+  push({
     id: "Q-DIS-02",
     category: "disambiguation",
     question: `Someone told me ${SCRIPTED.suffix} is delayed by three weeks. Which ${SCRIPTED.suffix} do they mean, and what does it affect?`,
@@ -139,7 +183,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
   const affectedVariants = variantsUsingPart(o, scriptedPart);
   const exposure = ordersForVariants(o, affectedVariants, RISK_HORIZON_END);
 
-  g.push({
+  push({
     id: "Q-MH-01",
     category: "multi_hop",
     question:
@@ -159,7 +203,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
       `value is ${exposure.netValueEur} EUR. Orders: ${exposure.orders.join(", ")}.`,
   });
 
-  g.push({
+  push({
     id: "Q-MH-02",
     category: "multi_hop",
     question: `Which variants use bearing housing ${str(o.get(scriptedPart).attrs.partNumber)}?`,
@@ -180,7 +224,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
       ),
     ),
   ].sort();
-  g.push({
+  push({
     id: "Q-MH-03",
     category: "multi_hop",
     question: `Which suppliers ultimately feed into sales order ${salesOrderId}?`,
@@ -208,7 +252,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
     ),
   ].sort();
 
-  g.push({
+  push({
     id: "Q-AGG-01",
     category: "aggregation",
     question:
@@ -230,7 +274,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
     .filter((s) => Number(s.attrs.onTimeDeliveryRate) < OTD_THRESHOLD)
     .map((s) => s.id)
     .sort();
-  g.push({
+  push({
     id: "Q-AGG-02",
     category: "aggregation",
     question:
@@ -244,7 +288,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
 
   const openSo = o.byType("SalesOrder").filter((e) => str(e.attrs.status) !== "shipped");
   const openValue = round2(openSo.reduce((s, e) => s + Number(e.attrs.netValueEur ?? 0), 0));
-  g.push({
+  push({
     id: "Q-AGG-03",
     category: "aggregation",
     question: "What is the total net value of all sales orders that have not yet shipped?",
@@ -256,7 +300,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
   /* ----------------------------------------------------- 4. absence */
 
   const partsNoSupplier = partsWithoutApprovedSupplier(o);
-  g.push({
+  push({
     id: "Q-ABS-01",
     category: "absence",
     question: "Which purchased parts have no approved supplier on the approved vendor list?",
@@ -271,7 +315,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
   const variantsWithGap = [
     ...new Set(partsNoSupplier.flatMap((p) => variantsUsingPart(o, p))),
   ].sort();
-  g.push({
+  push({
     id: "Q-ABS-02",
     category: "absence",
     question: "Which variants contain at least one part with no approved supplier?",
@@ -284,7 +328,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
   // in prompt construction, never in the generated ground truth — truncating here
   // is what made revisionCount and expectedIds disagree (KNOWN-ISSUES #2).
   const revsNoDrawing = currentRevisionsWithoutDrawing(o);
-  g.push({
+  push({
     id: "Q-ABS-03",
     category: "absence",
     question: "Which current part revisions have no released drawing?",
@@ -295,7 +339,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
 
   /* ------------------------------------------------------ 5. lookup */
 
-  g.push({
+  push({
     id: "Q-LK-01",
     category: "lookup",
     question: `Who is the customer on ${salesOrderId} and what is the requested delivery date?`,
@@ -307,7 +351,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
     reference: `${customerName}, requested delivery ${str(so.requestedDeliveryDate)}.`,
   });
 
-  g.push({
+  push({
     id: "Q-LK-02",
     category: "lookup",
     question: `What does engineering change order ${ecoId} change, and when does it take effect?`,
@@ -326,7 +370,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
   // Derived from the structured lubrication spec carried on every Product, the
   // same fields the product-specification document renders from.
   const anyProduct = o.byType("Product")[0]!.attrs;
-  g.push({
+  push({
     id: "Q-LK-03",
     category: "lookup",
     question: "What is the standard oil fill for a KDU-3 unit, and when should it be changed?",
@@ -349,7 +393,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
      scalar values: there is nothing structured to check them against, which is
      the point of the category. */
 
-  g.push({
+  push({
     id: "Q-NAR-01",
     category: "narrative",
     question: `Why can the ${customerName} delivery date not move?`,
@@ -361,7 +405,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
       `0.5 % of order value per week. This is stated only in an email, not in any structured field.`,
   });
 
-  g.push({
+  push({
     id: "Q-NAR-02",
     category: "narrative",
     question:
@@ -375,7 +419,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
       `from ${str(eco.marineDutyBarredFrom)} onward, regardless of build date.`,
   });
 
-  g.push({
+  push({
     id: "Q-NAR-03",
     category: "narrative",
     question: "What is the most common cause of premature bearing wear reported from the field?",
@@ -391,12 +435,15 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
   // canonical part, and evaluating the blocker predicates against the finished
   // environment. Not the staging list: that reports only what was staged on
   // purpose and misses blockers the random generation produced (KNOWN-ISSUES #1).
+  // Guarded on the batch window being derivable, which is the runtime form of
+  // the CAD + MES requirement declared in QUESTION_REQUIRES.
+  if (nx && o.out(salesOrderId, "fulfilled_by").length > 0) {
   const batch = deriveBatchWindow(o, salesOrderId);
   const derivedBlockers = deriveNxBlockers(o, nx, batch);
   const blockerPartIds = [...new Set(derivedBlockers.map((x) => x.partId))].sort();
   const kinds = [...new Set(derivedBlockers.map((x) => x.kind))].sort();
 
-  g.push({
+  push({
     id: "Q-NX-01",
     category: "multi_hop",
     question:
@@ -414,6 +461,7 @@ export function buildGold(b: Builder, nx: NxAssemblyExport): GoldAnswer[] {
         .map((x) => `${x.partNumber} (${x.kind}) — ${x.detail}`)
         .join(" "),
   });
+  }
 
   return g;
 }

@@ -10,8 +10,9 @@
  * comparing gold against itself.
  */
 
+import type { DomainId } from "../config/schema";
 import type { Dataset, NxAssemblyExport } from "../types";
-import type { GoldAnswer } from "./gold";
+import { QUESTION_REQUIRES, type GoldAnswer } from "./gold";
 import {
   currentRevisionsWithoutDrawing,
   deriveBatchWindow,
@@ -43,17 +44,35 @@ const COUNT_MATCHES_IDS: Record<string, string> = {
 export function checkInvariants(
   dataset: Dataset,
   gold: GoldAnswer[],
-  nx: NxAssemblyExport,
+  nx: NxAssemblyExport | null,
+  domains: ReadonlySet<DomainId>,
 ): string[] {
   const o = makeOracle(dataset.entities, dataset.relations);
   const problems: string[] = [];
   const fail = (m: string) => problems.push(m);
   const byId = new Map(gold.map((q) => [q.id, q]));
+  /**
+   * Fetch a gold answer, failing only when the selected domains say it should be
+   * there. A question whose reasoning path crosses an unselected domain is
+   * absent on purpose; treating that as a defect would make every reduced
+   * configuration fail the gates.
+   */
   const need = (id: string): GoldAnswer | null => {
     const q = byId.get(id);
-    if (!q) fail(`missing gold answer ${id}`);
+    if (!q) {
+      const requires = QUESTION_REQUIRES[id] ?? [];
+      if (requires.every((d) => domains.has(d))) fail(`missing gold answer ${id}`);
+    }
     return q ?? null;
   };
+
+  // The converse: a question that is present but should not be.
+  for (const q of gold) {
+    const missing = (QUESTION_REQUIRES[q.id] ?? []).filter((d) => !domains.has(d));
+    if (missing.length) {
+      fail(`${q.id} was emitted but needs unselected domain(s) ${missing.join(", ")}`);
+    }
+  }
 
   /* ------------------------------------------------ universal gates */
 
@@ -232,7 +251,7 @@ export function checkInvariants(
   /* ------------------------------------------------------- NX gates */
 
   const nx01 = need("Q-NX-01");
-  if (nx01) {
+  if (nx01 && nx) {
     const salesOrderId =
       byId.get("Q-LK-01")?.expectedIds.find((id) => o.get(id).type === "SalesOrder") ?? "";
     if (!salesOrderId) fail("Q-NX-01: cannot locate the batch sales order via Q-LK-01");

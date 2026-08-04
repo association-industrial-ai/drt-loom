@@ -15,6 +15,7 @@
     "generate": "tsx src/cli/generate.ts",
     "gen": "tsx src/generate/index.ts",
     "graph": "extractor/run.sh",
+    "view": "node viewer/serve.mjs",
     "site": "tsx src/site/build.ts",
     "site:check": "tsx src/site/build.ts --check",
     "site:serve": "npx --yes serve site/_out",

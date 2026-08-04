@@ -16,6 +16,7 @@ import { Builder } from "./builder";
 import { emptyMasterData } from "./master-data";
 import { emptyTransactionIndex } from "./transactions";
 import { buildGold, type GoldAnswer } from "./gold";
+import { buildExecution, type ExecutionSummary } from "./execution";
 import { makeRng, TODAY } from "./rng";
 import { checkRegistry, getDomain, PIPELINE, selectedModules } from "../domains/registry";
 import type { GenerationContext } from "../domains/types";
@@ -32,6 +33,7 @@ export interface Environment {
   nx: NxAssemblyExport | null;
   documents: DocumentRecord[];
   nxComponentCount: number;
+  execution: ExecutionSummary;
   builder: Builder;
   /** Problems reported by the selected domains' own `validate` hooks. */
   domainProblems: string[];
@@ -96,6 +98,11 @@ export function buildEnvironment(config: ResolvedConfig): Environment {
   // reasoning threads the selected domains can actually support.
   const gold = buildGold(b, ctx.nx, config.domains);
 
+  // Execution runs after gold, drawing from the RNG only once every other
+  // stage has finished, so adding it leaves the rest of the environment
+  // byte-identical and no gold answer moves.
+  const execution = buildExecution(b, md, tx, rng);
+
   b.verify();
 
   const domainProblems: string[] = [];
@@ -125,6 +132,7 @@ export function buildEnvironment(config: ResolvedConfig): Environment {
     nx: ctx.nx,
     documents,
     nxComponentCount: ctx.nx ? countNxComponents(ctx.nx) : 0,
+    execution,
     builder: b,
     domainProblems,
   };

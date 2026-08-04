@@ -201,21 +201,22 @@ window.LOOM_DATA = {
  ],
  "states": {
   "1000": {
-   "entities": 2241,
-   "relations": 3647,
+   "entities": 2246,
+   "relations": 3656,
    "crossing": 854,
    "documents": 0,
    "questions": 14,
    "byDomain": {
     "erp": 689,
     "plm": 1454,
-    "mes": 98
+    "mes": 98,
+    "_unclaimed": 5
    },
    "nx": 0
   },
   "1001": {
-   "entities": 2273,
-   "relations": 3679,
+   "entities": 2282,
+   "relations": 3694,
    "crossing": 880,
    "documents": 0,
    "questions": 14,
@@ -223,13 +224,14 @@ window.LOOM_DATA = {
     "erp": 703,
     "plm": 1454,
     "mes": 98,
-    "logistics": 18
+    "logistics": 18,
+    "_unclaimed": 9
    },
    "nx": 0
   },
   "1010": {
-   "entities": 2445,
-   "relations": 4215,
+   "entities": 2462,
+   "relations": 4242,
    "crossing": 1422,
    "documents": 204,
    "questions": 17,
@@ -237,13 +239,14 @@ window.LOOM_DATA = {
     "erp": 689,
     "plm": 1454,
     "mes": 98,
-    "documents": 204
+    "documents": 204,
+    "_unclaimed": 17
    },
    "nx": 0
   },
   "1011": {
-   "entities": 2477,
-   "relations": 4245,
+   "entities": 2483,
+   "relations": 4256,
    "crossing": 1446,
    "documents": 204,
    "questions": 17,
@@ -252,7 +255,8 @@ window.LOOM_DATA = {
     "plm": 1454,
     "mes": 98,
     "documents": 204,
-    "logistics": 18
+    "logistics": 18,
+    "_unclaimed": 6
    },
    "nx": 0
   },
@@ -271,8 +275,8 @@ window.LOOM_DATA = {
    "nx": 27
   },
   "1101": {
-   "entities": 2589,
-   "relations": 4749,
+   "entities": 2636,
+   "relations": 4829,
    "crossing": 1159,
    "documents": 0,
    "questions": 15,
@@ -281,7 +285,8 @@ window.LOOM_DATA = {
     "plm": 1499,
     "mes": 98,
     "cad": 286,
-    "logistics": 17
+    "logistics": 17,
+    "_unclaimed": 47
    },
    "nx": 27
   },
@@ -301,8 +306,8 @@ window.LOOM_DATA = {
    "nx": 27
   },
   "1111": {
-   "entities": 2793,
-   "relations": 5309,
+   "entities": 2838,
+   "relations": 5387,
    "crossing": 1719,
    "documents": 204,
    "questions": 18,
@@ -312,7 +317,8 @@ window.LOOM_DATA = {
     "mes": 98,
     "cad": 286,
     "documents": 204,
-    "logistics": 17
+    "logistics": 17,
+    "_unclaimed": 45
    },
    "nx": 27
   },
@@ -426,8 +432,8 @@ window.LOOM_DATA = {
   }
  },
  "reference": {
-  "entities": 2793,
-  "relations": 5309,
+  "entities": 2838,
+  "relations": 5387,
   "crossing": 1719,
   "documents": 204,
   "questions": 18,
@@ -437,11 +443,12 @@ window.LOOM_DATA = {
    "mes": 98,
    "cad": 286,
    "documents": 204,
-   "logistics": 17
+   "logistics": 17,
+   "_unclaimed": 45
   },
   "nx": 27,
-  "entityTypes": 20,
-  "relationTypes": 25,
+  "entityTypes": 24,
+  "relationTypes": 31,
   "byCategory": {
    "disambiguation": 2,
    "multi_hop": 4,

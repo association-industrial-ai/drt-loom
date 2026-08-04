@@ -66,7 +66,7 @@ committed reference environment are applications built on top of it.
 | | |
 |---|---|
 | Input | one integer seed |
-| Output | 2,793 entities · 5,309 typed relations · 204 documents · 1 CAD assembly · 18 questions with ground truth |
+| Output | 2,838 entities · 5,387 typed relations · 204 documents · 1 CAD assembly · 18 questions with ground truth |
 | Runtime | ~30 ms, no network, no API keys |
 | Reproducibility | byte-identical across machines for a given seed |
 | Status | v0.1.0 — see [Current status](#current-status) |
@@ -106,8 +106,8 @@ domain-configuration validation, configuration validation and determinism checks
 ```
 Generating Kestrel Drive Systems dataset (seed 20260728, today 2026-07-28)…
 
-  entities   2793
-  relations  5309
+  entities   2838
+  relations  5387
   documents  204
   NX components 27
   gold questions 18
@@ -119,7 +119,7 @@ Generating Kestrel Drive Systems dataset (seed 20260728, today 2026-07-28)…
 
 ```
 data/generated/
-├── dataset.json     2.1 MB    2,793 entities and 5,309 typed relations
+├── dataset.json     2.1 MB    2,838 entities and 5,387 typed relations
 ├── gold.json         12 KB    18 questions with expected IDs and values
 ├── documents/       204 Markdown files
 └── nx/                1 NX assembly export
@@ -178,12 +178,12 @@ npm run graph
 ```
 
 ```
-Extracted 2793 nodes / 5309 edges from Kestrel Drive Systems
+Extracted 2838 nodes / 5387 edges from Kestrel Drive Systems
   note: 181 duplicate edge(s) collapsed (same pair, same relation)
-Built directed graph: 2793 nodes, 5128 edges, 274 communities
+Built directed graph: 2838 nodes, 5206 edges, 262 communities
 
   provenance: AMBIGUOUS 9, EXTRACTED 5119
-  wrote data/graph/graph.json (2.55 MB), graph.html, graph.cypher
+  wrote data/graph/graph.json (2.59 MB), graph.html, graph.cypher
 ```
 
 The first run creates a Python virtualenv and installs
@@ -401,8 +401,8 @@ emitted — an unanswerable question measures nothing. The full domain set yield
 SEED=7 OUT_DIR=data/generated-seed7 npm run gen
 ```
 
-Same schema, same 18 questions, different environment: 2,832 entities and 5,404
-relations instead of 2,793 and 5,309, and Q-MH-01 resolves to 6 orders worth
+Same schema, same 18 questions, different environment: 2,868 entities and 5,465
+relations instead of 2,838 and 5,387, and Q-MH-01 resolves to 6 orders worth
 €723,681.01 instead of 16 worth €2,739,771.54.
 
 Verify determinism:
@@ -460,6 +460,7 @@ environment reproduces both, and it is publishable.
 | ERP | sales orders, purchase orders, inventory lots, shipments |
 | PLM | products, variants, parts, revisions, multi-level bills of material |
 | MES | production orders, routings, work centers |
+| MES execution | operation runs with actuals, material issues with lot genealogy, in-process checks, deviations |
 | CAD | an NX assembly tree with drawings and instance-name conventions |
 | Documents | emails, meeting minutes, change notices, inspection reports, work instructions, service bulletins |
 | Suppliers | supply base, approved-supplier relationships, purchasing history |
@@ -469,6 +470,38 @@ environment reproduces both, and it is publishable.
 
 All domains are generated together from one enterprise model, so cross-domain
 relationships are part of the model rather than annotations added over it.
+
+### Planned and actual
+
+Most of the environment records intent: planned dates, standard times, which parts
+a variant needs. `src/generate/execution.ts` adds what actually happened, which is
+a different kind of fact and supports a different kind of question.
+
+```jsonc
+// a batch consumed a specific physical lot — the genealogy edge
+{ "source": "ISS-4709-01", "target": "LOT-10-1668-02", "relation": "issue_of_lot" }
+
+// an operation ran over standard and scrapped one unit
+{ "id": "RUN-4709-0020", "type": "OperationRun",
+  "attrs": { "actualStart": "2026-06-28", "actualFinish": "2026-07-01",
+             "actualHours": 51.9, "standardHours": 51.7,
+             "quantityGood": 20, "quantityScrap": 1, "operator": "R. Delgado" } }
+```
+
+Two rules keep it honest. Only orders that have started get execution, so a
+`planned` order has no actuals, and an order claiming to run while planned to
+start after `TODAY` is reported as a contradiction rather than given invented
+ones. And no actual is ever dated after `TODAY`, because a recorded event in the
+future is a contradiction rather than a hard question.
+
+This makes lot genealogy answerable for the first time. Before it, `consumes`
+pointed at `Part` and never at `InventoryLot`, so no batch could be tied to the
+material that went into it.
+
+`buildExecution()` runs after `buildGold()`, drawing from the RNG only once every
+other stage has finished. The existing entities and relations are therefore
+byte-identical and `gold.json` does not move: no gold answer depends on this
+layer, and the invariant gates pass unchanged across all six verification seeds.
 
 ### Pipeline
 
@@ -485,10 +518,10 @@ complete domain.
 
 | | |
 |---|---|
-| Business records | 2,793 entities across 20 types |
-| Relations | 5,309 typed relations across 25 types |
+| Business records | 2,838 entities across 24 types |
+| Relations | 5,387 typed relations across 31 types |
 | Documents | 204 documents, 17,649 words, 8 families |
-| Knowledge graph | 2,793 nodes · 5,128 edges |
+| Knowledge graph | 2,838 nodes · 5,206 edges |
 | CAD export | 1 NX assembly tree, 27 components, 22 distinct part numbers |
 | Questions | 18 across 6 categories |
 

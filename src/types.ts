@@ -26,7 +26,12 @@ export type NodeType =
   | "Drawing"
   | "Document"
   | "InventoryLot"
-  | "Shipment";
+  | "Shipment"
+  /* execution — what actually happened, as opposed to what was planned */
+  | "OperationRun"
+  | "MaterialIssue"
+  | "InProcessCheck"
+  | "Deviation";
 
 export type RelationType =
   /* commercial */
@@ -40,6 +45,13 @@ export type RelationType =
   | "consumes" // ProductionOrder -> Part
   | "routed_through" // ProductionOrder -> RoutingStep
   | "step_at" // RoutingStep     -> WorkCenter
+  /* execution */
+  | "executed_as" // RoutingStep     -> OperationRun
+  | "run_at" // OperationRun    -> WorkCenter
+  | "issues" // ProductionOrder -> MaterialIssue
+  | "issue_of_lot" // MaterialIssue   -> InventoryLot  (batch genealogy)
+  | "has_check" // OperationRun    -> InProcessCheck
+  | "has_deviation" // OperationRun    -> Deviation
   /* product structure */
   | "variant_of" // Variant  -> Product
   | "has_bom_position" // Variant  -> BOMPosition

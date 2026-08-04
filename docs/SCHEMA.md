@@ -17,7 +17,7 @@ Two artifacts, one source of truth.
     "generatedAt": "2026-07-28",   // the world's "today" - all dates are relative to it
     "seed": 20260728,
     "company": "Kestrel Drive Systems",
-    "counts": { "_entities": 2793, "_relations": 5309, "Part": 241, ... }
+    "counts": { "_entities": 2838, "_relations": 5387, "Part": 241, ... }
   },
   "entities":  [ ... ],
   "relations": [ ... ],
@@ -105,6 +105,10 @@ it to a system under evaluation, or you have handed it the retrieval answer.
 | `CADAssembly` | 45 | `variantCode`, `prtFile`, `nxVersion`, `componentCount` |
 | `CADComponent` | 241 | `instanceName`, `prtFile`, `dbPartNo`, `isAssembly` |
 | `Document` | 204 | `title`, `family`, `date`, `wordCount` |
+| `OperationRun` | 22 | `routingStep`, `operation`, `workCenter`, `actualStart`, `actualFinish`, `actualHours`, `standardHours`, `quantityGood`, `quantityScrap`, `operator` |
+| `MaterialIssue` | 11 | `productionOrder`, `partNumber`, `lot`, `quantityIssued`, `issuedOn`, `issuedBy` |
+| `InProcessCheck` | 10 | `operationRun`, `characteristic`, `nominal`, `tolerance`, `measured`, `unit`, `verdict`, `inspector` |
+| `Deviation` | 2 | `operationRun`, `characteristic`, `measured`, `severity`, `disposition`, `status`, `raisedOn`, `closedOn` |
 
 **`effectivityDate`, not `effectiveDate`.** Worth naming explicitly in any tool
 schema you expose to a model - guessing between the two costs real tool calls.
@@ -139,6 +143,12 @@ schema you expose to a model - guessing between the two costs real tool calls.
 | `drawn_in` | 45 | `CADAssembly` → `Drawing` |
 | `shipped_in` | 17 | `SalesOrder` → `Shipment` |
 | `produces` | 10 | `ProductionOrder` → `Variant` |
+| `executed_as` | 22 | `RoutingStep` → `OperationRun` |
+| `run_at` | 22 | `OperationRun` → `WorkCenter` |
+| `issues` | 11 | `ProductionOrder` → `MaterialIssue` |
+| `issue_of_lot` | 11 | `MaterialIssue` → `InventoryLot` (**batch genealogy**) |
+| `has_check` | 10 | `OperationRun` → `InProcessCheck` |
+| `has_deviation` | 2 | `OperationRun` → `Deviation` |
 | `fulfilled_by` | 10 | `SalesOrder` → `ProductionOrder` |
 
 ### The chain that matters

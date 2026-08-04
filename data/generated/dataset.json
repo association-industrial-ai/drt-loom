@@ -24,8 +24,12 @@
    "Shipment": 17,
    "InventoryLot": 93,
    "Document": 204,
-   "_entities": 2793,
-   "_relations": 5309
+   "MaterialIssue": 11,
+   "OperationRun": 22,
+   "InProcessCheck": 10,
+   "Deviation": 2,
+   "_entities": 2838,
+   "_relations": 5387
   }
  },
  "entities": [
@@ -43253,6 +43257,845 @@
     "date": "2026-05-12",
     "wordCount": 51
    }
+  },
+  {
+   "id": "ISS-4703-01",
+   "type": "MaterialIssue",
+   "label": "PRO-4703 issue of 10-1706",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L1",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "partNumber": "10-1706",
+    "lot": "LOT-10-1706-09",
+    "quantityIssued": 8,
+    "issuedOn": "2026-05-31",
+    "issuedBy": "R. Delgado"
+   }
+  },
+  {
+   "id": "ISS-4703-02",
+   "type": "MaterialIssue",
+   "label": "PRO-4703 issue of 20-1651",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L2",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "partNumber": "20-1651",
+    "lot": "LOT-20-1651-03",
+    "quantityIssued": 16,
+    "issuedOn": "2026-05-28",
+    "issuedBy": "P. Nowak"
+   }
+  },
+  {
+   "id": "ISS-4703-03",
+   "type": "MaterialIssue",
+   "label": "PRO-4703 issue of 30-1339",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L3",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "partNumber": "30-1339",
+    "lot": "LOT-30-1339-09",
+    "quantityIssued": 8,
+    "issuedOn": "2026-05-28",
+    "issuedBy": "A. Brunner"
+   }
+  },
+  {
+   "id": "ISS-4703-04",
+   "type": "MaterialIssue",
+   "label": "PRO-4703 issue of 70-1838",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L4",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "partNumber": "70-1838",
+    "lot": "LOT-70-1838-06",
+    "quantityIssued": 24,
+    "issuedOn": "2026-05-30",
+    "issuedBy": "L. Fontaine"
+   }
+  },
+  {
+   "id": "ISS-4703-05",
+   "type": "MaterialIssue",
+   "label": "PRO-4703 issue of 70-1150",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L5",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "partNumber": "70-1150",
+    "lot": "LOT-70-1150-01",
+    "quantityIssued": 24,
+    "issuedOn": "2026-06-01",
+    "issuedBy": "R. Delgado"
+   }
+  },
+  {
+   "id": "ISS-4703-06",
+   "type": "MaterialIssue",
+   "label": "PRO-4703 issue of 80-1972",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L6",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "partNumber": "80-1972",
+    "lot": "LOT-80-1972-09",
+    "quantityIssued": 16,
+    "issuedOn": "2026-05-29",
+    "issuedBy": "L. Fontaine"
+   }
+  },
+  {
+   "id": "RUN-4703-0010",
+   "type": "OperationRun",
+   "label": "PRO-4703 op 0010 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L1",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "routingStep": "RTG-4703-0010",
+    "operation": "0010",
+    "workCenter": "SPAN-1",
+    "actualStart": "2026-06-03",
+    "actualFinish": "2026-06-04",
+    "actualHours": 22.9,
+    "standardHours": 24.5,
+    "quantityGood": 8,
+    "quantityScrap": 0,
+    "operator": "P. Nowak"
+   }
+  },
+  {
+   "id": "IPC-4703-0010-01",
+   "type": "InProcessCheck",
+   "label": "Bearing seat diameter on PRO-4703 op 0010",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L1",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "operationRun": "RUN-4703-0010",
+    "characteristic": "Bearing seat diameter",
+    "nominal": 120,
+    "tolerance": 0.02,
+    "measured": 120.0361,
+    "unit": "mm",
+    "verdict": "out of tolerance",
+    "checkedOn": "2026-06-04",
+    "inspector": "A. Brunner"
+   }
+  },
+  {
+   "id": "DEV-4703-0010-01",
+   "type": "Deviation",
+   "label": "Deviation on PRO-4703 op 0010",
+   "sourceFile": "mes/deviations.json",
+   "sourceLocation": "L1",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "operationRun": "RUN-4703-0010",
+    "characteristic": "Bearing seat diameter",
+    "measured": 120.0361,
+    "nominal": 120,
+    "tolerance": 0.02,
+    "unit": "mm",
+    "severity": "minor",
+    "raisedOn": "2026-06-04",
+    "raisedBy": "P. Nowak",
+    "disposition": "quarantine pending quality review",
+    "status": "closed",
+    "closedOn": "2026-06-13"
+   }
+  },
+  {
+   "id": "RUN-4703-0020",
+   "type": "OperationRun",
+   "label": "PRO-4703 op 0020 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L2",
+   "attrs": {
+    "productionOrder": "PRO-4703",
+    "routingStep": "RTG-4703-0020",
+    "operation": "0020",
+    "workCenter": "FRAS-1",
+    "actualStart": "2026-06-05",
+    "actualFinish": "2026-06-06",
+    "actualHours": 18.6,
+    "standardHours": 15.3,
+    "quantityGood": 8,
+    "quantityScrap": 0,
+    "operator": "R. Delgado"
+   }
+  },
+  {
+   "id": "ISS-4705-01",
+   "type": "MaterialIssue",
+   "label": "PRO-4705 issue of 70-1085",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L7",
+   "attrs": {
+    "productionOrder": "PRO-4705",
+    "partNumber": "70-1085",
+    "lot": "LOT-70-1085-03",
+    "quantityIssued": 8,
+    "issuedOn": "2026-07-21",
+    "issuedBy": "L. Fontaine"
+   }
+  },
+  {
+   "id": "RUN-4705-0010",
+   "type": "OperationRun",
+   "label": "PRO-4705 op 0010 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L3",
+   "attrs": {
+    "productionOrder": "PRO-4705",
+    "routingStep": "RTG-4705-0010",
+    "operation": "0010",
+    "workCenter": "SPAN-1",
+    "actualStart": "2026-07-20",
+    "actualFinish": "2026-07-21",
+    "actualHours": 13.7,
+    "standardHours": 13.9,
+    "quantityGood": 4,
+    "quantityScrap": 0,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "IPC-4705-0010-01",
+   "type": "InProcessCheck",
+   "label": "Bearing seat diameter on PRO-4705 op 0010",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L2",
+   "attrs": {
+    "productionOrder": "PRO-4705",
+    "operationRun": "RUN-4705-0010",
+    "characteristic": "Bearing seat diameter",
+    "nominal": 120,
+    "tolerance": 0.02,
+    "measured": 120.0145,
+    "unit": "mm",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-21",
+    "inspector": "R. Delgado"
+   }
+  },
+  {
+   "id": "RUN-4705-0020",
+   "type": "OperationRun",
+   "label": "PRO-4705 op 0020 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L4",
+   "attrs": {
+    "productionOrder": "PRO-4705",
+    "routingStep": "RTG-4705-0020",
+    "operation": "0020",
+    "workCenter": "FRAS-1",
+    "actualStart": "2026-07-23",
+    "actualFinish": "2026-07-24",
+    "actualHours": 6,
+    "standardHours": 5.5,
+    "quantityGood": 3,
+    "quantityScrap": 1,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "RUN-4705-0030",
+   "type": "OperationRun",
+   "label": "PRO-4705 op 0030 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L5",
+   "attrs": {
+    "productionOrder": "PRO-4705",
+    "routingStep": "RTG-4705-0030",
+    "operation": "0030",
+    "workCenter": "HAERT",
+    "actualStart": "2026-07-24",
+    "actualFinish": "2026-07-25",
+    "actualHours": 16.8,
+    "standardHours": 14,
+    "quantityGood": 4,
+    "quantityScrap": 0,
+    "operator": "L. Fontaine"
+   }
+  },
+  {
+   "id": "RUN-4705-0040",
+   "type": "OperationRun",
+   "label": "PRO-4705 op 0040 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L6",
+   "attrs": {
+    "productionOrder": "PRO-4705",
+    "routingStep": "RTG-4705-0040",
+    "operation": "0040",
+    "workCenter": "SCHL-1",
+    "actualStart": "2026-07-27",
+    "actualFinish": "2026-07-28",
+    "actualHours": 4.6,
+    "standardHours": 3.9,
+    "quantityGood": 4,
+    "quantityScrap": 0,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "ISS-4708-01",
+   "type": "MaterialIssue",
+   "label": "PRO-4708 issue of 70-1085",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L8",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "partNumber": "70-1085",
+    "lot": "LOT-70-1085-03",
+    "quantityIssued": 13,
+    "issuedOn": "2026-07-10",
+    "issuedBy": "A. Brunner"
+   }
+  },
+  {
+   "id": "ISS-4708-02",
+   "type": "MaterialIssue",
+   "label": "PRO-4708 issue of 70-1405",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L9",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "partNumber": "70-1405",
+    "lot": "LOT-70-1405-01",
+    "quantityIssued": 39,
+    "issuedOn": "2026-07-09",
+    "issuedBy": "P. Nowak"
+   }
+  },
+  {
+   "id": "RUN-4708-0010",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0010 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L7",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0010",
+    "operation": "0010",
+    "workCenter": "SPAN-1",
+    "actualStart": "2026-06-29",
+    "actualFinish": "2026-07-01",
+    "actualHours": 34.2,
+    "standardHours": 32.1,
+    "quantityGood": 13,
+    "quantityScrap": 0,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "RUN-4708-0020",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0020 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L8",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0020",
+    "operation": "0020",
+    "workCenter": "FRAS-1",
+    "actualStart": "2026-07-02",
+    "actualFinish": "2026-07-03",
+    "actualHours": 9.7,
+    "standardHours": 10,
+    "quantityGood": 13,
+    "quantityScrap": 0,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "RUN-4708-0030",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0030 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L9",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0030",
+    "operation": "0030",
+    "workCenter": "HAERT",
+    "actualStart": "2026-07-05",
+    "actualFinish": "2026-07-08",
+    "actualHours": 48.7,
+    "standardHours": 42.6,
+    "quantityGood": 13,
+    "quantityScrap": 0,
+    "operator": "R. Delgado"
+   }
+  },
+  {
+   "id": "IPC-4708-0030-01",
+   "type": "InProcessCheck",
+   "label": "Case hardening depth on PRO-4708 op 0030",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L3",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "operationRun": "RUN-4708-0030",
+    "characteristic": "Case hardening depth",
+    "nominal": 0.9,
+    "tolerance": 0.15,
+    "measured": 0.8056,
+    "unit": "mm",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-08",
+    "inspector": "P. Nowak"
+   }
+  },
+  {
+   "id": "RUN-4708-0040",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0040 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L10",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0040",
+    "operation": "0040",
+    "workCenter": "SCHL-1",
+    "actualStart": "2026-07-09",
+    "actualFinish": "2026-07-11",
+    "actualHours": 34.8,
+    "standardHours": 37,
+    "quantityGood": 12,
+    "quantityScrap": 1,
+    "operator": "L. Fontaine"
+   }
+  },
+  {
+   "id": "IPC-4708-0040-01",
+   "type": "InProcessCheck",
+   "label": "Gear flank profile deviation on PRO-4708 op 0040",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L4",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "operationRun": "RUN-4708-0040",
+    "characteristic": "Gear flank profile deviation",
+    "nominal": 0,
+    "tolerance": 0.006,
+    "measured": -0.0034,
+    "unit": "mm",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-11",
+    "inspector": "L. Fontaine"
+   }
+  },
+  {
+   "id": "RUN-4708-0050",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0050 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L11",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0050",
+    "operation": "0050",
+    "workCenter": "MONT-1",
+    "actualStart": "2026-07-13",
+    "actualFinish": "2026-07-15",
+    "actualHours": 33.5,
+    "standardHours": 36.4,
+    "quantityGood": 12,
+    "quantityScrap": 1,
+    "operator": "P. Nowak"
+   }
+  },
+  {
+   "id": "RUN-4708-0060",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0060 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L12",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0060",
+    "operation": "0060",
+    "workCenter": "MONT-2",
+    "actualStart": "2026-07-15",
+    "actualFinish": "2026-07-16",
+    "actualHours": 16,
+    "standardHours": 17.7,
+    "quantityGood": 13,
+    "quantityScrap": 0,
+    "operator": "R. Delgado"
+   }
+  },
+  {
+   "id": "IPC-4708-0060-01",
+   "type": "InProcessCheck",
+   "label": "Oil fill volume on PRO-4708 op 0060",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L5",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "operationRun": "RUN-4708-0060",
+    "characteristic": "Oil fill volume",
+    "nominal": 4.2,
+    "tolerance": 0.2,
+    "measured": 4.1613,
+    "unit": "L",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-16",
+    "inspector": "R. Delgado"
+   }
+  },
+  {
+   "id": "RUN-4708-0070",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0070 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L13",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0070",
+    "operation": "0070",
+    "workCenter": "PRUEF",
+    "actualStart": "2026-07-17",
+    "actualFinish": "2026-07-18",
+    "actualHours": 9.4,
+    "standardHours": 8.4,
+    "quantityGood": 13,
+    "quantityScrap": 0,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "RUN-4708-0080",
+   "type": "OperationRun",
+   "label": "PRO-4708 op 0080 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L14",
+   "attrs": {
+    "productionOrder": "PRO-4708",
+    "routingStep": "RTG-4708-0080",
+    "operation": "0080",
+    "workCenter": "LACK",
+    "actualStart": "2026-07-19",
+    "actualFinish": "2026-07-20",
+    "actualHours": 11,
+    "standardHours": 9.3,
+    "quantityGood": 13,
+    "quantityScrap": 0,
+    "operator": "R. Delgado"
+   }
+  },
+  {
+   "id": "ISS-4709-01",
+   "type": "MaterialIssue",
+   "label": "PRO-4709 issue of 10-1668",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L10",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "partNumber": "10-1668",
+    "lot": "LOT-10-1668-02",
+    "quantityIssued": 63,
+    "issuedOn": "2026-07-22",
+    "issuedBy": "P. Nowak"
+   }
+  },
+  {
+   "id": "ISS-4709-02",
+   "type": "MaterialIssue",
+   "label": "PRO-4709 issue of 20-1904",
+   "sourceFile": "mes/material_issues.json",
+   "sourceLocation": "L11",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "partNumber": "20-1904",
+    "lot": "LOT-20-1904-05",
+    "quantityIssued": 21,
+    "issuedOn": "2026-07-22",
+    "issuedBy": "P. Nowak"
+   }
+  },
+  {
+   "id": "RUN-4709-0010",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0010 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L15",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0010",
+    "operation": "0010",
+    "workCenter": "SPAN-1",
+    "actualStart": "2026-06-27",
+    "actualFinish": "2026-06-28",
+    "actualHours": 16.7,
+    "standardHours": 17.9,
+    "quantityGood": 21,
+    "quantityScrap": 0,
+    "operator": "A. Brunner"
+   }
+  },
+  {
+   "id": "RUN-4709-0020",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0020 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L16",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0020",
+    "operation": "0020",
+    "workCenter": "FRAS-1",
+    "actualStart": "2026-06-28",
+    "actualFinish": "2026-07-01",
+    "actualHours": 53.6,
+    "standardHours": 51.7,
+    "quantityGood": 20,
+    "quantityScrap": 1,
+    "operator": "R. Delgado"
+   }
+  },
+  {
+   "id": "RUN-4709-0030",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0030 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L17",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0030",
+    "operation": "0030",
+    "workCenter": "HAERT",
+    "actualStart": "2026-07-02",
+    "actualFinish": "2026-07-05",
+    "actualHours": 48.6,
+    "standardHours": 46.3,
+    "quantityGood": 21,
+    "quantityScrap": 0,
+    "operator": "R. Delgado"
+   }
+  },
+  {
+   "id": "IPC-4709-0030-01",
+   "type": "InProcessCheck",
+   "label": "Case hardening depth on PRO-4709 op 0030",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L6",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "operationRun": "RUN-4709-0030",
+    "characteristic": "Case hardening depth",
+    "nominal": 0.9,
+    "tolerance": 0.15,
+    "measured": 0.9462,
+    "unit": "mm",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-05",
+    "inspector": "L. Fontaine"
+   }
+  },
+  {
+   "id": "RUN-4709-0040",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0040 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L18",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0040",
+    "operation": "0040",
+    "workCenter": "SCHL-1",
+    "actualStart": "2026-07-06",
+    "actualFinish": "2026-07-11",
+    "actualHours": 86.5,
+    "standardHours": 71.4,
+    "quantityGood": 21,
+    "quantityScrap": 0,
+    "operator": "L. Fontaine"
+   }
+  },
+  {
+   "id": "IPC-4709-0040-01",
+   "type": "InProcessCheck",
+   "label": "Gear flank profile deviation on PRO-4709 op 0040",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L7",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "operationRun": "RUN-4709-0040",
+    "characteristic": "Gear flank profile deviation",
+    "nominal": 0,
+    "tolerance": 0.006,
+    "measured": 0.0105,
+    "unit": "mm",
+    "verdict": "out of tolerance",
+    "checkedOn": "2026-07-11",
+    "inspector": "L. Fontaine"
+   }
+  },
+  {
+   "id": "DEV-4709-0040-01",
+   "type": "Deviation",
+   "label": "Deviation on PRO-4709 op 0040",
+   "sourceFile": "mes/deviations.json",
+   "sourceLocation": "L2",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "operationRun": "RUN-4709-0040",
+    "characteristic": "Gear flank profile deviation",
+    "measured": 0.0105,
+    "nominal": 0,
+    "tolerance": 0.006,
+    "unit": "mm",
+    "severity": "minor",
+    "raisedOn": "2026-07-11",
+    "raisedBy": "L. Fontaine",
+    "disposition": "rework to drawing and re-inspect",
+    "status": "closed",
+    "closedOn": "2026-07-19"
+   }
+  },
+  {
+   "id": "RUN-4709-0050",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0050 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L19",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0050",
+    "operation": "0050",
+    "workCenter": "MONT-1",
+    "actualStart": "2026-07-13",
+    "actualFinish": "2026-07-15",
+    "actualHours": 27.2,
+    "standardHours": 23.2,
+    "quantityGood": 21,
+    "quantityScrap": 0,
+    "operator": "L. Fontaine"
+   }
+  },
+  {
+   "id": "RUN-4709-0060",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0060 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L20",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0060",
+    "operation": "0060",
+    "workCenter": "MONT-2",
+    "actualStart": "2026-07-16",
+    "actualFinish": "2026-07-20",
+    "actualHours": 65.2,
+    "standardHours": 60.5,
+    "quantityGood": 20,
+    "quantityScrap": 1,
+    "operator": "P. Nowak"
+   }
+  },
+  {
+   "id": "IPC-4709-0060-01",
+   "type": "InProcessCheck",
+   "label": "Oil fill volume on PRO-4709 op 0060",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L8",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "operationRun": "RUN-4709-0060",
+    "characteristic": "Oil fill volume",
+    "nominal": 4.2,
+    "tolerance": 0.2,
+    "measured": 4.169,
+    "unit": "L",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-20",
+    "inspector": "R. Delgado"
+   }
+  },
+  {
+   "id": "RUN-4709-0070",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0070 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L21",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0070",
+    "operation": "0070",
+    "workCenter": "PRUEF",
+    "actualStart": "2026-07-21",
+    "actualFinish": "2026-07-22",
+    "actualHours": 15.6,
+    "standardHours": 14.4,
+    "quantityGood": 21,
+    "quantityScrap": 0,
+    "operator": "P. Nowak"
+   }
+  },
+  {
+   "id": "IPC-4709-0070-01",
+   "type": "InProcessCheck",
+   "label": "Acoustic level at rated speed on PRO-4709 op 0070",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L9",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "operationRun": "RUN-4709-0070",
+    "characteristic": "Acoustic level at rated speed",
+    "nominal": 78,
+    "tolerance": 3,
+    "measured": 80.448,
+    "unit": "dB(A)",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-22",
+    "inspector": "R. Delgado"
+   }
+  },
+  {
+   "id": "IPC-4709-0070-02",
+   "type": "InProcessCheck",
+   "label": "Backlash after run-in on PRO-4709 op 0070",
+   "sourceFile": "mes/in_process_checks.json",
+   "sourceLocation": "L10",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "operationRun": "RUN-4709-0070",
+    "characteristic": "Backlash after run-in",
+    "nominal": 0.12,
+    "tolerance": 0.04,
+    "measured": 0.1048,
+    "unit": "mm",
+    "verdict": "within tolerance",
+    "checkedOn": "2026-07-22",
+    "inspector": "R. Delgado"
+   }
+  },
+  {
+   "id": "RUN-4709-0080",
+   "type": "OperationRun",
+   "label": "PRO-4709 op 0080 run",
+   "sourceFile": "mes/operation_runs.json",
+   "sourceLocation": "L22",
+   "attrs": {
+    "productionOrder": "PRO-4709",
+    "routingStep": "RTG-4709-0080",
+    "operation": "0080",
+    "workCenter": "LACK",
+    "actualStart": "2026-07-22",
+    "actualFinish": "2026-07-26",
+    "actualHours": 66.4,
+    "standardHours": 65.3,
+    "quantityGood": 21,
+    "quantityScrap": 0,
+    "operator": "R. Delgado"
+   }
   }
  ],
  "relations": [
@@ -82026,6 +82869,552 @@
    "relation": "documented_by",
    "confidence": "EXTRACTED",
    "sourceFile": "documents/doc-0204-re-so-4853-porto-azul-terminais.md"
+  },
+  {
+   "source": "PRO-4703",
+   "target": "ISS-4703-01",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4703-01",
+   "target": "LOT-10-1706-09",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4703",
+   "target": "ISS-4703-02",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4703-02",
+   "target": "LOT-20-1651-03",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4703",
+   "target": "ISS-4703-03",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4703-03",
+   "target": "LOT-30-1339-09",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4703",
+   "target": "ISS-4703-04",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4703-04",
+   "target": "LOT-70-1838-06",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4703",
+   "target": "ISS-4703-05",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4703-05",
+   "target": "LOT-70-1150-01",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4703",
+   "target": "ISS-4703-06",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4703-06",
+   "target": "LOT-80-1972-09",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "RTG-4703-0010",
+   "target": "RUN-4703-0010",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4703-0010",
+   "target": "WC-SPAN-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4703-0010",
+   "target": "IPC-4703-0010-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RUN-4703-0010",
+   "target": "DEV-4703-0010-01",
+   "relation": "has_deviation",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/deviations.json"
+  },
+  {
+   "source": "RTG-4703-0020",
+   "target": "RUN-4703-0020",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4703-0020",
+   "target": "WC-FRAS-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "PRO-4705",
+   "target": "ISS-4705-01",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4705-01",
+   "target": "LOT-70-1085-03",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "RTG-4705-0010",
+   "target": "RUN-4705-0010",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4705-0010",
+   "target": "WC-SPAN-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4705-0010",
+   "target": "IPC-4705-0010-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4705-0020",
+   "target": "RUN-4705-0020",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4705-0020",
+   "target": "WC-FRAS-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4705-0030",
+   "target": "RUN-4705-0030",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4705-0030",
+   "target": "WC-HAERT",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4705-0040",
+   "target": "RUN-4705-0040",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4705-0040",
+   "target": "WC-SCHL-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "PRO-4708",
+   "target": "ISS-4708-01",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4708-01",
+   "target": "LOT-70-1085-03",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4708",
+   "target": "ISS-4708-02",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4708-02",
+   "target": "LOT-70-1405-01",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "RTG-4708-0010",
+   "target": "RUN-4708-0010",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0010",
+   "target": "WC-SPAN-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4708-0020",
+   "target": "RUN-4708-0020",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0020",
+   "target": "WC-FRAS-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4708-0030",
+   "target": "RUN-4708-0030",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0030",
+   "target": "WC-HAERT",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0030",
+   "target": "IPC-4708-0030-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4708-0040",
+   "target": "RUN-4708-0040",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0040",
+   "target": "WC-SCHL-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0040",
+   "target": "IPC-4708-0040-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4708-0050",
+   "target": "RUN-4708-0050",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0050",
+   "target": "WC-MONT-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4708-0060",
+   "target": "RUN-4708-0060",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0060",
+   "target": "WC-MONT-2",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0060",
+   "target": "IPC-4708-0060-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4708-0070",
+   "target": "RUN-4708-0070",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0070",
+   "target": "WC-PRUEF",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4708-0080",
+   "target": "RUN-4708-0080",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4708-0080",
+   "target": "WC-LACK",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "PRO-4709",
+   "target": "ISS-4709-01",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4709-01",
+   "target": "LOT-10-1668-02",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "PRO-4709",
+   "target": "ISS-4709-02",
+   "relation": "issues",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "ISS-4709-02",
+   "target": "LOT-20-1904-05",
+   "relation": "issue_of_lot",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/material_issues.json"
+  },
+  {
+   "source": "RTG-4709-0010",
+   "target": "RUN-4709-0010",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0010",
+   "target": "WC-SPAN-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4709-0020",
+   "target": "RUN-4709-0020",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0020",
+   "target": "WC-FRAS-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4709-0030",
+   "target": "RUN-4709-0030",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0030",
+   "target": "WC-HAERT",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0030",
+   "target": "IPC-4709-0030-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4709-0040",
+   "target": "RUN-4709-0040",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0040",
+   "target": "WC-SCHL-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0040",
+   "target": "IPC-4709-0040-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RUN-4709-0040",
+   "target": "DEV-4709-0040-01",
+   "relation": "has_deviation",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/deviations.json"
+  },
+  {
+   "source": "RTG-4709-0050",
+   "target": "RUN-4709-0050",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0050",
+   "target": "WC-MONT-1",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RTG-4709-0060",
+   "target": "RUN-4709-0060",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0060",
+   "target": "WC-MONT-2",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0060",
+   "target": "IPC-4709-0060-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4709-0070",
+   "target": "RUN-4709-0070",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0070",
+   "target": "WC-PRUEF",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0070",
+   "target": "IPC-4709-0070-01",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RUN-4709-0070",
+   "target": "IPC-4709-0070-02",
+   "relation": "has_check",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/in_process_checks.json"
+  },
+  {
+   "source": "RTG-4709-0080",
+   "target": "RUN-4709-0080",
+   "relation": "executed_as",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
+  },
+  {
+   "source": "RUN-4709-0080",
+   "target": "WC-LACK",
+   "relation": "run_at",
+   "confidence": "EXTRACTED",
+   "sourceFile": "mes/operation_runs.json"
   }
  ],
  "documents": [
